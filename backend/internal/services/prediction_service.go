@@ -76,7 +76,7 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 	return &risks, nil
 }
 
-func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest) {
+func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest, onComplete func(uint, string, string)) {
 	s.Cache.Set(patientID, "", "pending")
 	
 	go func() {
@@ -86,6 +86,9 @@ func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.Diagn
 		diagRespRaw, err := http.Post(s.MLServiceURL+"/diagnose", "application/json", bytes.NewBuffer(diagPayload))
 		if err != nil {
 			s.Cache.Set(patientID, "Diagnosis unavailable - LLM service error", "error")
+			if onComplete != nil {
+				onComplete(patientID, "Diagnosis unavailable - LLM service error", "error")
+			}
 			log.Printf("⏱️ LLM Diagnose ASYNC ERROR: %v", err)
 			return
 		}
@@ -94,6 +97,9 @@ func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.Diagn
 		var diagRes models.DiagnosisResponse
 		json.NewDecoder(diagRespRaw.Body).Decode(&diagRes)
 		s.Cache.Set(patientID, diagRes.Diagnosis, "ready")
+		if onComplete != nil {
+			onComplete(patientID, diagRes.Diagnosis, "ready")
+		}
 		log.Printf("⏱️ LLM Diagnose ASYNC COMPLETE: %v", time.Since(llmStart))
 	}()
 }

@@ -1,45 +1,54 @@
-# 🏥 Frontend Guide v3 - The Clinical Cockpit
+# Frontend Integration Guide: Real-Time WebSockets ⚡
 
-**Hedef Kitle:** Doktorlar (Hız ve Bilgiye aç kullanıcılar).
-**Tasarım Dili:** "Bloomberg Terminali" gibi. Yoğun veri, karanlık mod, yüksek kontrast, gereksiz boşluk yok.
+This guide explains how to connect your Next.js frontend to the new real-time diagnostic stream.
 
-## 1. Doctor Dashboard (Main Hub) 🖥️
-Burası doktorun gününü geçirdiği yer.
+## Connection Details
+- **Endpoint**: `ws://localhost:3000/ws/diagnostics`
+- **Protocol**: Standard WebSocket (JSON)
 
-### A. Sol Panel: Akıllı Hasta Listesi (Smart Queue)
-*   **Sıralama:** Standart isim sırası DEĞİL. **Risk Score (Azalan)** veya **Triage Aciliyeti**ne göre sıralı.
-*   **Görsel:** Her hastanın yanında küçük bir "Status Dot" (🔴/🟡/🟢).
-*   **Hızlı Bilgi:** Listede sadece isim değil, "Ana Şikayet" ve "Son Geliş Tarihi" de yazar.
+## 1. Establishing a Connection
+Use a standard `WebSocket` client in your React component.
 
-### B. Orta Panel: Clinical Command Center 📊
-Seçili hasta için detaylar.
-*   **Header:** Hasta Adı, Yaş, Kan Grubu, Allerjiler (Büyük kırmızı bant ile).
-*   **4-Way Risk Grid:** Ekranı 4'e böl. Kalp, Diyabet, Böbrek, İnme grafiklerini kompakt göster.
-*   **Timeline:** Hastanın geçmiş ziyaretleri, ilaç değişimleri ve lab sonuçları yatay bir zaman çizelgesinde.
+```javascript
+const ws = new WebSocket("ws://localhost:3000/ws/diagnostics");
 
-### C. Sağ Panel: AI Copilot (Sidekick) 🤖
-*   **Active Analysis:** Doktor gezinirken sürekli arkaplanda çalışır.
-*   **Alerts:** "Potansiyel İlaç Etkileşimi!", "Diyabet riski geçen aya göre %10 arttı."
-*   **Action Buttons:**
-    *   `[Generate Epikriz]` (Raporu yazar)
-    *   `[Order Labs]` (Tahlil ister)
-    *   `[Prescribe]` (Reçete yazar)
+ws.onopen = () => {
+    console.log("Connected to clinical diagnostic stream");
+};
+```
 
-## 2. Emergency Triage Modu 🚨
-Tek tuşla (`Ctrl+E` veya Navbar butonu) açılır.
-*   **UI:** Siyah arka plan, devasa inputlar.
-*   **Inputs:** Nabız, Tansiyon, SPO2, Bilinç.
-*   **Output:** Ekranın tamamı KIRMIZI, SARI veya YEŞİL olur. Fontlar devasa.
+## 2. Subscribing to a Patient
+Once the connection is open, you must tell the server which patient you are interested in. Send a "subscribe" message with the `patient_id`.
 
-## 3. Patient Companion (Mobil Web) 📱
-Bu sadece doktorun hastasına "link" olarak attığı basit bir ekran.
-*   "Sonuçlarım ne anlama geliyor?"
-*   "İlacımı ne zaman alayım?"
-*   Doktora veri gönderme (Check-in).
+```javascript
+ws.send(JSON.stringify({
+    type: "subscribe",
+    patient_id: 42 // Replace with the actual patient ID
+}));
+```
 
----
+## 3. Handling Updates
+The server will send a message of type `diagnosis_update` as soon as the AI finishes its analysis.
 
-**Teknik Notlar:**
-*   Koyu Tema (Dark Mode) varsayılan olsun. Göz yormaz.
-*   Klavye kısayolları ekle (`Cmd+K` ile hasta ara).
-*   Data Grid kütüphanesi kullan (AG Grid veya TanStack Table).
+```javascript
+ws.onmessage = (event) => {
+    const data = json.parse(event.data);
+    
+    if (data.type === "diagnosis_update") {
+        console.log("Real-time Diagnosis Received:", data.diagnosis);
+        // data contains: 
+        // - patient_id
+        // - diagnosis (Markdown string)
+        // - status ("ready" or "error")
+        
+        // UPDATE YOUR UI STATE HERE
+        setDiagnosis(data.diagnosis);
+        setStatus(data.status);
+    }
+};
+```
+
+## Why use this instead of polling?
+1. **Zero Latency**: The diagnosis appears the millisecond the LLM finishes.
+2. **Efficiency**: No need for `setInterval` loops that waste battery and server resources.
+3. **UX**: Allows for a "Ready!" notification or toast to pop up even if the doctor has switched tabs.

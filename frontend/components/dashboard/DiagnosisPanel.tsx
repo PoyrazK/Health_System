@@ -96,6 +96,7 @@ export const DiagnosisPanel: React.FC<DiagnosisPanelProps> = ({ diagnosis, statu
                                     h1: ({ node, ...props }) => <h1 className="text-xl font-black text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2" {...props} />,
                                     h2: ({ node, ...props }) => <h2 className="text-lg font-bold text-blue-400 mt-6 mb-3" {...props} />,
                                     h3: ({ node, ...props }) => <h3 className="text-base font-semibold text-emerald-400 mt-4 mb-2" {...props} />,
+                                    p: ({ node, ...props }) => <p className="mb-4 text-slate-300 leading-relaxed" {...props} />,
                                     strong: ({ node, ...props }) => <strong className="text-white font-bold" {...props} />,
                                     ul: ({ node, ...props }) => <ul className="list-disc pl-4 space-y-2 marker:text-blue-500/50" {...props} />,
                                     li: ({ node, ...props }) => <li className="pl-1" {...props} />,

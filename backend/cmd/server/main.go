@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/contrib/websocket"
 
 	"healthcare-backend/internal/database"
 	"healthcare-backend/internal/handlers"
@@ -27,12 +28,24 @@ func main() {
 	predService := services.NewPredictionService(ML_SERVICE_URL)
 
 	// Handlers
-	patientHandler := handlers.NewPatientHandler(database.DB, ragService, predService)
+	wsHandler := handlers.NewWebSocketHandler()
+	patientHandler := handlers.NewPatientHandler(database.DB, ragService, predService, wsHandler)
 	feedbackHandler := handlers.NewFeedbackHandler(database.DB)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 4 Production Ready (Refactored)")
 	})
+
+	// WebSocket Routes
+	app.Use("/ws", func(c *fiber.Ctx) error {
+		if websocket.IsWebSocketUpgrade(c) {
+			c.Locals("allowed", true)
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	})
+
+	app.Get("/ws/diagnostics", websocket.New(wsHandler.HandleConnection))
 
 	// Get All Patients for the Sidebar Queue
 	app.Get("/api/patients", patientHandler.GetPatients)

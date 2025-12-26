@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Stethoscope,
@@ -60,106 +60,169 @@ interface AssessmentResponse {
   model_precisions: { model_name: string; confidence: number }[];
 }
 
+interface DashboardState {
+  loading: boolean;
+  data: AssessmentResponse | null;
+  patients: any[];
+  patient: Patient | null;
+  latency: number;
+}
+
 export default function ClinicalCockpit() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<AssessmentResponse | null>(null);
-  const [emergency, setEmergency] = useState(false);
-  const [patients, setPatients] = useState<any[]>([]);
+  const [state, setState] = useState<DashboardState>({
+    loading: true,
+    data: null,
+    patients: [],
+    patient: null,
+    latency: 0
+  });
   const [showModal, setShowModal] = useState(false);
-  const [latency, setLatency] = useState(0);
 
-  const [patient, setPatient] = useState<Patient | null>(null);
+  const mountedRef = useRef(true);
+  const loadingRef = useRef(false);
 
+  // Unified updater to batch changes
+  const updateState = useCallback((updates: Partial<DashboardState>) => {
+    if (mountedRef.current) {
+      setState(prev => ({ ...prev, ...updates }));
+    }
+  }, []);
+
+  // Fetch patients list
   const fetchPatients = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:3000/api/patients");
+      if (!mountedRef.current) return [];
       const list = await res.json();
-      setPatients(list);
+      updateState({ patients: list });
       return list;
     } catch (err) {
       console.error("Failed to fetch patients", err);
       return [];
     }
-  }, []);
+  }, [updateState]);
 
-  const runAssessment = useCallback(async (pOverride?: any) => {
-    setLoading(true);
-    const start = performance.now();
-    const target = pOverride || patient;
-    try {
-      const res = await fetch("http://localhost:3000/api/assess", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(target),
-      });
-      const result = await res.json();
-      setData(result);
-      setEmergency(result.emergency);
-      if (result.patient) setPatient(result.patient);
-      await fetchPatients();
-
-      const end = performance.now();
-      setLatency(Math.round(end - start));
-
-      // Start polling for diagnosis if status is pending
-      if (result.diagnosis_status === "pending" && result.patient?.id) {
-        pollForDiagnosis(result.patient.id);
-      }
-    } catch (error) {
-      console.error("Assessment failed", error);
-    } finally {
-      setTimeout(() => setLoading(false), 200);
-      setShowModal(false);
-    }
-  }, [patient, fetchPatients]);
-
-  const pollForDiagnosis = useCallback(async (patientId: number) => {
-    const maxAttempts = 30;
-    let attempts = 0;
-
-    const poll = async () => {
-      if (attempts >= maxAttempts) return;
-      attempts++;
+  // Poll for diagnosis updates
+  const pollDiagnosis = useCallback(async (patientId: number) => {
+    for (let i = 0; i < 30; i++) {
+      if (!mountedRef.current) return;
+      await new Promise(r => setTimeout(r, 1000));
 
       try {
         const res = await fetch(`http://localhost:3000/api/diagnosis/${patientId}`);
         const result = await res.json();
 
         if (result.status === "ready" || result.status === "error") {
-          setData(prev => prev ? { ...prev, diagnosis: result.diagnosis, diagnosis_status: result.status } : prev);
-        } else {
-          setTimeout(poll, 1000);
+          if (mountedRef.current) {
+            setState(prev => {
+              if (prev.data?.patient?.id === patientId) {
+                return {
+                  ...prev,
+                  data: { ...prev.data, diagnosis: result.diagnosis, diagnosis_status: result.status }
+                };
+              }
+              return prev;
+            });
+          }
+          return;
         }
-      } catch {
-        setTimeout(poll, 1000);
-      }
-    };
-
-    setTimeout(poll, 500);
+      } catch { /* continue polling */ }
+    }
   }, []);
 
+  const { loading, data, patients, patient, latency } = state;
+  const emergency = data?.emergency || false;
+
+  // Use refs for stable values in callbacks
+  const patientRef = useRef(patient);
+  useEffect(() => { patientRef.current = patient; }, [patient]);
+
+  // Run assessment (Stable Function)
+  const runAssessment = useCallback(async (targetPatient?: any) => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+
+    const currentPatient = patientRef.current;
+    const isNewPatient = targetPatient && currentPatient?.id !== targetPatient.id;
+    updateState({ loading: isNewPatient });
+
+    const start = performance.now();
+    let target = targetPatient || currentPatient;
+
+    // If no patient override and current patient is null, use defaults
+    if (!target) {
+      // Fetch defaults as fallback
+      try {
+        const defRes = await fetch("http://localhost:3000/api/defaults");
+        target = await defRes.json();
+      } catch {
+        target = {
+          age: 45, gender: 'Male', systolic_bp: 120, diastolic_bp: 80,
+          glucose: 100, bmi: 24.5, cholesterol: 190, heart_rate: 72, steps: 6000,
+          smoking: 'No', alcohol: 'No', medications: 'Lisinopril'
+        };
+      }
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/assess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(target),
+      });
+
+      if (!mountedRef.current) return;
+
+      const result = await res.json();
+      const end = performance.now();
+
+      updateState({
+        data: result,
+        latency: Math.round(end - start),
+        patient: result.patient || currentPatient,
+        loading: false
+      });
+
+      if (result.patient && result.diagnosis_status === "pending") {
+        pollDiagnosis(result.patient.id);
+      }
+
+      fetchPatients();
+    } catch (error) {
+      console.error("Assessment failed", error);
+      updateState({ loading: false });
+    } finally {
+      if (mountedRef.current) {
+        setShowModal(false);
+      }
+      loadingRef.current = false;
+    }
+  }, [updateState, pollDiagnosis, fetchPatients]); // Stabilized: no patient dependency
+
+  // Initial load
   useEffect(() => {
-    let active = true;
+    mountedRef.current = true;
+
     const init = async () => {
-      setLoading(true);
       const list = await fetchPatients();
-      if (!active) return;
+      if (!mountedRef.current) return;
+
       if (list && list.length > 0) {
-        setPatient(list[0]);
-        await runAssessment(list[0]);
+        runAssessment(list[0]);
       } else {
-        await runAssessment();
+        updateState({ loading: false });
       }
     };
-    init();
-    return () => { active = false; };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const selectPatient = (p: any) => {
-    if (patient && p.id === patient.id && data) return;
-    setPatient(p);
+    init();
+    return () => { mountedRef.current = false; };
+  }, [fetchPatients, runAssessment]);
+
+  // Select patient handler
+  const selectPatient = useCallback((p: any) => {
+    if (patientRef.current?.id === p.id) return;
     runAssessment(p);
-  };
+  }, [runAssessment]); // Stabilized
 
   const medInfo = useMemo(() => {
     if (data?.medication_analysis) {
@@ -169,7 +232,7 @@ export default function ClinicalCockpit() {
   }, [data]);
 
   // Loading Screen
-  if (!patient) {
+  if (loading && !patient) {
     return (
       <main className="fixed inset-0 bg-[#050505] flex items-center justify-center">
         <div className="text-center">
@@ -184,6 +247,9 @@ export default function ClinicalCockpit() {
       </main>
     );
   }
+
+  // Final fallback
+  if (!patient) return null;
 
   return (
     <main
@@ -250,7 +316,7 @@ export default function ClinicalCockpit() {
 
         {/* COL 1: Patient Queue */}
         <div className="col-span-2 h-full min-h-0">
-          <PatientSidebar patients={patients} selectedId={patient.id} onSelect={selectPatient} />
+          <PatientSidebar patients={patients} selectedId={patient?.id} onSelect={selectPatient} />
         </div>
 
         {/* COL 2: Biometrics & Feedback */}
@@ -264,10 +330,10 @@ export default function ClinicalCockpit() {
                 <Gauge className="w-3 h-3" /> Telemetry Stream
               </h3>
               <div className="flex gap-1.5">
-                {patient.smoking === 'Yes' && (
+                {patient?.smoking === 'Yes' && (
                   <span className="text-[8px] bg-amber-500/10 text-amber-500 px-2.5 py-1 rounded-md font-black tracking-wider border border-amber-500/10">SMOKER</span>
                 )}
-                {patient.alcohol === 'Yes' && (
+                {patient?.alcohol === 'Yes' && (
                   <span className="text-[8px] bg-purple-500/10 text-purple-500 px-2.5 py-1 rounded-md font-black tracking-wider border border-purple-500/10">ALCOHOL</span>
                 )}
               </div>
@@ -344,7 +410,7 @@ export default function ClinicalCockpit() {
                 </div>
               ))}
 
-              {patient.medications === "" && (
+              {patient?.medications === "" && (
                 <div className="text-center py-6">
                   <p className="text-[9px] text-slate-600 italic uppercase font-bold tracking-widest">No medications listed</p>
                 </div>

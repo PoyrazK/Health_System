@@ -15,13 +15,15 @@ type PatientHandler struct {
 	DB         *gorm.DB
 	RAG        *services.RAGService
 	Prediction *services.PredictionService
+	WS         *WebSocketHandler
 }
 
-func NewPatientHandler(db *gorm.DB, rag *services.RAGService, pred *services.PredictionService) *PatientHandler {
+func NewPatientHandler(db *gorm.DB, rag *services.RAGService, pred *services.PredictionService, ws *WebSocketHandler) *PatientHandler {
 	return &PatientHandler{
 		DB:         db,
 		RAG:        rag,
 		Prediction: pred,
+		WS:         ws,
 	}
 }
 
@@ -98,7 +100,7 @@ func (h *PatientHandler) AssessPatient(c *fiber.Ctx) error {
 		Patient:     patient,
 		RiskScores:  *risks,
 		PastContext: contextStr,
-	})
+	}, h.WS.BroadcastDiagnosis)
 
 	log.Printf("⏱️ FAST RESPONSE (no LLM wait): %v", time.Since(totalStart))
 

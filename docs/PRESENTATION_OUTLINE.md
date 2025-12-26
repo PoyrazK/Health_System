@@ -23,9 +23,9 @@ This outline provides a structure for an 8-slide presentation for the AI Healthc
   2. **Neural Differential:** Gemini-powered clinical synthesis.
   3. **Medication HUD:** Real-time safety scanning.
 
-### Slide 4: Real-Time Intelligence & Telemetry
-- **Dynamic Integration:** Real-time biometric streaming and feedback loops.
-- **Confidence Metrics:** Transparent model precision reporting.
+### Slide 4: Real-Time Intelligence & XAI
+- **SHAP Explainability:** Identify key risk drivers (e.g., Blood Pressure vs. Glucose) for every prediction.
+- **Explainable AI (XAI):** Move from "Black Box" to clinician-assisted reasoning.
 - **Emergency Triage:** Automated "Critical High" flags (BP > 180, Heart Risk > 85%).
 
 ### Slide 5: Innovation: RAG-Lite Semantic Learning
@@ -33,18 +33,18 @@ This outline provides a structure for an 8-slide presentation for the AI Healthc
 - **The Value:** Injects past successful human decisions (Doctor Notes) into current AI assessments.
 - **Impact:** System "remembers" and learns from the presiding clinician.
 
-### Slide 6: System Architecture: Professional & Scalable
-- **Backend:** High-performance Go (Fiber) with Clean Architecture.
-- **Engine:** Python (FastAPI/XGBoost) decoupled for specialized scaling.
-- **Latency:** ~120ms total latency (Zero-Block Async Pattern for LLM).
+### Slide 6: System Architecture: Live Sync
+- **Backend:** Go (Fiber) Clean Architecture with **WebSocket Integration**.
+- **Live Sync:** Instant delivery of deep-analysis results (LLM) without polling.
+- **Latency:** ~120ms local processing; real-time sync for AI synthesis (~3-5s).
 
 ### Slide 7: Impact & Validation
 - **Clinical First:** Designed around clinician mental models.
-- **Performance:** Significant reduction in data aggregation time.
+- **Extended Profile:** Incorporates Heart/Stroke/Diabetes medical history flags.
 - **Scalability:** Ready for PostgreSQL/Redis migration for hospital-wide deployment.
 
 ### Slide 8: The Future & Conclusion
-- **Roadmap:** SHAP explainability, Multi-patient view, FHIR integration.
+- **Roadmap:** Multi-patient ward view, FHIR integration, Edge AI deployment.
 - **Closing:** Clinical Copilot isn't just an app; it's a force-multiplier for healthcare providers.
 
 ---
