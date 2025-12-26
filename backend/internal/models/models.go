@@ -21,6 +21,10 @@ type PatientData struct {
 	Smoking     string    `json:"smoking"`
 	Alcohol     string    `json:"alcohol"`
 	Medications string    `json:"medications"` // Comma-separated
+	HistoryHeartDisease string `json:"history_heart_disease"`
+	HistoryStroke       string `json:"history_stroke"`
+	HistoryDiabetes     string `json:"history_diabetes"`
+	HistoryHighChol     string `json:"history_high_chol"`
 }
 
 type Feedback struct {

@@ -26,8 +26,13 @@ GET /
 
 **Response:**
 ```
-🏥 Healthcare Clinical Copilot | Phase 4 Production Ready
+🏥 Healthcare Clinical Copilot | Phase 4 Production Ready (Refactored)
 ```
+
+---
+
+> [!NOTE]
+> The Go Backend has been refactored to a **Clean Architecture** (cmd/internal) for better scalability. All endpoints remain consistent with v1.8 specifications.
 
 ---
 

@@ -34,20 +34,24 @@ func (h *PatientHandler) GetPatients(c *fiber.Ctx) error {
 
 // Get Default Form Values for New Patient Intake
 func (h *PatientHandler) GetDefaults(c *fiber.Ctx) error {
-	defaults := fiber.Map{
-		"age":          45,
-		"gender":       "Male",
-		"systolic_bp":  120,
-		"diastolic_bp": 80,
-		"glucose":      100,
-		"bmi":          24.5,
-		"cholesterol":  190,
-		"heart_rate":   72,
-		"steps":        6000,
-		"smoking":      "No",
-		"alcohol":      "No",
-		"medications":  "Lisinopril, Atorvastatin",
-	}
+		defaults := fiber.Map{
+			"age":          45,
+			"gender":       "Male",
+			"systolic_bp":  120,
+			"diastolic_bp": 80,
+			"glucose":      100,
+			"bmi":          24.5,
+			"cholesterol":  190,
+			"heart_rate":   72,
+			"steps":        6000,
+			"smoking":      "No",
+			"alcohol":      "No",
+			"medications":  "Lisinopril, Atorvastatin",
+			"history_heart_disease": "No",
+			"history_stroke":       "No",
+			"history_diabetes":     "No",
+			"history_high_chol":     "No",
+		}
 	return c.JSON(defaults)
 }
 

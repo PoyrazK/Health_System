@@ -3,8 +3,14 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 import numpy as np
+import xgboost as xgb
 import json
 from pathlib import Path
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
+
+load_dotenv() # Load from .env
 
 app = FastAPI(title="Healthcare Risk Engine")
 
@@ -42,6 +48,14 @@ class PatientData(BaseModel):
     smoking: str = "No" # Yes/No/Former
     alcohol: str = "No" # Yes/No
     medications: str = "" # Comma-separated list of medications
+    history_heart_disease: str = "No"
+    history_stroke: str = "No"
+    history_diabetes: str = "No"
+    history_high_chol: str = "No"
+    history_heart_disease: str = "No"
+    history_stroke: str = "No"
+    history_diabetes: str = "No"
+    history_high_chol: str = "No"
 
 def transform_features(data: PatientData, target_model: str):
     """
@@ -56,34 +70,33 @@ def transform_features(data: PatientData, target_model: str):
     is_smoker = 1 if data.smoking.lower() == 'yes' else 0
     
     if target_model == 'diabetes':
-        # Logic: BRFSS 2015 Features
-        # Age Category: 1 (18-24) to 13 (80+)
-        # Formula: (Age - 18) // 5 + 1
-        age_cat = max(1, min(13, int((data.age - 18) // 5) + 1))
+        # Logic: BRFSS 2015 Features + Synthetic Glucose
+        # Age Category: 1 (18-24), 2 (25-29), ...
+        # Correct BRFSS mapping: 1 is 18-24 (7 yrs), then 5 yr brackets
+        if data.age < 25:
+            age_cat = 1
+        else:
+            age_cat = min(13, int((data.age - 25) // 5) + 2)
         
         row = {
             'target_diabetes': 0, # Dummy
             'history_bp': 1 if data.systolic_bp >= 130 else 0,
-            'history_chol': 1 if data.cholesterol >= 200 else 0,
-            'history_heart_disease': 0, # Assume no if not asked
-            'history_stroke': 0,
-            'general_health': 3, # Average (1-5)
+            'history_chol': 1 if data.history_high_chol.lower() == 'yes' or data.cholesterol >= 200 else 0,
+            'history_heart_disease': 1 if data.history_heart_disease.lower() == 'yes' else 0,
+            'history_stroke': 1 if data.history_stroke.lower() == 'yes' else 0,
+            'general_health': 3,
             'physical_health_days': 0,
-            'age': age_cat * 5 + 17, # REVERSE TRANSFORMED IN FEATURE PIPELINE?
-            # Wait, feature pipeline loaded 'age' as (Age * 5 + 17). 
-            # The model expects trained feature 'age'. 
-            # If train df had 'age' (numeric), we pass 'age' (numeric).
-            # In feature_pipeline selected: 'age' = df['Age'] * 5 + 17.
-            # So models inputs are real ages approximately.
             'age': float(data.age),
             'bmi': data.bmi,
             'sex': is_male,
-            # Fill others with defaults (0 for pathologies)
-            'CholCheck': 1, 'Smoker': is_smoker, 'Stroke': 0, 'HeartDiseaseorAttack': 0,
+            'glucose': data.glucose,
+            'CholCheck': 1, 'Smoker': is_smoker, 'Stroke': 1 if data.history_stroke.lower() == 'yes' else 0,
+            'HeartDiseaseorAttack': 1 if data.history_heart_disease.lower() == 'yes' else 0,
             'PhysActivity': 1 if data.steps > 3000 else 0,
             'Fruits': 1, 'Veggies': 1, 'HvyAlcoholConsump': 0,
             'AnyHealthcare': 1, 'NoDocbcCost': 0, 'GenHlth': 2,
-            'MentHlth': 0, 'PhysHlth': 0, 'DiffWalk': 0, 'Education': 4, 'Income': 5
+            'MentHlth': 0, 'PhysHlth': 0, 'DiffWalk': 0, 'Education': 4, 'Income': 5,
+            'Age': age_cat
         }
     
     elif target_model == 'heart':
@@ -118,11 +131,11 @@ def transform_features(data: PatientData, target_model: str):
             # Actually safely: if we didn't save encoder, we guessed.
             # Best practice: 0/1 usually Male is 1.
             'hypertension': 1 if data.systolic_bp > 140 else 0,
-            'heart_disease': 0,
+            'heart_disease': 1 if data.history_heart_disease.lower() == 'yes' else 0,
             'ever_married': 1, 
             'work': 2, # Private
             'Residence_type': 1, # Urban
-            'smoking': 1 if is_smoker else 0 # le mapping might differ!
+            'smoking': 3 if is_smoker else 2 # 3: smokes, 2: never smoked
         }
         
     elif target_model == 'kidney':
@@ -149,27 +162,52 @@ def transform_features(data: PatientData, target_model: str):
         
     return df_aligned
 
+def get_shap_values(model, X_df):
+    """Calculate SHAP contributions for XGBoost models"""
+    try:
+        if hasattr(model, 'get_booster'):
+            contribs = model.get_booster().predict(xgb.DMatrix(X_df), pred_contribs=True)
+            # contribs[0][:-1] excludes bias term (last col)
+            feature_contribs = contribs[0][:-1]
+            
+            # Create dict of Feature -> Contribution
+            contrib_dict = {}
+            feature_names = X_df.columns
+            for i, val in enumerate(feature_contribs):
+                if abs(val) > 0.01: # Lower threshold to capture more detail
+                    contrib_dict[feature_names[i]] = float(round(val, 3))
+            
+            # Sort by impact (absolute value)
+            return dict(sorted(contrib_dict.items(), key=lambda x: abs(x[1]), reverse=True)[:5])
+    except Exception as e:
+        print(f"Explain Error: {e}")
+    return {}
+
 @app.post("/predict")
 def predict_risk(patient: PatientData):
     results = {}
-    
+    explanations = {}
+
     # 1. Heart Risk
     if 'heart' in models:
         X = transform_features(patient, 'heart')
         prob = models['heart'].predict_proba(X)[0][1]
         results['heart_risk_score'] = float(round(prob * 100, 2))
+        explanations['heart'] = get_shap_values(models['heart'], X)
 
     # 2. Diabetes Risk
     if 'diabetes' in models:
         X = transform_features(patient, 'diabetes')
         prob = models['diabetes'].predict_proba(X)[0][1]
         results['diabetes_risk_score'] = float(round(prob * 100, 2))
+        explanations['diabetes'] = get_shap_values(models['diabetes'], X)
         
     # 3. Stroke Risk
     if 'stroke' in models:
         X = transform_features(patient, 'stroke')
         prob = models['stroke'].predict_proba(X)[0][1]
         results['stroke_risk_score'] = float(round(prob * 100, 2))
+        explanations['stroke'] = get_shap_values(models['stroke'], X)
         
     # 4. Kidney Risk
     if 'kidney' in models:
@@ -200,6 +238,7 @@ def predict_risk(patient: PatientData):
     if 'stroke_risk_score' in results:
         results['model_precisions']['GBM Stroke'] = float(round(82 + (abs(results['stroke_risk_score'] - 50) * 0.35), 1))
 
+    results['explanations'] = explanations
     return results
 
 # --- Med Interaction Knowledge Base (Hackathon Demo Version) ---
@@ -222,18 +261,17 @@ def check_interaction(meds: list[str]):
 def health_check():
     return {"status": "ok", "models_loaded": list(models.keys())}
 
-# --- LLM Integration ---
-import google.generativeai as genai
-import os
+# --- OpenAI Integration ---
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+client = None
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-    llm_model = genai.GenerativeModel('gemini-flash-latest')
+if OPENAI_API_KEY:
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=OPENAI_API_KEY
+    )
 else:
-    llm_model = None
-    print("⚠️ GEMINI_API_KEY not found. LLM endpoint will return mock responses.")
+    print("⚠️ OPENAI_API_KEY not found. LLM endpoint will return mock responses.")
 
 class DiagnosisRequest(BaseModel):
     patient: PatientData
@@ -275,15 +313,55 @@ async def diagnose_patient(request: DiagnosisRequest):
     Markdown. Use headings. Keep it under 200 words.
     """
     
-    if not llm_model:
+    if not client:
         # Mock Response for Dev/Offline
         return {
-            "diagnosis": "⚠️ **Mock Diagnosis (No API Key)**\n\nBased on the high blood pressure (145/90), the patient shows signs of **Stage 2 Hypertension**. This is a significant driver for the elevated Heart Risk (77%).\n\n**Recommendations:**\n1. Immediate lifestyle intervention (Sodium reduction).\n2. Schedule detailed Cardiology panel.\n3. Monitor creatinine for kidney function.",
+            "diagnosis": "⚠️ **Mock Diagnosis (No OpenAI API Key)**\n\nBased on the high blood pressure (145/90), the patient shows signs of **Stage 2 Hypertension**. This is a significant driver for the elevated Heart Risk (77%).\n\n**Recommendations:**\n1. Immediate lifestyle intervention (Sodium reduction).\n2. Schedule detailed Cardiology panel.\n3. Monitor creatinine for kidney function.",
             "status": "mock"
         }
         
     try:
-        response = await llm_model.generate_content_async(prompt)
-        return {"diagnosis": response.text, "status": "success"}
+        # Construct Context-Aware Prompt
+        prompt = f"""
+        You are an expert Clinical Decision Support System (Cardiologist & Endocrinologist).
+        
+        PAST CLINICAL KNOWLEDGE (RAG):
+        {request.past_context}
+        
+        PATIENT PROFILE:
+        - Age: {p.age}, Gender: {p.gender}, BMI: {p.bmi}
+        - Vitals: BP {p.systolic_bp}/{p.diastolic_bp}, Glucose {p.glucose}, Chol {p.cholesterol}
+        - Habits: Smoking {p.smoking}, Alcohol {p.alcohol}
+        - Medical History: 
+            - Heart Disease: {p.history_heart_disease}
+            - Stroke: {p.history_stroke}
+            - Diabetes: {p.history_diabetes}
+            - High Cholesterol: {p.history_high_chol}
+        
+        AI RISK ASSESSMENT (Validated ML Models):
+        - Heart Attack 10y Risk: {r.get('heart_risk_score', 'N/A')}%
+        - Diabetes Probability: {r.get('diabetes_risk_score', 'N/A')}%
+        - Stroke Risk Score: {r.get('stroke_risk_score', 'N/A')}%
+        - Kidney Disease Risk: {r.get('kidney_risk_score', 'N/A')}%
+        
+        INSTRUCTIONS:
+        1. Analyze features and correlations, especially the new Medical History flags.
+        2. Review 'PAST CLINICAL KNOWLEDGE' to see if similar cases were corrected by doctors before.
+        3. Provide concise differential diagnosis and 3 next steps.
+        
+        OUTPUT FORMAT:
+        Markdown. Use headings. Keep it under 200 words.
+        """
+
+        response = client.chat.completions.create(
+            model="openai/gpt-4o", 
+            messages=[
+                {"role": "system", "content": "You are a professional medical assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=600,
+            temperature=0.3
+        )
+        return {"diagnosis": response.choices[0].message.content, "status": "success"}
     except Exception as e:
         return {"diagnosis": f"Error generating diagnosis: {str(e)}", "status": "error"}

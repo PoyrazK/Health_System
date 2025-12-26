@@ -40,7 +40,8 @@
             "Age",
             "Education",
             "Income",
-            "age"
+            "age",
+            "glucose"
         ],
         "type": "xgboost"
     },

@@ -39,14 +39,35 @@ def train_diabetes():
     X = df.drop('target_diabetes', axis=1)
     y = df['target_diabetes']
     
+    # Verify glucose is in features
+    if 'glucose' in X.columns:
+        print(f"   ✅ Glucose feature present (corr with target: {df['glucose'].corr(y):.3f})")
+    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    model = xgb.XGBClassifier(eval_metric='logloss')
+    # Handle class imbalance (14% diabetics)
+    scale_pos_weight = (len(y) - y.sum()) / y.sum()
+    
+    model = xgb.XGBClassifier(
+        eval_metric='logloss',
+        scale_pos_weight=scale_pos_weight,
+        n_estimators=100,
+        max_depth=6,
+        learning_rate=0.1
+    )
     model.fit(X_train, y_train)
     
     preds = model.predict(X_test)
+    probs = model.predict_proba(X_test)[:, 1]
+    
     acc = accuracy_score(y_test, preds)
-    print(f"   Diabetes Acc: {acc:.4f}")
+    auc = roc_auc_score(y_test, probs)
+    print(f"   Diabetes Acc: {acc:.4f}, AUC: {auc:.4f}")
+    
+    # Feature importance check
+    importance = dict(zip(X.columns, model.feature_importances_))
+    top_features = sorted(importance.items(), key=lambda x: x[1], reverse=True)[:5]
+    print(f"   Top features: {[f[0] for f in top_features]}")
     
     joblib.dump(model, MODEL_DIR / "diabetes_model.pkl")
     metadata['diabetes'] = {'features': list(X.columns), 'type': 'xgboost'}

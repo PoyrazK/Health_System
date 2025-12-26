@@ -11,10 +11,15 @@ Clinical Copilot is a state-of-the-art medical decision support system designed 
   - **Stroke Assessment:** Predictive analysis of vascular health.
   - **Kidney Health AI:** Specialized indicators for chronic kidney disease risk.
 - **Neural Differential Assessment:** LLM-powered (Gemini) synthesis that explains ML findings in clinical language, identifies paradoxes, and suggests next steps.
-- **RAG-Lite Integration:** Injects past doctor feedback and clinical decisions back into the LLM prompt for context-aware reasoning.
-- **Medication Safety HUD:** Real-time drug-drug and drug-condition interaction scanning.
+- **RAG-Lite Semantic Search:** Injects past doctor feedback and similar historical cases into the LLM prompt for context-aware reasoning.
+- **Medication Safety HUD:** Real-time drug-drug and drug-condition interaction scanning with dynamic risk categorization.
+- **Clinical Confidence Score:** Statistical confidence metrics for every prediction.
+- **Live System Telemetry:** Real-time monitoring of network latency and microservice performance.
 - **Biometric Telemetry:** Live streaming of BP, Glucose, BMI, Cholesterol, Heart Rate, and Steps.
 - **New Triage System:** Seamless entry of new patient data with instant analysis.
+
+> [!TIP]
+> **New in v2.0**: See [System Upgrades](./docs/UPGRADES.md) for a deep dive into the latest architectural and feature enhancements.
 
 ## 🏗️ Architecture
 
@@ -65,7 +70,7 @@ python main.py
 ### 4. Run Backend (Go)
 ```bash
 cd backend
-go run main.go
+go run cmd/server/main.go
 ```
 
 ### 5. Run Frontend (Web)

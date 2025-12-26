@@ -62,6 +62,31 @@ class FeaturePipeline:
         # TRANSFORMATION: BMI is already numeric
         df = df.rename(columns={'BMI': 'bmi', 'Sex': 'sex'})
         
+        # SYNTHETIC GLUCOSE FEATURE
+        # Generate realistic glucose based on clinical correlations:
+        # - Base: 90 mg/dL (healthy fasting)
+        # - Diabetics have ~40-80 mg/dL higher average
+        # - BMI > 30 adds ~10-20 mg/dL
+        # - Older age adds ~5-15 mg/dL
+        # - HighBP correlation adds ~5-10 mg/dL
+        np.random.seed(42)  # Reproducibility
+        
+        base_glucose = 90
+        diabetes_effect = df['target_diabetes'] * np.random.uniform(40, 80, len(df))
+        bmi_effect = np.clip((df['bmi'] - 25) * 1.2, 0, 30)
+        age_effect = (df['Age'] - 5) * 1.5  # Age category effect
+        bp_effect = df['history_bp'] * np.random.uniform(5, 15, len(df))
+        noise = np.random.normal(0, 12, len(df))
+        
+        df['glucose'] = np.clip(
+            base_glucose + diabetes_effect + bmi_effect + age_effect + bp_effect + noise,
+            70, 300  # Clinical range
+        ).astype(int)
+        
+        print(f"   📊 Synthetic glucose generated: Mean={df['glucose'].mean():.1f}, "
+              f"Diabetic avg={df[df['target_diabetes']==1]['glucose'].mean():.1f}, "
+              f"Non-diabetic avg={df[df['target_diabetes']==0]['glucose'].mean():.1f}")
+        
         return df
 
     def load_stroke(self):
@@ -120,6 +145,8 @@ class FeaturePipeline:
                 df[col] = df[col].replace({
                     'yes': 1, 'no': 0, 
                     'present': 1, 'notpresent': 0,
+                    'normal': 0, 'abnormal': 1,
+                    'good': 0, 'poor': 1,
                     'nan': np.nan, 'None': np.nan
                 })
                 # Force numeric conversion where possible

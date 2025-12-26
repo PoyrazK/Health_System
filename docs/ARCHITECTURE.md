@@ -17,8 +17,8 @@ graph TB
     subgraph Backend["⚙️ Go Backend (Fiber)"]
         API[REST API Router]
         CACHE[Diagnosis Cache]
-        RAG[RAG-Lite Engine]
-        MED[Medication Checker]
+        RAG[RAG-Lite Semantic Search]
+        MED[Medication Safety Engine]
     end
     
     subgraph ML["🧠 ML API (FastAPI)"]
@@ -71,7 +71,8 @@ graph TB
 
 ### 2. Backend Orchestrator (Go Fiber)
 
-**Location:** `/backend/main.go`
+**Location:** `/backend/cmd/server/main.go`
+**Logic:** `/backend/internal/`
 
 The Go backend serves as the system orchestrator, handling:
 
@@ -92,15 +93,15 @@ graph LR
    - Auto-migration on startup
    - Demo data seeding
 
-2. **RAG-Lite Implementation**
-   - Fetches last 3 approved doctor feedbacks
-   - Injects context into LLM prompts
-   - Enables continuous learning from clinicians
+2. **RAG-Lite Semantic Search**
+   - Implements **Normalized Euclidean Distance** scoring between the current patient and historical approved cases.
+   - Features used for similarity: Age, Systolic BP, Glucose, and BMI.
+   - Injects top 3 most relevant doctor feedbacks into the LLM prompt for context-aware reasoning.
 
 3. **Async Diagnosis Pattern**
-   - Non-blocking LLM calls
-   - In-memory cache for results
-   - Frontend polling support
+   - Non-blocking LLM calls using Goroutines.
+   - High-performance in-memory `DiagnosisCache` for state management.
+   - Frontend polling support via `:id` endpoint.
 
 4. **Medication Safety**
    - Comma-separated medication parsing
@@ -324,10 +325,10 @@ npm run dev -- -p 3001
 | Operation | Typical Latency |
 |-----------|-----------------|
 | DB Write (Patient) | ~5ms |
-| RAG Query (3 feedbacks) | ~10ms |
+| RAG Semantic Search | ~15-25ms |
 | ML Predict (4 models) | ~50-100ms |
 | LLM Diagnosis | ~2-5 seconds |
-| **Total (without LLM)** | **~100ms** |
+| **Total (without LLM)** | **~120ms** |
 
 ### Async Optimization
 
