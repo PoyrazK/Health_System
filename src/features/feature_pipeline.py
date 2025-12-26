@@ -33,6 +33,12 @@ class FeaturePipeline:
             'target': 'target_heart'
         }
         df = df.rename(columns=rename_dict)
+        
+        # FIX: In this UCI Heart dataset version, labels are INVERTED!
+        # target=1 means healthy, target=0 means disease
+        # We invert to: 1 = has disease, 0 = healthy
+        df['target_heart'] = 1 - df['target_heart']
+        
         return df
 
     def load_diabetes(self):
