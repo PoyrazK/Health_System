@@ -1,0 +1,132 @@
+package services
+
+import (
+	"bytes"
+	"encoding/json"
+	"log"
+	"net/http"
+	"strings"
+	"sync"
+	"time"
+
+	"healthcare-backend/internal/models"
+)
+
+// -- Diagnosis Cache --
+
+type DiagnosisCache struct {
+	mu      sync.RWMutex
+	results map[uint]string // patientID -> diagnosis
+	status  map[uint]string // patientID -> status (pending/ready/error)
+}
+
+func NewDiagnosisCache() *DiagnosisCache {
+	return &DiagnosisCache{
+		results: make(map[uint]string),
+		status:  make(map[uint]string),
+	}
+}
+
+func (c *DiagnosisCache) Set(id uint, diagnosis string, status string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.results[id] = diagnosis
+	c.status[id] = status
+}
+
+func (c *DiagnosisCache) Get(id uint) (string, string) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.results[id], c.status[id]
+}
+
+// -- Service --
+
+type PredictionService struct {
+	MLServiceURL string
+	Cache        *DiagnosisCache
+}
+
+func NewPredictionService(mlURL string) *PredictionService {
+	return &PredictionService{
+		MLServiceURL: mlURL,
+		Cache:        NewDiagnosisCache(),
+	}
+}
+
+func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.PredictResponse, error) {
+	mlStart := time.Now()
+	// Use strict JSON marshaling
+	predictPayload, err := json.Marshal(patient)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := http.Post(s.MLServiceURL+"/predict", "application/json", bytes.NewBuffer(predictPayload))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var risks models.PredictResponse
+	if err := json.NewDecoder(resp.Body).Decode(&risks); err != nil {
+		return nil, err
+	}
+	log.Printf("⏱️ ML Predict: %v", time.Since(mlStart))
+	return &risks, nil
+}
+
+func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest) {
+	s.Cache.Set(patientID, "", "pending")
+	
+	go func() {
+		llmStart := time.Now()
+		diagPayload, _ := json.Marshal(req)
+		
+		diagRespRaw, err := http.Post(s.MLServiceURL+"/diagnose", "application/json", bytes.NewBuffer(diagPayload))
+		if err != nil {
+			s.Cache.Set(patientID, "Diagnosis unavailable - LLM service error", "error")
+			log.Printf("⏱️ LLM Diagnose ASYNC ERROR: %v", err)
+			return
+		}
+		defer diagRespRaw.Body.Close()
+		
+		var diagRes models.DiagnosisResponse
+		json.NewDecoder(diagRespRaw.Body).Decode(&diagRes)
+		s.Cache.Set(patientID, diagRes.Diagnosis, "ready")
+		log.Printf("⏱️ LLM Diagnose ASYNC COMPLETE: %v", time.Since(llmStart))
+	}()
+}
+
+func (s *PredictionService) CheckMedications(medStr string) models.InteractionResult {
+	if medStr == "" {
+		return models.InteractionResult{Risky: []string{}, Safe: []string{}}
+	}
+	
+	meds := strings.Split(medStr, ",")
+	for i, m := range meds {
+		meds[i] = strings.TrimSpace(m)
+	}
+
+	conflicts := []string{"Metformin", "Contrast", "Alcohol", "NSAIDs"}
+	risky := []string{}
+	safe := []string{}
+
+	for _, m := range meds {
+		if m == "" { continue }
+		isRisky := false
+		for _, c := range conflicts {
+			if strings.Contains(strings.ToLower(m), strings.ToLower(c)) {
+				isRisky = true
+				break
+			}
+		}
+		if isRisky {
+			risky = append(risky, m)
+		} else {
+			safe = append(safe, m)
+		}
+	}
+	
+	return models.InteractionResult{Risky: risky, Safe: safe}
+}
