@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # 1. Machine Learning Microservice
+  ml-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ml
+    container_name: healthcare-ml-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./models:/app/models
+    networks:
+      - healthcare-net
+
+  # 2. Go Backend
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: healthcare-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ml-api
+    networks:
+      - healthcare-net
+    volumes:
+      - ./backend/clinical.db:/app/clinical.db
+
+  # 3. Next.js Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: healthcare-frontend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+    networks:
+      - healthcare-net
+
+networks:
+  healthcare-net:
+    driver: bridge
