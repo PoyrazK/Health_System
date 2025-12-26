@@ -1,0 +1,128 @@
+﻿2. Kronik Hastalar İçin Yapay Zekâ Destekli “Günlük Durum Skoru”
+(Sağlık + AI)
+💡 Problem
+Kronik hastalar:
+* “Bugün nasılım?” sorusuna objektif cevap veremiyor
+* Doktora eksik bilgiyle gidiyor
+🚀 Çözüm
+Kullanıcı:
+* Günlük semptom / ruh hali / ilaç / aktivite girer
+AI:
+* Health Stability Score
+* Risk trendi
+* “Son 3 günde kötüleşme var”
+🤖 AI
+   * Time-series analysis
+   * Trend detection
+   * Basit risk model
+🧠 Gücü
+Doktora giden daha bilinçli hasta = gerçek değer
+Jüriyi Şaşırtan & Sosyal Etkisi Yüksek
+🧠 3. Sağlıkta “Yanlış Bilgi” Tespit Eden AI
+(Sağlık + Dijitalleşme + Yapay Zekâ)
+💡 Problem
+WhatsApp, Instagram, TikTok:
+   * Sahte tedavi
+   * Yanlış ilaç önerileri
+   * Komplo teorileri
+🚀 Çözüm
+Kullanıcı:
+   * Bir sağlık içeriğini yapıştırır
+AI:
+   * Güven skoru
+   * Yanlış / eksik / riskli iddiaları işaretler
+   * Bilimsel kaynakla karşılaştırır
+🤖 AI
+      * LLM fact-checking
+      * Claim extraction
+      * Trust score
+🏆 Jüri etkisi
+“Bu proje insanları yanlış tedaviden kurtarır.”
+4. İlaç Unutma Risk Tahmincisi
+(Sağlık + AI + Akıllı Sistemler)
+💡 Fikir
+AI şunu tahmin eder:
+      * “Bugün ilacı unutma ihtimalin %65”
+      * Kişiye özel hatırlatma
+🤖 AI
+      * Habit modeling
+      * Basit ML / kural sistemi
+________________
+
+
+🏆 Hackathon’da Altın Cümle
+Sunumda şunu söyleyin:
+“Bu sistem teşhis koymaz, farkındalık yaratır ve sağlık sisteminin yükünü azaltır.”
+Bu cümle jüriyi rahatlatır.
+Kan Tahlili Sonuçlarını İnsan Diline Çeviren AI
+(Sağlık + Dijitalleşme + AI)
+💡 Problem
+Hastalar tahlil alıyor ama:
+      * Ne anlama geldiğini bilmiyor
+      * Google’da yanlış panik oluyor
+🚀 Çözüm
+AI:
+      * Referans aralıklarını yorumlar
+      * “Normal / Takip / Doktora sor”
+      * Basit açıklama
+⚠️ Teşhis yok, sadece yorum.
+Hasta–Doktor Görüşmesi Öncesi AI Hazırlık Asistanı
+(Sağlık + Dijitalleşme + AI)
+💡 Problem
+Hasta doktora gidiyor ama:
+      * Ne soracağını unutuyor
+      * Önemli detayı söylemiyor
+🚀 Çözüm
+AI:
+      * Şikâyetleri derler
+      * Kısa, net özet hazırlar
+      * Doktora gösterilecek çıktı
+
+
+
+
+
+
+
+
+Hackathon Ideas
+
+      1. 14. Hafıza Kaybı Yaşayanlar İçin Sesli Asistan (ATTI)
+Güney Koreli bir ekip tarafından geliştirilen ATTI, hafif demans hastalarının günlük rutinlerini yönetmelerine ve önemli olayları hatırlamalarına yardımcı olan bir mobil uygulamadır. Flutter ve Firebase kullanılarak inşa edilen sistem, yapay zekayı bir "dijital refakatçi" olarak konumlandırmaktadır.
+
+
+36. Acil Durum Triyaj Otomasyonu
+Lablab.ai üzerinde geliştirilen bu platform, akıllı telefonları birer multimodal tıbbi sensöre dönüştürerek acil servislerdeki triyaj (hastaların önceliklendirilmesi) sürecini otomatize etmektedir.1  Proje, özellikle büyük ölçekli afetlerde sınırlı tıbbi personel ile daha fazla hayatın kurtarılmasını hedeflemektedir.
+30. Şeffaf Sağlık Tahminleri İçin Blokzinciri (HealthGuard AI)
+HealthGuard AI, yapay zeka tarafından yapılan sağlık tahminlerinin şeffaflığını ve güvenilirliğini artırmak için her bir tahmini blokzincirine (Hedera Consensus Service) işlemektedir. Bu sayede, tıbbi verilerin manipülasyonu engellenmekte ve güvenilir bir denetim izi oluşturulmaktadır.
+
+
+
+
+calisma mekanizmalari:
+İstediğiniz projelerle ilgili teknik detaylar, kullanılan teknolojiler ve çözüm mekanizmaları aşağıda detaylandırılmıştır:
+14. Hafıza Kaybı Yaşayanlar İçin Sesli Asistan (ATTI)
+Güney Kore'deki Pukyong Ulusal Üniversitesi öğrencileri tarafından geliştirilen bu proje, Google Solution Challenge 2024 kapsamında dünya birincilerinden biri olmuştur.
+      * Temel Amacı: Hafif demans hastalarının iki temel sorununa odaklanır: Önemli yaşam olaylarını hatırlayamama ve günlük rutinleri yönetememe.
+      * Teknik Altyapı: Uygulama hem Android hem de iOS platformlarında geniş erişim sağlamak için Flutter ile geliştirilmiştir. Üye yönetimi ve özellik geliştirme aşamalarında Firebase kullanılırken, sistemin ana zekası Gemini API ve Google Cloud özellikleri üzerine inşa edilmiştir.
+      * Çalışma Mekanizması:
+      * Dijital Refakatçi: Gemini API destekli "ATTI" sohbet robotu, hastalarla iletişim kurarak psikolojik denge sağlar ve yaşam tarzı kalıplarını destekler.
+      * Hafıza ve Rutin Yönetimi: Kullanıcılar özel günlerine ait "anı fotoğraflarını" sisteme kaydedebilir. Uygulama, rutin zamanlarda alarm ekranını otomatik açarak hastanın unutkanlık nedeniyle aksatabileceği görevleri hatırlatır.
+      * Erişilebilirlik: Sistem, akıllı telefon kullanımında yetkin olmayan yaşlı bireylerin bile rahatça etkileşime girebileceği şekilde tasarlanmıştır.
+      * Güvenlik: Hassas veriler AES 256 algoritması ile şifrelenmekte ve Google Cloud DLP (Veri Kaybı Önleme) ile korunmaktadır.
+36. Acil Durum Triyaj Otomasyonu (Prioritizing Care)
+Lablab.ai tarafından düzenlenen "AI Genesis" hackathonunda "En İyi Opus İş Akışı" ödülünü kazanan bu proje, bir asistan hekim ve solo yazılımcı olan Fuyuto Miyake tarafından geliştirilmiştir.
+      * Temel Amacı: Büyük ölçekli afetlerde sınırlı tıbbi personel varken hastaları aciliyet durumuna göre hızlı, güvenli ve denetlenebilir şekilde sınıflandırmaktır.
+      * Teknik Altyapı: Akıllı telefonu multimodal bir tıbbi sensöre dönüştüren bu PWA (Progresif Web Uygulaması), MediaPipe Tasks ve WebAssembly/FFT üzerine kurulu hafif bir rPPG hattı kullanır. Merkezi karar motoru olarak AppliedAI'ın OPUS platformunu kullanır.
+      * Çalışma Mekanizması:
+      * 10 Saniyelik Video Analizi: Cihaz içi analizle solunum hızı, kalp hızı, duruş, solunum eforu, solukluk, terleme, göz açıklığı ve ağrı göstergeleri gibi verileri çıkarır.
+      * Karar Süreci (OPUS Akışı): Toplanan veriler "Anlama" (Understand) aşamasında hayati tehlike işaretleri ve yüksek riskli kalıplar için taranır. "Karar" (Decide) aşamasında yapay zeka kuralları hastaya bir triyaj seviyesi (Kırmızı/Sarı/Yeşil) atar.
+      * İnsan Denetimi (HITL): Sistem, yalnızca "Kırmızı" (acil) ve yüksek riskli vakaları bir uzmanın onayına sunarak güvenlik kapısı oluşturur. Her işlem, model sürümlerini ve uzman kararlarını içeren tam bir denetim izi üretir.
+30. Şeffaf Sağlık Tahminleri İçin Blokzinciri (HealthGuard AI)
+ACOER ekibi tarafından geliştirilen bu proje, 2024 #HelloFuture Hackathon kapsamında ödül almıştır.
+      * Temel Amacı: Yapay zeka tarafından üretilen sağlık tahminlerinin şeffaflığını ve güvenilirliğini artırmak, tıbbi verilerin manipüle edilmesini önlemektir.
+      * Teknik Altyapı: Yapay zeka algoritmaları, Hedera Consensus Service (HCS) ve Hedera Akıllı Sözleşme Servisi ile entegre edilmiştir.
+      * Çalışma Mekanizması:
+      * Değiştirilemez Denetim İzi: Yapay zeka bir sağlık tahmini ürettiğinde, bu tahminin tüm parametreleri ve sonuçları anında Hedera ağında mühürlenir. Bu, her tahmin için silinemez ve değiştirilemez bir "emanet zinciri" (chain of custody) oluşturur.
+      * Kriptografik Veri Ağı (Cryptographic Data Mesh): ACOER'in bu teknolojisi, verilerin kaynağını (provenance) ve bütünlüğünü kriptografik olarak kanıtlar. HCS, hassas verilerin kendisini depolamadan, olaylar için merkeziyetsiz bir "noter" gibi doğrulanabilir zaman damgaları sağlar.
+      * Güven ve Uyumluluk: Bu sistem, doktorların yapay zeka kararlarına olan güvenini artırırken, aynı zamanda sağlık verilerinin gizliliğini koruyan düzenleyici standartlarla uyumlu bir altyapı sunar.
