@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+
+# Environments
+.env
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Go
+backend/clinical.db
+backend/clinical.db-journal
+
+# ML
+models/*.joblib
+data/*.csv
+data/*.xlsx
+!data/demo_placeholder.txt

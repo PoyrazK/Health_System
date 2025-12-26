@@ -1,0 +1,91 @@
+{
+    "heart": {
+        "features": [
+            "age",
+            "sex",
+            "cp",
+            "systolic_bp",
+            "cholesterol",
+            "fasting_bs",
+            "restecg",
+            "heart_rate",
+            "exang",
+            "oldpeak",
+            "slope",
+            "ca",
+            "thal"
+        ],
+        "type": "xgboost"
+    },
+    "diabetes": {
+        "features": [
+            "history_bp",
+            "history_chol",
+            "CholCheck",
+            "bmi",
+            "Smoker",
+            "history_stroke",
+            "history_heart_disease",
+            "PhysActivity",
+            "Fruits",
+            "Veggies",
+            "HvyAlcoholConsump",
+            "AnyHealthcare",
+            "NoDocbcCost",
+            "general_health",
+            "MentHlth",
+            "physical_health_days",
+            "DiffWalk",
+            "sex",
+            "Age",
+            "Education",
+            "Income",
+            "age"
+        ],
+        "type": "xgboost"
+    },
+    "stroke": {
+        "features": [
+            "gender",
+            "age",
+            "hypertension",
+            "heart_disease",
+            "ever_married",
+            "work",
+            "Residence_type",
+            "glucose",
+            "bmi",
+            "smoking"
+        ],
+        "type": "xgboost"
+    },
+    "kidney": {
+        "features": [
+            "age",
+            "diastolic_bp",
+            "sg",
+            "al",
+            "su",
+            "rbc",
+            "pc",
+            "pcc",
+            "ba",
+            "glucose",
+            "bu",
+            "creatinine",
+            "sod",
+            "pot",
+            "hemo",
+            "pcv",
+            "wc",
+            "rc",
+            "history_bp",
+            "history_diabetes",
+            "cad",
+            "appet",
+            "pe",
+            "ane"
+        ],
+        "type": "sklearn_rf"
+    }
+}
