@@ -2,13 +2,16 @@ package services
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
 
+	"healthcare-backend/internal/cache"
 	"healthcare-backend/internal/models"
 )
 
@@ -54,9 +57,26 @@ func NewPredictionService(mlURL string) *PredictionService {
 	}
 }
 
+func (s *PredictionService) hashVitals(p models.PatientData) string {
+	raw := fmt.Sprintf("%d|%.2f|%.2f|%.2f|%.2f|%s", p.Age, p.SystolicBP, p.Glucose, p.BMI, p.Cholesterol, p.Smoking)
+	h := sha256.Sum256([]byte(raw))
+	return fmt.Sprintf("%x", h)
+}
+
 func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.PredictResponse, error) {
 	mlStart := time.Now()
-	// Use strict JSON marshaling
+
+	// 1. Check Cache
+	cacheKey := fmt.Sprintf("predict:%d:%s", patient.ID, s.hashVitals(patient))
+	if cached, err := cache.Get(cacheKey); err == nil {
+		var risks models.PredictResponse
+		if err := json.Unmarshal([]byte(cached), &risks); err == nil {
+			log.Printf("🚀 ML Predict (CACHED): %v", time.Since(mlStart))
+			return &risks, nil
+		}
+	}
+
+	// 2. Cache Miss - Call ML API
 	predictPayload, err := json.Marshal(patient)
 	if err != nil {
 		return nil, err
@@ -72,7 +92,13 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 	if err := json.NewDecoder(resp.Body).Decode(&risks); err != nil {
 		return nil, err
 	}
-	log.Printf("⏱️ ML Predict: %v", time.Since(mlStart))
+
+	// 3. Set Cache (TTL: 5 minutes)
+	if risksData, err := json.Marshal(risks); err == nil {
+		cache.Set(cacheKey, risksData, 5*time.Minute)
+	}
+
+	log.Printf("⏱️ ML Predict (LIVE): %v", time.Since(mlStart))
 	return &risks, nil
 }
 
