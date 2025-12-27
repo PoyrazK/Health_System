@@ -13,34 +13,36 @@ import (
 
 	"healthcare-backend/internal/cache"
 	"healthcare-backend/internal/models"
+	"healthcare-backend/internal/queue"
 )
 
-// -- Diagnosis Cache --
+// -- Diagnosis Cache (RESTORED AS STATELESS REDIS WRAPPER) --
 
-type DiagnosisCache struct {
-	mu      sync.RWMutex
-	results map[uint]string // patientID -> diagnosis
-	status  map[uint]string // patientID -> status (pending/ready/error)
-}
+type DiagnosisCache struct{}
 
 func NewDiagnosisCache() *DiagnosisCache {
-	return &DiagnosisCache{
-		results: make(map[uint]string),
-		status:  make(map[uint]string),
-	}
+	return &DiagnosisCache{}
 }
 
 func (c *DiagnosisCache) Set(id uint, diagnosis string, status string) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.results[id] = diagnosis
-	c.status[id] = status
+	data := map[string]string{
+		"diagnosis": diagnosis,
+		"status":    status,
+	}
+	jsonData, _ := json.Marshal(data)
+	cache.Set(fmt.Sprintf("diag:status:%d", id), jsonData, 1*time.Hour)
 }
 
 func (c *DiagnosisCache) Get(id uint) (string, string) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	return c.results[id], c.status[id]
+	val, err := cache.Get(fmt.Sprintf("diag:status:%d", id))
+	if err != nil {
+		return "", ""
+	}
+	var data map[string]string
+	if err := json.Unmarshal([]byte(val), &data); err != nil {
+		return "", ""
+	}
+	return data["diagnosis"], data["status"]
 }
 
 // -- Service --
@@ -103,31 +105,20 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 }
 
 func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest, onComplete func(uint, string, string)) {
+	// 1. Mark as pending in Redis
 	s.Cache.Set(patientID, "", "pending")
 	
-	go func() {
-		llmStart := time.Now()
-		diagPayload, _ := json.Marshal(req)
-		
-		diagRespRaw, err := http.Post(s.MLServiceURL+"/diagnose", "application/json", bytes.NewBuffer(diagPayload))
-		if err != nil {
-			s.Cache.Set(patientID, "Diagnosis unavailable - LLM service error", "error")
-			if onComplete != nil {
-				onComplete(patientID, "Diagnosis unavailable - LLM service error", "error")
-			}
-			log.Printf("⏱️ LLM Diagnose ASYNC ERROR: %v", err)
-			return
-		}
-		defer diagRespRaw.Body.Close()
-		
-		var diagRes models.DiagnosisResponse
-		json.NewDecoder(diagRespRaw.Body).Decode(&diagRes)
-		s.Cache.Set(patientID, diagRes.Diagnosis, "ready")
-		if onComplete != nil {
-			onComplete(patientID, diagRes.Diagnosis, "ready")
-		}
-		log.Printf("⏱️ LLM Diagnose ASYNC COMPLETE: %v", time.Since(llmStart))
-	}()
+	// 2. Publish to NATS for Worker pick-up
+	reqData, _ := json.Marshal(req)
+	if err := queue.Publish("llm.tasks", reqData); err != nil {
+		log.Printf("❌ Failed to publish LLM task to NATS: %v", err)
+		s.Cache.Set(patientID, "System overloaded - please retry", "error")
+		return
+	}
+
+	log.Printf("🚀 LLM Task Published to NATS for patient %d", patientID)
+	// onComplete is now slightly trickier in distributed system, 
+	// typically handled via WS Pub/Sub in later phase.
 }
 
 func (s *PredictionService) CheckMedications(medStr string) models.InteractionResult {

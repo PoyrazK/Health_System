@@ -20,6 +20,7 @@ import (
 	"healthcare-backend/internal/queue"
 	"healthcare-backend/internal/repositories"
 	"healthcare-backend/internal/services"
+	"healthcare-backend/internal/workers"
 )
 
 func main() {
@@ -65,6 +66,10 @@ func main() {
 	ragService := services.NewRAGService(patientRepo, feedbackRepo)
 	predService := services.NewPredictionService(cfg.MLServiceURL)
 	auditService := services.NewAuditService(database.DB)
+
+	// Workers
+	llmWorker := workers.NewLLMWorker(cfg.MLServiceURL)
+	llmWorker.Start()
 
 	// Handlers
 	wsHandler := handlers.NewWebSocketHandler()
