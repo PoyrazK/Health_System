@@ -40,6 +40,12 @@ type Feedback struct {
 
 // -- API Communication Structs --
 
+type APIResponse struct {
+	Success bool   `json:"success"`
+	Data    any    `json:"data,omitempty"`
+	Error   string `json:"error,omitempty"`
+}
+
 type PredictResponse struct {
 	HeartRisk          float64                       `json:"heart_risk_score"`
 	DiabetesRisk       float64                       `json:"diabetes_risk_score"`
@@ -177,4 +183,14 @@ type PerformanceMetrics struct {
 	UptimeSeconds        float64 `json:"uptime_seconds"`
 	RequestCount         int64   `json:"request_count"`
 	ErrorRate            float64 `json:"error_rate"` // % of last 100 requests
+}
+
+// -- Vitals / MediaPipe Structs --
+
+type VitalsResponse struct {
+	HeartRate       *float64 `json:"heart_rate"`
+	Confidence      float64  `json:"confidence"`
+	FramesProcessed int      `json:"frames_processed"`
+	FPS             float64  `json:"fps"`
+	Error           string   `json:"error,omitempty"`
 }

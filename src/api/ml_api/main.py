@@ -376,6 +376,23 @@ if OPENAI_API_KEY:
 else:
     print("⚠️ OPENAI_API_KEY not found. LLM endpoint will return mock responses.")
 
+# --- Vitals Analysis (rPPG) Endpoints ---
+from src.api.ml_api.services.vitals import VitalsService
+
+vitals_svc = VitalsService()
+
+@app.post("/vitals/analyze")
+async def analyze_vitals(file_path: str):
+    """
+    Analyze a video file for heart rate using rPPG.
+    Input: Absolute path to video file (must be accessible by container).
+    """
+    try:
+        return vitals_svc.analyze_video(file_path)
+    except Exception as e:
+        logger.exception("Unexpected error in /vitals/analyze")
+        raise HTTPException(status_code=500, detail=f"Vitals analysis failed: {str(e)}")
+
 class DiagnosisRequest(BaseModel):
     patient: PatientData
     risk_scores: dict

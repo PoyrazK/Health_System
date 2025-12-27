@@ -14,6 +14,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     volumes:
       - ./models:/app/models
+      - uploads_data:/app/uploads
     networks:
       - healthcare-net
 
@@ -46,6 +47,8 @@ services:
       - SERVER_PORT=3000
       - ENABLE_AUDIT_LOG=true
       - ENABLE_WEBSOCKET=true
+    volumes:
+      - uploads_data:/app/uploads
     networks:
       - healthcare-net
 
@@ -149,3 +152,4 @@ networks:
 volumes:
   postgres_data:
   redis_data:
+  uploads_data:

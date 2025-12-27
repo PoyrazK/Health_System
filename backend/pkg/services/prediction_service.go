@@ -374,3 +374,24 @@ func (s *PredictionService) CheckMedications(medStr string) models.InteractionRe
 	
 	return models.InteractionResult{Risky: risky, Safe: safe}
 }
+
+func (s *PredictionService) AnalyzeVitals(filePath string) (*models.VitalsResponse, error) {
+	// Call ML API /vitals/analyze?file_path=...
+	url := fmt.Sprintf("%s/vitals/analyze?file_path=%s", s.MLServiceURL, filePath)
+	
+	resp, err := http.Post(url, "application/json", nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("ML API returned status %d", resp.StatusCode)
+	}
+
+	var result models.VitalsResponse
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}

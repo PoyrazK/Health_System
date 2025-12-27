@@ -26,3 +26,4 @@ description: DevOps Engineer Agent - Docker, deployment, CI/CD, and Git Manageme
 2. Create `requirements.txt` or `pyproject.toml`.
 3. Create a `Dockerfile` optimized for python (slim-buster or alpine).
 4. Create `docker-compose.yml` if database/redis is needed.
+5. **Verify Service Health**: `docker-compose logs --tail=50 -f [service_name]` to check for startup errors.

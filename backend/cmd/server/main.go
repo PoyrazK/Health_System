@@ -134,6 +134,7 @@ func main() {
 	feedbackHandler := handlers.NewFeedbackHandler(database.DB, auditService)
 	diseaseHandler := handlers.NewDiseaseHandler(predService)
 	ekgHandler := handlers.NewEKGHandler(predService)
+	vitalsHandler := handlers.NewVitalsHandler(predService) // [NEW] Vitals Handler
 	blockchainHandler := handlers.NewBlockchainHandler(auditService, ipfsService)
 	dashboardHandler := handlers.NewDashboardHandler(database.DB, predService, auditService)
 
@@ -209,6 +210,7 @@ func main() {
 	// New AI Services
 	app.Post("/api/disease/predict", diseaseHandler.Predict)
 	app.Post("/api/ekg/analyze", ekgHandler.Analyze)
+	app.Post("/api/vitals/analyze", vitalsHandler.Analyze) // [NEW] Route
 
 	// 8. Blockchain Audit Endpoints (AI Act Compliance)
 	app.Get("/api/blockchain/verify", blockchainHandler.VerifyChain)
