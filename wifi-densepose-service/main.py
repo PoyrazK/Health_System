@@ -245,14 +245,19 @@ class WiFiDensePoseService:
         self.fall_events: List[FallEvent] = []
         self.connected_clients: List[WebSocket] = []
         self._running = False
+        self._use_mock = settings.should_use_mock()  # Auto-detect hardware
     
     async def start(self):
         """Start the pose estimation service"""
         self._running = True
-        logger.info(f"WiFi DensePose Service started in {'MOCK' if settings.use_mock_data else 'LIVE'} mode")
+        mode = "MOCK (auto-detected)" if self._use_mock else "LIVE"
+        logger.info(f"📡 WiFi DensePose Service started in {mode} mode")
         
-        if settings.use_mock_data:
-            logger.info(f"Mock mode: Tracking {settings.mock_person_count} virtual persons")
+        if self._use_mock:
+            logger.info(f"🎭 Mock mode: Tracking {settings.mock_person_count} virtual persons")
+            logger.info("💡 Tip: Connect CSI-capable WiFi hardware to enable live mode")
+        else:
+            logger.info("🔴 LIVE mode: Real CSI hardware detected!")
     
     async def stop(self):
         """Stop the pose estimation service"""
@@ -264,7 +269,7 @@ class WiFiDensePoseService:
         return SystemStatus(
             status="healthy",
             version=settings.service_version,
-            mode="mock" if settings.use_mock_data else "live",
+            mode="mock" if self._use_mock else "live",
             fps=settings.frame_rate,
             active_persons=len(self.mock_generator.persons),
             fall_detection=settings.fall_detection_enabled,
@@ -273,7 +278,7 @@ class WiFiDensePoseService:
     
     def get_current_poses(self) -> List[PersonPose]:
         """Get current pose estimations"""
-        if settings.use_mock_data:
+        if self._use_mock:
             return self.mock_generator.generate_poses()
         else:
             # TODO: Integrate with real wifi-densepose library

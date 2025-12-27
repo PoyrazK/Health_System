@@ -21,12 +21,13 @@ type Config struct {
 	DBPort       string
 
 	// External Services
-	MLServiceURL string
-	RedisURL     string
-	NatsURL      string
+	MLServiceURL        string
+	WiFiPoseServiceURL  string
+	RedisURL            string
+	NatsURL             string
 
 	// Feature Flags
-	EnableAuditLog bool
+	EnableAuditLog  bool
 	EnableWebSocket bool
 }
 
@@ -52,9 +53,10 @@ func Load() *Config {
 		DBPort:       getEnv("DB_PORT", "5432"),
 
 		// External Services
-		MLServiceURL: getEnv("ML_SERVICE_URL", "http://127.0.0.1:8000"),
-		RedisURL:     getEnv("REDIS_URL", "localhost:6379"),
-		NatsURL:      getEnv("NATS_URL", "nats://localhost:4222"),
+		MLServiceURL:       getEnv("ML_SERVICE_URL", "http://127.0.0.1:8000"),
+		WiFiPoseServiceURL: getEnv("WIFI_POSE_SERVICE_URL", "http://127.0.0.1:8001"),
+		RedisURL:           getEnv("REDIS_URL", "localhost:6379"),
+		NatsURL:            getEnv("NATS_URL", "nats://localhost:4222"),
 
 		// Feature Flags
 		EnableAuditLog:  getEnvBool("ENABLE_AUDIT_LOG", true),

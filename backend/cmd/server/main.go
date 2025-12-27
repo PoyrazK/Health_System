@@ -93,8 +93,12 @@ func main() {
 	diseaseHandler := handlers.NewDiseaseHandler(predService)
 	ekgHandler := handlers.NewEKGHandler(predService)
 
+	// WiFi Pose Service & Handler
+	wifiPoseService := services.NewWiFiPoseService(cfg.WiFiPoseServiceURL)
+	wifiPoseHandler := handlers.NewWiFiPoseHandler(wifiPoseService)
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 8 (Scalability Stack)")
+		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 8 (Scalability Stack) | 📡 WiFi DensePose Enabled")
 	})
 
 	// 7. Health Probes (K8s Ready)
@@ -164,6 +168,9 @@ func main() {
 	// New AI Services
 	app.Post("/api/disease/predict", diseaseHandler.Predict)
 	app.Post("/api/ekg/analyze", ekgHandler.Analyze)
+
+	// 9. WiFi DensePose Routes (Through-Wall Pose Estimation)
+	wifiPoseHandler.RegisterRoutes(app)
 
 	// 8. Blockchain Audit Endpoints
 	app.Get("/api/audit/chain", func(c *fiber.Ctx) error {

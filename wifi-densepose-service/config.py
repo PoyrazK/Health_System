@@ -1,10 +1,62 @@
 """
 WiFi DensePose Service Configuration
 Healthcare Domain Optimized Settings
+Auto-fallback: Uses mock data if no CSI hardware detected
 """
 import os
+import subprocess
 from pydantic_settings import BaseSettings
 from typing import Optional
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def detect_csi_hardware() -> bool:
+    """
+    Detect if CSI-capable WiFi hardware is available.
+    Returns True if real hardware is detected, False otherwise.
+    """
+    try:
+        # Check for common CSI-capable interfaces
+        # This checks for wireless interfaces that might support CSI
+        result = subprocess.run(
+            ["ls", "/sys/class/net"],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        
+        interfaces = result.stdout.strip().split('\n')
+        wifi_interfaces = [iface for iface in interfaces if iface.startswith(('wlan', 'wlp', 'ath'))]
+        
+        if wifi_interfaces:
+            # Check if nexmon CSI tool is available (common for CSI extraction)
+            nexmon_check = subprocess.run(
+                ["which", "nexutil"],
+                capture_output=True,
+                timeout=5
+            )
+            if nexmon_check.returncode == 0:
+                logger.info(f"CSI hardware detected: {wifi_interfaces} with nexmon support")
+                return True
+            
+            # Check for Intel 5300 CSI tool
+            intel_check = subprocess.run(
+                ["which", "log_to_file"],
+                capture_output=True,
+                timeout=5
+            )
+            if intel_check.returncode == 0:
+                logger.info(f"CSI hardware detected: {wifi_interfaces} with Intel CSI tool")
+                return True
+        
+        logger.info("No CSI hardware detected, falling back to mock mode")
+        return False
+        
+    except Exception as e:
+        logger.warning(f"Hardware detection failed: {e}, using mock mode")
+        return False
 
 
 class Settings(BaseSettings):
@@ -21,7 +73,10 @@ class Settings(BaseSettings):
     domain: str = "healthcare"  # healthcare, fitness, smart_home, security
     
     # WiFi DensePose Settings
-    use_mock_data: bool = True  # True for demo mode without real hardware
+    # "auto" means detect hardware automatically
+    # "true" forces mock mode
+    # "false" forces live mode (will fail if no hardware)
+    use_mock_data: str = "auto"  # "auto", "true", or "false"
     mock_person_count: int = 3
     frame_rate: int = 30  # FPS
     
@@ -50,6 +105,16 @@ class Settings(BaseSettings):
     class Config:
         env_prefix = "WIFI_POSE_"
         env_file = ".env"
+    
+    def should_use_mock(self) -> bool:
+        """Determine if mock mode should be used based on config and hardware detection"""
+        if self.use_mock_data.lower() == "true":
+            return True
+        elif self.use_mock_data.lower() == "false":
+            return False
+        else:  # "auto" - detect hardware
+            has_hardware = detect_csi_hardware()
+            return not has_hardware
 
 
 settings = Settings()

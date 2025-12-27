@@ -16,8 +16,13 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("Failed to connect to database")
 	}
-	DB.AutoMigrate(&models.PatientData{}, &models.Feedback{})
-	log.Println("✅ Database Migrated (SQLite)")
+	DB.AutoMigrate(
+		&models.PatientData{},
+		&models.Feedback{},
+		&models.WiFiPoseEvent{},
+		&models.FallAlert{},
+	)
+	log.Println("✅ Database Migrated (SQLite) - Including WiFi Pose tables")
 	seedDemoData()
 }
 
