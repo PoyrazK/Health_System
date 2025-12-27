@@ -14,6 +14,9 @@ import (
 	"healthcare-backend/internal/cache"
 	"healthcare-backend/internal/models"
 	"healthcare-backend/internal/queue"
+	"healthcare-backend/internal/resilience"
+
+	"github.com/sony/gobreaker"
 )
 
 // -- Diagnosis Cache (RESTORED AS STATELESS REDIS WRAPPER) --
@@ -50,12 +53,14 @@ func (c *DiagnosisCache) Get(id uint) (string, string) {
 type PredictionService struct {
 	MLServiceURL string
 	Cache        *DiagnosisCache
+	CB           *gobreaker.CircuitBreaker
 }
 
 func NewPredictionService(mlURL string) *PredictionService {
 	return &PredictionService{
 		MLServiceURL: mlURL,
 		Cache:        NewDiagnosisCache(),
+		CB:           resilience.NewCircuitBreaker("ML-Service"),
 	}
 }
 
@@ -78,22 +83,34 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 		}
 	}
 
-	// 2. Cache Miss - Call ML API
-	predictPayload, err := json.Marshal(patient)
+	// 2. Cache Miss - Call ML API (with Circuit Breaker)
+	body, err := s.CB.Execute(func() (interface{}, error) {
+		predictPayload, err := json.Marshal(patient)
+		if err != nil {
+			return nil, err
+		}
+
+		resp, err := http.Post(s.MLServiceURL+"/predict", "application/json", bytes.NewBuffer(predictPayload))
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		var risks models.PredictResponse
+		if err := json.NewDecoder(resp.Body).Decode(&risks); err != nil {
+			return nil, err
+		}
+		return &risks, nil
+	})
+
 	if err != nil {
-		return nil, err
+		log.Printf("🔌 ML Service Error (CB): %v", err)
+		// Fallback: If we have an older cache, it would be returned in step 1.
+		// If not, we return an error or empty risks with warning
+		return nil, fmt.Errorf("ML service is currently unavailable")
 	}
 
-	resp, err := http.Post(s.MLServiceURL+"/predict", "application/json", bytes.NewBuffer(predictPayload))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var risks models.PredictResponse
-	if err := json.NewDecoder(resp.Body).Decode(&risks); err != nil {
-		return nil, err
-	}
+	risks := body.(*models.PredictResponse)
 
 	// 3. Set Cache (TTL: 5 minutes)
 	if risksData, err := json.Marshal(risks); err == nil {
@@ -101,7 +118,7 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 	}
 
 	log.Printf("⏱️ ML Predict (LIVE): %v", time.Since(mlStart))
-	return &risks, nil
+	return risks, nil
 }
 
 func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest, onComplete func(uint, string, string)) {
