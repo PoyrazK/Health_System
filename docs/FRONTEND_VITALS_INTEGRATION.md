@@ -76,13 +76,34 @@ export const VitalsScanner = () => {
 
             {status === 'uploading' && <p className="mt-4 text-blue-400 animate-pulse">Uploading video...</p>}
             {status === 'success' && result && (
-                <div className="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-                    <p className="text-emerald-400 font-bold text-2xl">
-                        {result.heart_rate ? `${Math.round(result.heart_rate)} BPM` : 'Could not detect pulse'}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-2">
-                        Confidence: {(result.confidence * 100).toFixed(1)}% | {result.frames_processed} frames
-                    </p>
+                <div className="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg space-y-3">
+                    <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Heart Rate</span>
+                        <span className="text-emerald-400 font-bold text-xl">
+                            {result.heart_rate ? `${Math.round(result.heart_rate)} BPM` : 'N/A'}
+                        </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">SpO2 (Est.)</span>
+                        <span className="text-blue-400 font-bold text-xl">
+                            {result.spo2_estimate.toFixed(1)}%
+                        </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Risk Level</span>
+                        <span className={`font-bold px-2 py-1 rounded text-xs ${
+                            result.risk_level === 'RED' ? 'bg-red-500/20 text-red-500' : 
+                            result.risk_level === 'YELLOW' ? 'bg-yellow-500/20 text-yellow-500' : 
+                            'bg-emerald-500/20 text-emerald-500'
+                        }`}>
+                            {result.risk_level}
+                        </span>
+                    </div>
+                    <div className="pt-2 border-t border-slate-700/50 flex justify-between text-[10px] text-slate-500">
+                        <span>SNR: {result.snr.toFixed(2)}</span>
+                        <span>Asymmetry: {result.asymmetry_score.toFixed(3)}</span>
+                        <span>Face: {(result.face_detected_ratio * 100).toFixed(0)}%</span>
+                    </div>
                 </div>
             )}
         </div>

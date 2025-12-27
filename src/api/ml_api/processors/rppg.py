@@ -9,6 +9,7 @@ class RPPGProcessor:
         self.raw_signal = []
         self.timestamps = []
         self.filtered_signal = []
+        self.last_snr = 0.0
         
         # Filter Design (0.75Hz to 3.0Hz = 45 to 180 BPM)
         self.low_cut = 0.75
@@ -72,6 +73,7 @@ class RPPGProcessor:
         
         # Store for Visualization
         self.latest_filtered_samples = filtered
+        self.last_snr = 0.0
         
         # 5. FFT
         n = len(filtered)
@@ -89,6 +91,19 @@ class RPPGProcessor:
             
         peak_idx = np.argmax(valid_mags)
         peak_freq = valid_freqs[peak_idx]
+        
+        # 7. SNR Calculation (Signal power at peak vs Rest)
+        # Power is magnitude squared
+        power = magnitude ** 2
+        total_power = np.sum(power)
+        
+        # Signal power (Peak + 2 neighbors on each side for robustness)
+        full_peak_idx = np.where(freqs == peak_freq)[0][0]
+        start = max(0, full_peak_idx - 2)
+        end = min(len(power), full_peak_idx + 3)
+        signal_power = np.sum(power[start:end])
+        
+        self.last_snr = signal_power / (total_power - signal_power) if (total_power - signal_power) > 0 else 0.0
         
         bpm = peak_freq * 60.0
         return bpm

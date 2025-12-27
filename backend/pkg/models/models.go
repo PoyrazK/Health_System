@@ -188,9 +188,14 @@ type PerformanceMetrics struct {
 // -- Vitals / MediaPipe Structs --
 
 type VitalsResponse struct {
-	HeartRate       *float64 `json:"heart_rate"`
-	Confidence      float64  `json:"confidence"`
-	FramesProcessed int      `json:"frames_processed"`
-	FPS             float64  `json:"fps"`
-	Error           string   `json:"error,omitempty"`
+	HeartRate         *float64 `json:"heart_rate"`
+	SpO2Estimate      float64  `json:"spo2_estimate"`
+	AsymmetryScore    float64  `json:"asymmetry_score"`
+	SNR               float64  `json:"snr"`
+	RiskLevel         string   `json:"risk_level"`
+	FaceDetectedRatio float64  `json:"face_detected_ratio"`
+	Confidence        float64  `json:"confidence"`
+	FramesProcessed   int      `json:"frames_processed"`
+	FPS               float64  `json:"fps"`
+	Error             string   `json:"error,omitempty"`
 }

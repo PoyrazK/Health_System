@@ -27,3 +27,17 @@ description: DevOps Engineer Agent - Docker, deployment, CI/CD, and Git Manageme
 3. Create a `Dockerfile` optimized for python (slim-buster or alpine).
 4. Create `docker-compose.yml` if database/redis is needed.
 5. **Verify Service Health**: `docker-compose logs --tail=50 -f [service_name]` to check for startup errors.
+
+### Fast Docker Build (Turbo Mode)
+// turbo-all
+```bash
+# Enable BuildKit + parallel builds (40-60% faster)
+DOCKER_BUILDKIT=1 docker-compose build --parallel
+
+# Build specific service only
+DOCKER_BUILDKIT=1 docker-compose build ml-api
+
+# Full stack up with build
+DOCKER_BUILDKIT=1 docker-compose up --build -d
+```
+
