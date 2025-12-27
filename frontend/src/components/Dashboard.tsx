@@ -16,6 +16,7 @@ import SystemStatus from './dashboard/SystemStatus';
 import UrgencyCard from './dashboard/UrgencyCard';
 import AuditBadge from './dashboard/AuditBadge';
 import WiFiDensePose from './dashboard/WiFiDensePose';
+import EKGMonitor from './dashboard/EKGMonitor';
 
 // Convert PatientRecord from API to Patient for UI display
 function recordToPatient(record: PatientRecord): Patient {
@@ -469,6 +470,7 @@ export default function Dashboard({ onExit }: DashboardProps) {
                         {/* Right: Medication & System telemetry */}
                         <div className="col-span-12 lg:col-span-3 flex flex-col gap-6">
                             <UrgencyCard urgency={assessment?.urgency} />
+                            <EKGMonitor patientId={selectedPatient.id} />
                             <MedicationSafety analysis={assessment?.medication_analysis} />
                             <SystemStatus models={assessment?.model_precisions} />
                         </div>
