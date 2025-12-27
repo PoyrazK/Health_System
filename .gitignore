@@ -1,34 +1,59 @@
+# ========================================
 # Python
+# ========================================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-*.egg
-*.egg-info/
-dist/
-build/
-venv/
 env/
-.env
-.venv
-.idea/
-.vscode/
-*.swp
-.DS_Store
-Thumbs.db
-*.log
-logs/
-.pytest_cache/
-.coverage
-.ipynb_checkpoints/
-*.tmp
-*.temp
+venv/
+.venv/
+*.egg-info/
+.eggs/
 
-# Training Data - DO NOT PUSH
-*.npz
+# ========================================
+# Large Data Files (>100MB GitHub limit)
+# ========================================
+# CSV datasets - download from original sources
 *.csv
 
-# Large model files over 100MB - use Git LFS or external storage
-# disease_classifier.joblib is 103MB - exclude from normal push
-ai-service/models/disease/disease_classifier.joblib
+# Processed data files
+*.npz
+
+# Large model versions (use pruned version instead)
+disease_classifier.joblib
+disease_classifier.pkl
+
+# ========================================
+# Keep these model files
+# ========================================
+!disease_classifier_pruned.joblib
+!ekg_xgboost.joblib
+!*_scaler*.joblib
+!*_encoder*.joblib
+
+# ========================================
+# IDE & System
+# ========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ========================================
+# Logs & Temp
+# ========================================
+*.log
+logs/
+tmp/
+temp/
+
+# ========================================
+# Environment
+# ========================================
+.env
+.env.local
+*.env

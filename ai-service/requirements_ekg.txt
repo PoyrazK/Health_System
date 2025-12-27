@@ -1,0 +1,11 @@
+# EKG Model Training Dependencies
+scipy>=1.11.0  # Signal processing (filtfilt, find_peaks)
+tensorflow>=2.15.0  # Deep learning for EKG classification
+# OR
+# torch>=2.1.0  # Alternative: PyTorch
+# torchaudio>=2.1.0
+
+# Optional: Advanced signal processing
+pywavelets>=1.5.0  # Wavelet transforms
+neurokit2>=0.2.0  # ECG-specific analysis toolkit
+wfdb>=4.1.0  # For reading PhysioNet datasets (MIT-BIH, PTB-XL)

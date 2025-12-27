@@ -53,7 +53,8 @@ class EnhancedMLService:
     
     def _load_model(self):
         """Load the trained model and configurations"""
-        model_path = os.path.join(self.model_dir, "disease_classifier.joblib")
+        # Use pruned model (28.6 MB) instead of full model (103.7 MB) - same accuracy
+        model_path = os.path.join(self.model_dir, "disease_classifier_pruned.joblib")
         
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model not found at {model_path}")
