@@ -29,11 +29,17 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
     env_file:
       - .env
     environment:
       - DB_HOST=db
       - ML_SERVICE_URL=http://ml-api:8000
+      - REDIS_URL=redis:6379
+      - NATS_URL=nats://nats:4222
       - SERVER_PORT=3000
     networks:
       - healthcare-net
@@ -72,9 +78,43 @@ services:
     networks:
       - healthcare-net
 
+  # 5. Redis (Cache + Pub/Sub)
+  redis:
+    image: redis:7-alpine
+    container_name: healthcare-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - healthcare-net
+
+  # 6. NATS (Message Queue)
+  nats:
+    image: nats:2.10-alpine
+    container_name: healthcare-nats
+    ports:
+      - "4222:4222" # Client
+      - "8222:8222" # Monitor
+    command: [ "--jetstream", "--http_port", "8222" ]
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost:8222/healthz" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - healthcare-net
+
 networks:
   healthcare-net:
     driver: bridge
 
 volumes:
   postgres_data:
+  redis_data:
