@@ -1,0 +1,106 @@
+/**
+ * API Client for RedFive Backend
+ * 
+ * Go Backend runs on port 3000
+ * ML API runs on port 8000 (called by backend, not directly)
+ */
+
+import type {
+    PatientFormData,
+    DefaultFormValues,
+    AssessmentAPIResponse,
+    DiagnosisResponse,
+    PatientRecord,
+} from './types';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
+/**
+ * Fetch default form values for new patient intake
+ */
+export async function fetchDefaults(): Promise<DefaultFormValues> {
+    const response = await fetch(`${API_BASE_URL}/api/defaults`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch default values');
+    }
+    return response.json();
+}
+
+/**
+ * Submit patient data for full assessment
+ */
+export async function submitAssessment(data: PatientFormData): Promise<AssessmentAPIResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/assess`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to submit assessment');
+    }
+    return response.json();
+}
+
+/**
+ * Poll diagnosis status for a patient
+ */
+export async function pollDiagnosis(patientId: number): Promise<DiagnosisResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/diagnosis/${patientId}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch diagnosis');
+    }
+    return response.json();
+}
+
+/**
+ * Fetch all patients
+ */
+export async function fetchPatients(): Promise<PatientRecord[]> {
+    const response = await fetch(`${API_BASE_URL}/api/patients`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch patients');
+    }
+    return response.json();
+}
+
+/**
+ * Submit doctor feedback for RAG-Lite learning
+ */
+export async function submitFeedback(data: {
+    assessment_id: string;
+    doctor_approved: boolean;
+    doctor_notes: string;
+    risk_profile: string;
+}): Promise<{ status: string; id: number }> {
+    const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to submit feedback');
+    }
+    return response.json();
+}
+
+/**
+ * Default form values (fallback when API is unavailable)
+ */
+export const DEFAULT_FORM_VALUES: DefaultFormValues = {
+    age: 45,
+    gender: 'Male',
+    systolic_bp: 120,
+    diastolic_bp: 80,
+    glucose: 100,
+    bmi: 24.5,
+    cholesterol: 190,
+    heart_rate: 72,
+    steps: 6000,
+    smoking: 'No',
+    alcohol: 'No',
+    medications: 'Lisinopril, Atorvastatin',
+};
