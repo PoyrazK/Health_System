@@ -1,6 +1,8 @@
 package services
 
 import (
+	"crypto/ed25519"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -16,9 +18,11 @@ import (
 )
 
 type AuditService struct {
-	DB       *gorm.DB
-	mu       sync.Mutex
-	lastHash string
+	DB         *gorm.DB
+	mu         sync.Mutex
+	lastHash   string
+	privateKey ed25519.PrivateKey
+	publicKey  ed25519.PublicKey
 }
 
 func NewAuditService(db *gorm.DB) *AuditService {
@@ -37,9 +41,14 @@ func NewAuditService(db *gorm.DB) *AuditService {
 		lastHash = lastEntry.CurrentHash
 	}
 
+	// 🔑 Generate ephemeral Ed25519 keys for this session (In prod: Load from HSM/Vault)
+	pub, priv, _ := ed25519.GenerateKey(rand.Reader)
+
 	return &AuditService{
-		DB:       db,
-		lastHash: lastHash,
+		DB:         db,
+		lastHash:   lastHash,
+		privateKey: priv,
+		publicKey:  pub,
 	}
 }
 
@@ -82,6 +91,14 @@ func (a *AuditService) LogEvent(eventType string, patientID uint, payload interf
 	)
 	entry.CurrentHash = hashString(entryData)
 
+	// ✍️ DIGITAL SIGNATURE (Phase 1 Compliance)
+	// Sign the (PayloadHash + Timestamp) to prove authenticity
+	msg := []byte(fmt.Sprintf("%s|%s", payloadHash, entry.Timestamp.Format(time.RFC3339)))
+	signature := ed25519.Sign(a.privateKey, msg)
+	
+	entry.ActorSignature = hex.EncodeToString(signature)
+	entry.ActorPublicKey = hex.EncodeToString(a.publicKey)
+
 	// Save to database
 	if err := a.DB.Create(&entry).Error; err != nil {
 		log.Printf("❌ Audit Log Error: %v", err)
@@ -99,11 +116,12 @@ func (a *AuditService) LogEvent(eventType string, patientID uint, payload interf
 		"data_hash":  payloadHash,
 		"timestamp":  entry.Timestamp,
 		"actor":      actorID,
+		"signature":  entry.ActorSignature, // Add signature to block
 	}
 	blockchain.GlobalChain.AddBlock(blockPayload)
 	// -------------------------------
 
-	log.Printf("📜 Audit Log: [%s] Patient %s | Hash: %s...%s",
+	log.Printf("📜 Audit Log: [%s] Patient %s | Hash: %s...%s | Signed: ✅",
 		eventType,
 		patientIDHash[:8],
 		entry.CurrentHash[:8],
@@ -150,4 +168,13 @@ func (a *AuditService) VerifyChain() (bool, int, error) {
 	}
 
 	return true, len(entries), nil
+}
+
+// ExportChain retrieves the full chain for backup
+func (a *AuditService) ExportChain() ([]byte, error) {
+	var entries []models.AuditLog
+	if err := a.DB.Order("id ASC").Find(&entries).Error; err != nil {
+		return nil, err
+	}
+	return json.Marshal(entries)
 }

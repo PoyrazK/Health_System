@@ -1,0 +1,438 @@
+2025/12/27 10:17:21 ⚙️ Config loaded: Port=3000, DB=localhost:5432, ML=http://127.0.0.1:8000
+2025/12/27 10:17:21 ✅ Database Migrated (SQLite)
+2025/12/27 10:17:21 🔴 Redis connected successfully
+2025/12/27 10:17:21 ⚡ NATS connected successfully
+2025/12/27 10:17:21 🔗 Blockchain Initialized: Genesis Block created.
+2025/12/27 10:17:21 👷 LLM Worker started and listening on llm.tasks
+2025/12/27 10:17:21 🚀 Server starting on port 3000
+2025/12/27 10:17:21 🌐 WS Handler: Listening for global diagnosis updates on Redis...
+
+ ┌───────────────────────────────────────────────────┐ 
+ │         Healthcare Clinical Copilot v1.0          │ 
+ │                  Fiber v2.52.10                   │ 
+ │               http://127.0.0.1:3000               │ 
+ │       (bound on host 0.0.0.0 and port 3000)       │ 
+ │                                                   │ 
+ │ Handlers ............ 25  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............. 81959 │ 
+ └───────────────────────────────────────────────────┘ 
+
+10:18:00 | 200 |    2.131792ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:18:00 ⏱️ DB Write: 963.25µs
+2025/12/27 10:18:00 ⏱️ RAG Semantic Search: 148.5µs
+2025/12/27 10:18:00 ⏱️ ML Predict (LIVE): 31.978416ms
+2025/12/27 10:18:00 📜 Audit Log: [AI_PREDICTION] Patient efd96aed | Hash: ac643ca4...00be3eb8
+2025/12/27 10:18:00 🚀 LLM Task Published to NATS for patient 279
+2025/12/27 10:18:00 ⏱️ FAST RESPONSE (no LLM wait): 37.011875ms
+10:18:00 | 200 |   37.063333ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:18:00 🤖 LLM Worker: Processing diagnosis for patient 279
+10:18:00 | 200 |    1.845666ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:18:01 ✅ LLM Worker: Completed diagnosis for patient 279 in 662.0215ms
+10:18:01 | 200 |     316.625µs | 127.0.0.1 | GET | /api/diagnosis/279 | -
+2025/12/27 10:19:01 ⏱️ DB Write: 2.098083ms
+2025/12/27 10:19:01 ⏱️ RAG Semantic Search: 237.334µs
+2025/12/27 10:19:01 ⏱️ ML Predict (LIVE): 34.649333ms
+2025/12/27 10:19:01 📜 Audit Log: [AI_PREDICTION] Patient 7f0a2211 | Hash: 6e244b71...7aa5296f
+2025/12/27 10:19:01 🚀 LLM Task Published to NATS for patient 280
+2025/12/27 10:19:01 ⏱️ FAST RESPONSE (no LLM wait): 41.440917ms
+10:19:01 | 200 |   41.473042ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:19:01 🤖 LLM Worker: Processing diagnosis for patient 280
+10:19:01 | 200 |      1.5965ms | 127.0.0.1 | GET | /api/patients | -
+10:19:02 | 200 |     203.917µs | 127.0.0.1 | GET | /api/diagnosis/280 | -
+2025/12/27 10:19:02 ✅ LLM Worker: Completed diagnosis for patient 280 in 1.555143792s
+10:19:03 | 200 |     289.042µs | 127.0.0.1 | GET | /api/diagnosis/280 | -
+2025/12/27 10:19:04 ⏱️ DB Write: 1.476834ms
+2025/12/27 10:19:04 ⏱️ RAG Semantic Search: 215.584µs
+2025/12/27 10:19:04 ⏱️ ML Predict (LIVE): 31.014083ms
+2025/12/27 10:19:04 📜 Audit Log: [AI_PREDICTION] Patient 71a1c003 | Hash: 81d3cd9a...283345d3
+2025/12/27 10:19:04 🚀 LLM Task Published to NATS for patient 281
+2025/12/27 10:19:04 ⏱️ FAST RESPONSE (no LLM wait): 36.774708ms
+10:19:04 | 200 |   36.804541ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:19:04 🤖 LLM Worker: Processing diagnosis for patient 281
+10:19:04 | 200 |      1.6625ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:19:05 ✅ LLM Worker: Completed diagnosis for patient 281 in 86.272ms
+10:19:05 | 200 |     255.125µs | 127.0.0.1 | GET | /api/diagnosis/281 | -
+2025/12/27 10:19:07 ⏱️ DB Write: 1.443292ms
+2025/12/27 10:19:07 ⏱️ RAG Semantic Search: 1.561875ms
+2025/12/27 10:19:07 ⏱️ ML Predict (LIVE): 28.661583ms
+2025/12/27 10:19:07 📜 Audit Log: [AI_PREDICTION] Patient 27e16152 | Hash: 5a8cec76...4f945ac4
+2025/12/27 10:19:07 🚀 LLM Task Published to NATS for patient 282
+2025/12/27 10:19:07 ⏱️ FAST RESPONSE (no LLM wait): 38.368833ms
+10:19:07 | 200 |   38.601959ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:19:07 🤖 LLM Worker: Processing diagnosis for patient 282
+10:19:07 | 200 |    1.819208ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:19:07 ✅ LLM Worker: Completed diagnosis for patient 282 in 115.419708ms
+10:19:08 | 200 |     215.875µs | 127.0.0.1 | GET | /api/diagnosis/282 | -
+2025/12/27 10:19:09 ⏱️ DB Write: 1.114125ms
+2025/12/27 10:19:09 ⏱️ RAG Semantic Search: 265.083µs
+2025/12/27 10:19:09 ⏱️ ML Predict (LIVE): 26.152083ms
+2025/12/27 10:19:09 📜 Audit Log: [AI_PREDICTION] Patient e0850a77 | Hash: c84f902f...550d4d01
+2025/12/27 10:19:09 🚀 LLM Task Published to NATS for patient 283
+2025/12/27 10:19:09 ⏱️ FAST RESPONSE (no LLM wait): 33.206083ms
+10:19:09 | 200 |   33.323542ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:19:09 🤖 LLM Worker: Processing diagnosis for patient 283
+10:19:09 | 200 |    1.829834ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:19:09 ✅ LLM Worker: Completed diagnosis for patient 283 in 86.206125ms
+10:19:10 | 200 |     232.958µs | 127.0.0.1 | GET | /api/diagnosis/283 | -
+10:21:10 | 200 |    1.719167ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:21:10 ⏱️ DB Write: 1.568542ms
+2025/12/27 10:21:10 ⏱️ RAG Semantic Search: 354.084µs
+2025/12/27 10:21:10 ⏱️ ML Predict (LIVE): 35.89525ms
+2025/12/27 10:21:10 📜 Audit Log: [AI_PREDICTION] Patient 1e68ed4e | Hash: 3139582c...dbaeff3d
+2025/12/27 10:21:10 🚀 LLM Task Published to NATS for patient 284
+2025/12/27 10:21:10 ⏱️ FAST RESPONSE (no LLM wait): 41.620667ms
+10:21:10 | 200 |   41.663833ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:21:10 🤖 LLM Worker: Processing diagnosis for patient 284
+10:21:10 | 200 |    2.008583ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:21:10 ✅ LLM Worker: Completed diagnosis for patient 284 in 602.587292ms
+10:21:11 | 200 |     244.792µs | 127.0.0.1 | GET | /api/diagnosis/284 | -
+10:21:15 | 200 |    4.208125ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:21:15 ⏱️ DB Write: 1.638083ms
+2025/12/27 10:21:15 ⏱️ RAG Semantic Search: 298.542µs
+2025/12/27 10:21:15 ⏱️ ML Predict (LIVE): 25.915666ms
+2025/12/27 10:21:15 📜 Audit Log: [AI_PREDICTION] Patient a0d177b4 | Hash: 044bb2b3...22fd1824
+2025/12/27 10:21:15 🚀 LLM Task Published to NATS for patient 285
+2025/12/27 10:21:15 ⏱️ FAST RESPONSE (no LLM wait): 32.669667ms
+10:21:15 | 200 |   32.736792ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:21:15 🤖 LLM Worker: Processing diagnosis for patient 285
+10:21:15 | 200 |     1.87375ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:21:15 ✅ LLM Worker: Completed diagnosis for patient 285 in 78.277208ms
+10:21:16 | 200 |     242.292µs | 127.0.0.1 | GET | /api/diagnosis/285 | -
+10:21:35 | 200 |    3.375125ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:21:36 ⏱️ DB Write: 1.464542ms
+2025/12/27 10:21:36 ⏱️ RAG Semantic Search: 221.625µs
+2025/12/27 10:21:36 ⏱️ ML Predict (LIVE): 23.883125ms
+2025/12/27 10:21:36 📜 Audit Log: [AI_PREDICTION] Patient 00328ce5 | Hash: 04a463b5...9d62cbf7
+2025/12/27 10:21:36 🚀 LLM Task Published to NATS for patient 286
+2025/12/27 10:21:36 ⏱️ FAST RESPONSE (no LLM wait): 28.395542ms
+10:21:35 | 200 |     28.4275ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:21:36 🤖 LLM Worker: Processing diagnosis for patient 286
+10:21:35 | 200 |    1.760292ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:21:36 ✅ LLM Worker: Completed diagnosis for patient 286 in 192.144041ms
+10:21:36 | 200 |     209.208µs | 127.0.0.1 | GET | /api/diagnosis/286 | -
+10:28:20 | 200 |   21.652125ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:20 ⏱️ DB Write: 5.63725ms
+2025/12/27 10:28:20 ⏱️ RAG Semantic Search: 207.291µs
+2025/12/27 10:28:20 ⏱️ ML Predict (LIVE): 83.866417ms
+2025/12/27 10:28:20 📜 Audit Log: [AI_PREDICTION] Patient d7cdaa5c | Hash: 6618a491...9bb95a18
+2025/12/27 10:28:20 🚀 LLM Task Published to NATS for patient 287
+2025/12/27 10:28:20 ⏱️ FAST RESPONSE (no LLM wait): 93.193167ms
+10:28:20 | 200 |   93.267792ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:28:20 🤖 LLM Worker: Processing diagnosis for patient 287
+10:28:20 | 200 |    3.515041ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:21 ✅ LLM Worker: Completed diagnosis for patient 287 in 301.260458ms
+10:28:21 | 200 |    3.100667ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:21 ⏱️ DB Write: 1.063ms
+2025/12/27 10:28:21 ⏱️ RAG Semantic Search: 158.542µs
+2025/12/27 10:28:21 ⏱️ ML Predict (LIVE): 29.812792ms
+2025/12/27 10:28:21 📜 Audit Log: [AI_PREDICTION] Patient 23c657f2 | Hash: d852548a...4f6eef48
+2025/12/27 10:28:21 🚀 LLM Task Published to NATS for patient 288
+2025/12/27 10:28:21 ⏱️ FAST RESPONSE (no LLM wait): 40.7045ms
+10:28:21 | 200 |   40.739584ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:28:21 🤖 LLM Worker: Processing diagnosis for patient 288
+10:28:21 | 200 |     2.59275ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:21 ✅ LLM Worker: Completed diagnosis for patient 288 in 58.610959ms
+10:28:22 | 200 |      205.25µs | 127.0.0.1 | GET | /api/diagnosis/288 | -
+10:28:26 | 200 |    2.540292ms | 127.0.0.1 | GET | /api/patients | -
+10:28:26 | 200 |   12.858917ms | 127.0.0.1 | GET | /api/patients | -
+10:28:26 | 200 |   13.109125ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:27 ⏱️ DB Write: 7.603ms
+2025/12/27 10:28:27 ⏱️ RAG Semantic Search: 959.375µs
+10:28:26 | 200 |    9.291167ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:27 ⏱️ DB Write: 12.870417ms
+2025/12/27 10:28:27 ⏱️ RAG Semantic Search: 378.583µs
+2025/12/27 10:28:27 ⏱️ DB Write: 1.785875ms
+2025/12/27 10:28:27 ⏱️ RAG Semantic Search: 644.5µs
+2025/12/27 10:28:27 ⏱️ DB Write: 16.610959ms
+2025/12/27 10:28:27 ⏱️ RAG Semantic Search: 646.25µs
+2025/12/27 10:28:27 ⏱️ ML Predict (LIVE): 171.185417ms
+2025/12/27 10:28:27 ⏱️ ML Predict (LIVE): 188.610917ms
+2025/12/27 10:28:27 ⏱️ ML Predict (LIVE): 178.74725ms
+2025/12/27 10:28:27 ⏱️ ML Predict (LIVE): 188.076ms
+2025/12/27 10:28:27 📜 Audit Log: [AI_PREDICTION] Patient 09895de0 | Hash: 3e004f83...f61cbfcd
+2025/12/27 10:28:27 🚀 LLM Task Published to NATS for patient 290
+2025/12/27 10:28:27 ⏱️ FAST RESPONSE (no LLM wait): 214.053625ms
+10:28:26 | 200 |     214.144ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:28:27 🤖 LLM Worker: Processing diagnosis for patient 290
+2025/12/27 10:28:27 📜 Audit Log: [AI_PREDICTION] Patient 33512007 | Hash: c67ffbe6...45ae8b54
+2025/12/27 10:28:27 📜 Audit Log: [AI_PREDICTION] Patient af180e43 | Hash: 108c9ca5...270afd07
+2025/12/27 10:28:27 🚀 LLM Task Published to NATS for patient 291
+2025/12/27 10:28:27 ⏱️ FAST RESPONSE (no LLM wait): 203.057875ms
+10:28:27 | 200 |  203.099792ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:28:27 🚀 LLM Task Published to NATS for patient 289
+2025/12/27 10:28:27 ⏱️ FAST RESPONSE (no LLM wait): 222.231708ms
+10:28:26 | 200 |     222.279ms | 127.0.0.1 | POST | /api/assess | -
+10:28:27 | 200 |    7.081875ms | 127.0.0.1 | GET | /api/patients | -
+10:28:27 | 200 |    2.779667ms | 127.0.0.1 | GET | /api/patients | -
+10:28:27 | 200 |    2.859666ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:27 ✅ LLM Worker: Completed diagnosis for patient 290 in 295.223417ms
+2025/12/27 10:28:27 🤖 LLM Worker: Processing diagnosis for patient 291
+2025/12/27 10:28:27 📜 Audit Log: [AI_PREDICTION] Patient 6db6eb4a | Hash: c730fd38...6d7e7f7a
+2025/12/27 10:28:27 🚀 LLM Task Published to NATS for patient 292
+2025/12/27 10:28:27 ⏱️ FAST RESPONSE (no LLM wait): 505.838542ms
+10:28:26 | 200 |  505.864625ms | 127.0.0.1 | POST | /api/assess | -
+10:28:27 | 200 |       2.017ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:27 ✅ LLM Worker: Completed diagnosis for patient 291 in 59.236083ms
+2025/12/27 10:28:27 🤖 LLM Worker: Processing diagnosis for patient 289
+2025/12/27 10:28:27 ✅ LLM Worker: Completed diagnosis for patient 289 in 59.761ms
+2025/12/27 10:28:27 🤖 LLM Worker: Processing diagnosis for patient 292
+2025/12/27 10:28:27 ✅ LLM Worker: Completed diagnosis for patient 292 in 65.340709ms
+10:28:28 | 200 |     190.667µs | 127.0.0.1 | GET | /api/diagnosis/290 | -
+10:28:28 | 200 |         211µs | 127.0.0.1 | GET | /api/diagnosis/291 | -
+10:28:28 | 200 |       147.5µs | 127.0.0.1 | GET | /api/diagnosis/289 | -
+10:28:29 | 200 |    10.47425ms | 127.0.0.1 | GET | /api/patients | -
+10:28:29 | 200 |    3.777333ms | 127.0.0.1 | GET | /api/patients | -
+10:28:29 | 200 |    2.842125ms | 127.0.0.1 | GET | /api/patients | -
+10:28:29 | 200 |     3.35125ms | 127.0.0.1 | GET | /api/patients | -
+10:28:29 | 200 |    3.934625ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 ⏱️ DB Write: 4.384709ms
+2025/12/27 10:28:29 ⏱️ RAG Semantic Search: 385.25µs
+10:28:29 | 200 |    4.925125ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 ⏱️ DB Write: 1.917292ms
+2025/12/27 10:28:29 ⏱️ RAG Semantic Search: 703.958µs
+10:28:29 | 200 |    5.838042ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 ⏱️ DB Write: 7.394667ms
+2025/12/27 10:28:29 ⏱️ RAG Semantic Search: 383.333µs
+2025/12/27 10:28:29 ⏱️ DB Write: 1.480334ms
+2025/12/27 10:28:29 ⏱️ RAG Semantic Search: 839.208µs
+10:28:29 | 200 |   11.879083ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 ⏱️ ML Predict (LIVE): 198.542708ms
+10:28:29 | 200 |      395.75µs | 127.0.0.1 | GET | /api/diagnosis/292 | -
+2025/12/27 10:28:29 ⏱️ ML Predict (LIVE): 241.829791ms
+2025/12/27 10:28:29 ⏱️ ML Predict (LIVE): 239.72275ms
+2025/12/27 10:28:29 ⏱️ ML Predict (LIVE): 251.215875ms
+2025/12/27 10:28:29 📜 Audit Log: [AI_PREDICTION] Patient 7cb676d5 | Hash: 72408633...33267cd7
+2025/12/27 10:28:29 🚀 LLM Task Published to NATS for patient 293
+2025/12/27 10:28:29 ⏱️ FAST RESPONSE (no LLM wait): 273.615083ms
+10:28:29 | 200 |  273.647834ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:28:29 🤖 LLM Worker: Processing diagnosis for patient 293
+10:28:29 | 200 |    1.968042ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 📜 Audit Log: [AI_PREDICTION] Patient 9cfd3c75 | Hash: 3fd85c86...e5b540c2
+2025/12/27 10:28:29 🚀 LLM Task Published to NATS for patient 295
+2025/12/27 10:28:29 ⏱️ FAST RESPONSE (no LLM wait): 269.363833ms
+10:28:29 | 200 |  269.393708ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:28:29 📜 Audit Log: [AI_PREDICTION] Patient a0f8b2c4 | Hash: 993e65f6...a605b468
+2025/12/27 10:28:29 🚀 LLM Task Published to NATS for patient 296
+2025/12/27 10:28:29 ⏱️ FAST RESPONSE (no LLM wait): 263.20475ms
+10:28:29 | 200 |  263.241292ms | 127.0.0.1 | POST | /api/assess | -
+10:28:29 | 200 |      3.8105ms | 127.0.0.1 | GET | /api/patients | -
+10:28:29 | 200 |    2.843625ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 ✅ LLM Worker: Completed diagnosis for patient 293 in 70.170958ms
+2025/12/27 10:28:29 🤖 LLM Worker: Processing diagnosis for patient 295
+2025/12/27 10:28:29 📜 Audit Log: [AI_PREDICTION] Patient 2cfc8ccb | Hash: e4655180...23c4344a
+2025/12/27 10:28:29 🚀 LLM Task Published to NATS for patient 294
+2025/12/27 10:28:29 ⏱️ FAST RESPONSE (no LLM wait): 343.981709ms
+10:28:29 | 200 |  344.074125ms | 127.0.0.1 | POST | /api/assess | -
+10:28:29 | 200 |    3.020583ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:28:29 ✅ LLM Worker: Completed diagnosis for patient 295 in 75.610542ms
+2025/12/27 10:28:29 🤖 LLM Worker: Processing diagnosis for patient 296
+2025/12/27 10:28:29 ✅ LLM Worker: Completed diagnosis for patient 296 in 64.666292ms
+2025/12/27 10:28:29 🤖 LLM Worker: Processing diagnosis for patient 294
+2025/12/27 10:28:29 ✅ LLM Worker: Completed diagnosis for patient 294 in 69.066292ms
+10:28:30 | 200 |     170.334µs | 127.0.0.1 | GET | /api/diagnosis/293 | -
+10:28:30 | 200 |     216.417µs | 127.0.0.1 | GET | /api/diagnosis/296 | -
+10:28:30 | 200 |     263.208µs | 127.0.0.1 | GET | /api/diagnosis/295 | -
+10:28:31 | 200 |     213.375µs | 127.0.0.1 | GET | /api/diagnosis/294 | -
+10:28:59 | 200 |    3.542459ms | 127.0.0.1 | GET | /api/patients | -
+10:28:59 | 200 |     928.542µs | 127.0.0.1 | GET | /health/ready | -
+2025/12/27 10:29:00 ⏱️ DB Write: 1.485958ms
+2025/12/27 10:29:00 ⏱️ RAG Semantic Search: 827.75µs
+10:28:59 | 200 |     835.375µs | 127.0.0.1 | GET | /health/ready | -
+10:28:59 | 200 |    4.097125ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:00 ⏱️ DB Write: 1.522959ms
+2025/12/27 10:29:00 ⏱️ RAG Semantic Search: 241.542µs
+2025/12/27 10:29:00 ⏱️ ML Predict (LIVE): 66.13875ms
+2025/12/27 10:29:00 📜 Audit Log: [AI_PREDICTION] Patient 4c15f47a | Hash: 334675ba...a8e2e6a4
+2025/12/27 10:29:00 🚀 LLM Task Published to NATS for patient 297
+2025/12/27 10:29:00 ⏱️ FAST RESPONSE (no LLM wait): 88.203083ms
+10:28:59 | 200 |   88.238667ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:00 🤖 LLM Worker: Processing diagnosis for patient 297
+10:28:59 | 200 |    1.787458ms | 127.0.0.1 | GET | /api/patients | -
+10:29:00 | 200 |    3.309708ms | 127.0.0.1 | GET | /health/ready | -
+10:29:00 | 200 |    9.031208ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:00 ⏱️ DB Write: 1.325625ms
+2025/12/27 10:29:00 ⏱️ RAG Semantic Search: 1.03ms
+10:29:00 | 200 |     766.875µs | 127.0.0.1 | GET | /health/ready | -
+10:29:00 | 200 |    4.773042ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:00 ⏱️ DB Write: 1.4915ms
+2025/12/27 10:29:00 ⏱️ RAG Semantic Search: 195.042µs
+2025/12/27 10:29:00 ✅ LLM Worker: Completed diagnosis for patient 297 in 183.737417ms
+2025/12/27 10:29:00 ⏱️ ML Predict (LIVE): 238.351916ms
+2025/12/27 10:29:00 📜 Audit Log: [AI_PREDICTION] Patient 76ebdb6d | Hash: 9af628c9...f4b3a3cd
+2025/12/27 10:29:00 🚀 LLM Task Published to NATS for patient 298
+2025/12/27 10:29:00 ⏱️ FAST RESPONSE (no LLM wait): 264.544208ms
+10:28:59 | 200 |  264.580959ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:00 🤖 LLM Worker: Processing diagnosis for patient 298
+10:29:00 | 200 |    2.577292ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:00 ✅ LLM Worker: Completed diagnosis for patient 298 in 57.784167ms
+2025/12/27 10:29:00 ⏱️ ML Predict (LIVE): 121.983209ms
+2025/12/27 10:29:00 ⏱️ ML Predict (LIVE): 160.2785ms
+2025/12/27 10:29:00 📜 Audit Log: [AI_PREDICTION] Patient 30883104 | Hash: 161e1709...9f56a4bb
+2025/12/27 10:29:00 🚀 LLM Task Published to NATS for patient 299
+2025/12/27 10:29:00 ⏱️ FAST RESPONSE (no LLM wait): 168.152292ms
+10:29:00 | 200 |  168.189083ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:00 🤖 LLM Worker: Processing diagnosis for patient 299
+2025/12/27 10:29:00 📜 Audit Log: [AI_PREDICTION] Patient 983bd614 | Hash: 9a276d6f...115bca59
+2025/12/27 10:29:00 🚀 LLM Task Published to NATS for patient 300
+2025/12/27 10:29:00 ⏱️ FAST RESPONSE (no LLM wait): 130.092209ms
+10:29:00 | 200 |  130.156541ms | 127.0.0.1 | POST | /api/assess | -
+10:29:00 | 200 |    3.765792ms | 127.0.0.1 | GET | /api/patients | -
+10:29:00 | 200 |     2.72425ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:00 ✅ LLM Worker: Completed diagnosis for patient 299 in 64.519917ms
+2025/12/27 10:29:00 🤖 LLM Worker: Processing diagnosis for patient 300
+2025/12/27 10:29:00 ✅ LLM Worker: Completed diagnosis for patient 300 in 63.700291ms
+10:29:01 | 200 |     221.333µs | 127.0.0.1 | GET | /api/diagnosis/298 | -
+10:29:01 | 200 |     242.875µs | 127.0.0.1 | GET | /api/diagnosis/299 | -
+10:29:01 | 200 |     179.667µs | 127.0.0.1 | GET | /api/diagnosis/300 | -
+10:29:01 | 200 |     208.792µs | 127.0.0.1 | GET | /api/diagnosis/297 | -
+10:29:09 | 200 |     206.583µs | 127.0.0.1 | GET | /health/ready | -
+10:29:09 | 200 |     147.041µs | 127.0.0.1 | GET | /health/ready | -
+10:29:10 | 200 |     160.292µs | 127.0.0.1 | GET | /health/ready | -
+10:29:10 | 200 |         165µs | 127.0.0.1 | GET | /health/ready | -
+10:29:19 | 200 |      173.75µs | 127.0.0.1 | GET | /health/ready | -
+10:29:19 | 200 |      157.25µs | 127.0.0.1 | GET | /health/ready | -
+10:29:20 | 200 |     281.417µs | 127.0.0.1 | GET | /health/ready | -
+10:29:20 | 200 |     216.208µs | 127.0.0.1 | GET | /health/ready | -
+10:29:29 | 200 |     259.708µs | 127.0.0.1 | GET | /health/ready | -
+10:29:29 | 200 |     222.458µs | 127.0.0.1 | GET | /health/ready | -
+10:29:30 | 200 |     209.292µs | 127.0.0.1 | GET | /health/ready | -
+10:29:30 | 200 |     204.083µs | 127.0.0.1 | GET | /health/ready | -
+10:29:39 | 200 |     429.667µs | 127.0.0.1 | GET | /health/ready | -
+10:29:39 | 200 |     792.708µs | 127.0.0.1 | GET | /health/ready | -
+10:29:39 | 200 |     175.208µs | 127.0.0.1 | GET | /health/ready | -
+10:29:40 | 200 |     230.375µs | 127.0.0.1 | GET | /health/ready | -
+10:29:41 | 200 |     274.584µs | 127.0.0.1 | GET | /health/ready | -
+10:29:41 | 200 |    4.841291ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:41 ⏱️ DB Write: 7.686125ms
+2025/12/27 10:29:41 ⏱️ RAG Semantic Search: 1.024667ms
+10:29:41 | 200 |     1.02575ms | 127.0.0.1 | GET | /health/ready | -
+10:29:41 | 200 |    9.232958ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:41 ⏱️ DB Write: 1.332708ms
+2025/12/27 10:29:41 ⏱️ RAG Semantic Search: 1.198458ms
+2025/12/27 10:29:41 ⏱️ ML Predict (LIVE): 145.355458ms
+2025/12/27 10:29:41 📜 Audit Log: [AI_PREDICTION] Patient c3ea99f8 | Hash: 28246f69...4ead098a
+2025/12/27 10:29:41 🚀 LLM Task Published to NATS for patient 301
+2025/12/27 10:29:41 ⏱️ FAST RESPONSE (no LLM wait): 201.1075ms
+10:29:41 | 200 |  201.157792ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:41 🤖 LLM Worker: Processing diagnosis for patient 301
+10:29:41 | 200 |    5.924292ms | 127.0.0.1 | GET | /api/patients | -
+10:29:41 | 200 |       438.5µs | 127.0.0.1 | GET | /health/ready | -
+10:29:41 | 200 |    5.632791ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:41 ⏱️ DB Write: 1.004958ms
+2025/12/27 10:29:41 ⏱️ RAG Semantic Search: 2.524417ms
+10:29:41 | 200 |     247.667µs | 127.0.0.1 | GET | /health/ready | -
+10:29:41 | 200 |    4.314334ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:41 ⏱️ DB Write: 1.151375ms
+2025/12/27 10:29:41 ⏱️ RAG Semantic Search: 209.041µs
+2025/12/27 10:29:41 ✅ LLM Worker: Completed diagnosis for patient 301 in 228.593625ms
+2025/12/27 10:29:41 ⏱️ ML Predict (LIVE): 334.919084ms
+2025/12/27 10:29:41 📜 Audit Log: [AI_PREDICTION] Patient f32828ac | Hash: 60e21f70...e3938427
+2025/12/27 10:29:41 🚀 LLM Task Published to NATS for patient 302
+2025/12/27 10:29:41 ⏱️ FAST RESPONSE (no LLM wait): 366.307333ms
+10:29:41 | 200 |  366.347875ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:41 🤖 LLM Worker: Processing diagnosis for patient 302
+10:29:41 | 200 |    3.635375ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:42 ✅ LLM Worker: Completed diagnosis for patient 302 in 83.11925ms
+2025/12/27 10:29:42 ⏱️ ML Predict (LIVE): 272.272167ms
+2025/12/27 10:29:42 ⏱️ ML Predict (LIVE): 225.494625ms
+2025/12/27 10:29:42 📜 Audit Log: [AI_PREDICTION] Patient 8bd9c0d4 | Hash: 9305680b...e20e455f
+2025/12/27 10:29:42 🚀 LLM Task Published to NATS for patient 303
+2025/12/27 10:29:42 ⏱️ FAST RESPONSE (no LLM wait): 282.586875ms
+10:29:41 | 200 |  282.620792ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:42 🤖 LLM Worker: Processing diagnosis for patient 303
+2025/12/27 10:29:42 📜 Audit Log: [AI_PREDICTION] Patient d874e4e4 | Hash: 12569d86...f1c4c45c
+2025/12/27 10:29:42 🚀 LLM Task Published to NATS for patient 304
+2025/12/27 10:29:42 ⏱️ FAST RESPONSE (no LLM wait): 234.632292ms
+10:29:41 | 200 |  234.773959ms | 127.0.0.1 | POST | /api/assess | -
+10:29:41 | 200 |    3.272958ms | 127.0.0.1 | GET | /api/patients | -
+10:29:41 | 200 |    2.768041ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:42 ✅ LLM Worker: Completed diagnosis for patient 303 in 171.756417ms
+2025/12/27 10:29:42 🤖 LLM Worker: Processing diagnosis for patient 304
+2025/12/27 10:29:42 ✅ LLM Worker: Completed diagnosis for patient 304 in 52.626625ms
+10:29:42 | 200 |     181.584µs | 127.0.0.1 | GET | /api/diagnosis/302 | -
+10:29:42 | 200 |     208.209µs | 127.0.0.1 | GET | /api/diagnosis/303 | -
+10:29:42 | 200 |     252.541µs | 127.0.0.1 | GET | /api/diagnosis/304 | -
+10:29:43 | 200 |     172.041µs | 127.0.0.1 | GET | /api/diagnosis/301 | -
+10:29:50 | 200 |    1.979625ms | 127.0.0.1 | GET | /api/patients | -
+10:29:50 | 200 |    2.377292ms | 127.0.0.1 | GET | /health/ready | -
+2025/12/27 10:29:51 ⏱️ DB Write: 694.958µs
+2025/12/27 10:29:51 ⏱️ RAG Semantic Search: 147.375µs
+2025/12/27 10:29:51 ⏱️ ML Predict (LIVE): 29.381333ms
+2025/12/27 10:29:51 📜 Audit Log: [AI_PREDICTION] Patient 090d3859 | Hash: 15b6bc65...1459a0a0
+2025/12/27 10:29:51 🚀 LLM Task Published to NATS for patient 305
+2025/12/27 10:29:51 ⏱️ FAST RESPONSE (no LLM wait): 32.803458ms
+10:29:50 | 200 |   32.826166ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:29:51 🤖 LLM Worker: Processing diagnosis for patient 305
+10:29:50 | 200 |    3.506334ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:29:51 ✅ LLM Worker: Completed diagnosis for patient 305 in 343.456959ms
+10:29:51 | 200 |     228.833µs | 127.0.0.1 | GET | /health/ready | -
+10:29:51 | 200 |     180.583µs | 127.0.0.1 | GET | /health/ready | -
+10:29:51 | 200 |     268.875µs | 127.0.0.1 | GET | /health/ready | -
+10:29:51 | 200 |     189.625µs | 127.0.0.1 | GET | /health/ready | -
+10:29:51 | 200 |     243.375µs | 127.0.0.1 | GET | /api/diagnosis/305 | -
+10:30:00 | 200 |         150µs | 127.0.0.1 | GET | /health/ready | -
+10:30:01 | 200 |     201.041µs | 127.0.0.1 | GET | /health/ready | -
+10:30:01 | 200 |     172.208µs | 127.0.0.1 | GET | /health/ready | -
+10:30:01 | 200 |     153.625µs | 127.0.0.1 | GET | /health/ready | -
+10:30:01 | 200 |     146.542µs | 127.0.0.1 | GET | /health/ready | -
+10:30:11 | 200 |     203.708µs | 127.0.0.1 | GET | /health/ready | -
+10:30:11 | 200 |     162.875µs | 127.0.0.1 | GET | /health/ready | -
+10:30:11 | 200 |     189.834µs | 127.0.0.1 | GET | /health/ready | -
+10:30:11 | 200 |      290.75µs | 127.0.0.1 | GET | /health/ready | -
+10:30:11 | 200 |     187.667µs | 127.0.0.1 | GET | /health/ready | -
+10:30:21 | 200 |      188.25µs | 127.0.0.1 | GET | /health/ready | -
+10:30:21 | 200 |     225.209µs | 127.0.0.1 | GET | /health/ready | -
+10:30:21 | 200 |     301.667µs | 127.0.0.1 | GET | /health/ready | -
+10:30:21 | 200 |      143.75µs | 127.0.0.1 | GET | /health/ready | -
+10:30:21 | 200 |     157.583µs | 127.0.0.1 | GET | /health/ready | -
+10:30:26 | 200 |     113.791µs | 127.0.0.1 | GET | /api/defaults | -
+10:30:31 | 200 |     220.417µs | 127.0.0.1 | GET | /health/ready | -
+10:30:31 | 200 |     310.375µs | 127.0.0.1 | GET | /health/ready | -
+10:30:31 | 200 |     158.666µs | 127.0.0.1 | GET | /health/ready | -
+10:30:31 | 200 |     156.792µs | 127.0.0.1 | GET | /health/ready | -
+10:30:31 | 200 |         158µs | 127.0.0.1 | GET | /health/ready | -
+2025/12/27 10:30:37 ⏱️ DB Write: 1.214542ms
+2025/12/27 10:30:37 ⏱️ RAG Semantic Search: 260.417µs
+2025/12/27 10:30:37 ⏱️ ML Predict (LIVE): 29.146125ms
+2025/12/27 10:30:37 📜 Audit Log: [AI_PREDICTION] Patient 38b83cae | Hash: fe160bc3...19bb8d0f
+2025/12/27 10:30:37 🚀 LLM Task Published to NATS for patient 306
+2025/12/27 10:30:37 ⏱️ FAST RESPONSE (no LLM wait): 33.89425ms
+10:30:37 | 200 |    33.92325ms | 127.0.0.1 | POST | /api/assess | -
+2025/12/27 10:30:37 🤖 LLM Worker: Processing diagnosis for patient 306
+10:30:37 | 200 |     1.80475ms | 127.0.0.1 | GET | /api/patients | -
+2025/12/27 10:30:37 ✅ LLM Worker: Completed diagnosis for patient 306 in 140.780083ms
+10:30:38 | 200 |     276.541µs | 127.0.0.1 | GET | /api/diagnosis/306 | -
+10:30:40 | 200 |      847.75µs | 127.0.0.1 | GET | /health/ready | -
+10:30:41 | 200 |         177µs | 127.0.0.1 | GET | /health/ready | -
+10:30:41 | 200 |     619.417µs | 127.0.0.1 | GET | /health/ready | -
+10:30:41 | 200 |       159.5µs | 127.0.0.1 | GET | /health/ready | -
+10:30:41 | 200 |     331.209µs | 127.0.0.1 | GET | /health/ready | -
+10:30:50 | 200 |    1.842584ms | 127.0.0.1 | GET | /health/ready | -
+10:30:51 | 200 |     312.584µs | 127.0.0.1 | GET | /health/ready | -
+10:30:51 | 200 |     470.458µs | 127.0.0.1 | GET | /health/ready | -
+10:30:51 | 200 |       147.5µs | 127.0.0.1 | GET | /health/ready | -
+10:31:00 | 200 |     153.458µs | 127.0.0.1 | GET | /health/ready | -
+10:31:01 | 200 |     183.541µs | 127.0.0.1 | GET | /health/ready | -
+10:31:01 | 200 |     149.959µs | 127.0.0.1 | GET | /health/ready | -
+10:31:01 | 200 |     239.166µs | 127.0.0.1 | GET | /health/ready | -
+10:31:10 | 200 |      201.25µs | 127.0.0.1 | GET | /health/ready | -
+10:31:11 | 200 |       196.5µs | 127.0.0.1 | GET | /health/ready | -
+10:31:11 | 200 |     176.375µs | 127.0.0.1 | GET | /health/ready | -
+10:31:11 | 200 |     162.791µs | 127.0.0.1 | GET | /health/ready | -
+10:31:20 | 200 |      239.25µs | 127.0.0.1 | GET | /health/ready | -
+10:31:21 | 200 |     185.042µs | 127.0.0.1 | GET | /health/ready | -
+10:31:21 | 200 |     207.458µs | 127.0.0.1 | GET | /health/ready | -
+10:31:21 | 200 |      237.25µs | 127.0.0.1 | GET | /health/ready | -
+10:31:30 | 200 |     166.584µs | 127.0.0.1 | GET | /health/ready | -
+10:31:31 | 200 |     263.459µs | 127.0.0.1 | GET | /health/ready | -
+10:31:31 | 200 |       189.5µs | 127.0.0.1 | GET | /health/ready | -
+10:31:31 | 200 |      233.25µs | 127.0.0.1 | GET | /health/ready | -
+10:31:40 | 200 |     277.458µs | 127.0.0.1 | GET | /health/ready | -
+10:31:41 | 200 |      220.25µs | 127.0.0.1 | GET | /health/ready | -
+10:31:41 | 200 |     185.584µs | 127.0.0.1 | GET | /health/ready | -
+10:31:41 | 200 |     165.708µs | 127.0.0.1 | GET | /health/ready | -
+10:31:45 | 200 |     193.959µs | 127.0.0.1 | GET | /health/ready | -
+10:31:50 | 200 |     213.625µs | 127.0.0.1 | GET | /health/ready | -
+10:31:51 | 200 |     189.708µs | 127.0.0.1 | GET | /health/ready | -
+10:31:51 | 200 |     209.083µs | 127.0.0.1 | GET | /health/ready | -
+10:31:51 | 200 |      237.75µs | 127.0.0.1 | GET | /health/ready | -

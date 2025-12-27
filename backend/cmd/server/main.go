@@ -80,6 +80,7 @@ func main() {
 	ragService := services.NewRAGService(patientRepo, feedbackRepo)
 	predService := services.NewPredictionService(cfg.MLServiceURL)
 	auditService := services.NewAuditService(database.DB)
+	ipfsService := services.NewIPFSService()
 
 	// Workers
 	llmWorker := workers.NewLLMWorker(cfg.MLServiceURL)
@@ -92,6 +93,7 @@ func main() {
 	feedbackHandler := handlers.NewFeedbackHandler(database.DB, auditService)
 	diseaseHandler := handlers.NewDiseaseHandler(predService)
 	ekgHandler := handlers.NewEKGHandler(predService)
+	blockchainHandler := handlers.NewBlockchainHandler(auditService, ipfsService)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 8 (Scalability Stack)")
@@ -165,7 +167,9 @@ func main() {
 	app.Post("/api/disease/predict", diseaseHandler.Predict)
 	app.Post("/api/ekg/analyze", ekgHandler.Analyze)
 
-	// 8. Blockchain Audit Endpoints
+	// 8. Blockchain Audit Endpoints (AI Act Compliance)
+	app.Get("/api/blockchain/verify", blockchainHandler.VerifyChain)
+	app.Post("/api/blockchain/backup", blockchainHandler.BackupChain)
 	app.Get("/api/audit/chain", func(c *fiber.Ctx) error {
 		// Just for safety if called before Init
 		if blockchain.GlobalChain == nil {
