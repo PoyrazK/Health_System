@@ -97,13 +97,13 @@ Sağlık sektörünü **yapay zeka ile dönüştürmek** ve hekimlerin bilişsel
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Mikroservis Modülleri (13 Adet)
+### Mikroservis Modülleri (14 Adet)
 
 | Modül | Sorumluluk | Teknoloji |
 |-------|------------|-----------|
 | `handlers/` | API endpoint yönetimi | Go Fiber |
 | `services/` | İş mantığı katmanı | Go |
-| `blockchain/` | SHA-256 denetim deftери | Custom Go |
+| `blockchain/` | SHA-256 denetim defteri | Custom Go |
 | `cache/` | Yüksek hızlı önbellek | Redis |
 | `queue/` | Asenkron görev kuyruğu | NATS |
 | `resilience/` | Circuit Breaker pattern | Go |
@@ -111,6 +111,7 @@ Sağlık sektörünü **yapay zeka ile dönüştürmek** ve hekimlerin bilişsel
 | `middleware/` | Auth, logging, CORS | Go |
 | `repositories/` | Veri erişim katmanı | GORM |
 | `mcp/` | Model Context Protocol | Go |
+| **`wifi-densepose/`** | **Duvar arkası insan takibi** | **Python FastAPI** |
 
 ---
 
@@ -676,6 +677,6 @@ Yılda **250,000+** önlenebilir tıbbi hata ölümü - mevcut çözümler yeter
 ---
 
 **Versiyon:** 2.0.1  
-**Son Güncelleme:** 27 Aralık 2025  
+**Son Güncelleme:** 27 AralıredFivek 2025  
 **Lisans:** Proprietary  
 **İletişim:** [Proje Ekibi]

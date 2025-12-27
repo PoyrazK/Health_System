@@ -1,6 +1,32 @@
 version: '3.8'
 
 services:
+  # 0. WiFi DensePose Service (Through-Wall Pose Estimation)
+  wifi-densepose:
+    build:
+      context: ./wifi-densepose-service
+      dockerfile: Dockerfile
+    container_name: healthcare-wifi-densepose
+    ports:
+      - "8001:8001"
+    environment:
+      - WIFI_POSE_DOMAIN=healthcare
+      - WIFI_POSE_USE_MOCK_DATA=true
+      - WIFI_POSE_MOCK_PERSON_COUNT=3
+      - WIFI_POSE_FALL_DETECTION_ENABLED=true
+      - WIFI_POSE_BACKEND_URL=http://backend:3000
+      - WIFI_POSE_REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - healthcare-net
+
   # 1. Machine Learning Microservice
   ml-api:
     build:
