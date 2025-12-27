@@ -67,9 +67,10 @@ func (c *DiagnosisCache) Get(id uint) (string, string) {
 // -- Service --
 
 type PredictionService struct {
-	MLServiceURL string
-	Cache        *DiagnosisCache
-	CB           *gobreaker.CircuitBreaker
+	MLServiceURL  string
+	Cache         *DiagnosisCache
+	CB            *gobreaker.CircuitBreaker
+	LastMLLatency int64 // Ms
 }
 
 func NewPredictionService(mlURL string) *PredictionService {
@@ -148,10 +149,8 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 	})
 
 	if err != nil {
-		log.Printf("🔌 ML Service Error (CB): %v", err)
-		// Fallback: If we have an older cache, it would be returned in step 1.
-		// If not, we return an error or empty risks with warning
-		return nil, fmt.Errorf("ML service is currently unavailable")
+		log.Printf("🔌 ML Service Error (CB): %v. Activating Rule-Based Fallback!", err)
+		return s.ruleBasedPredictRisks(patient), nil
 	}
 
 	risks := body.(*models.PredictResponse)
@@ -161,8 +160,55 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 		cache.Set(cacheKey, risksData, 5*time.Minute)
 	}
 
+	s.LastMLLatency = time.Since(mlStart).Milliseconds()
 	log.Printf("⏱️ ML Predict (LIVE): %v", time.Since(mlStart))
 	return risks, nil
+}
+
+// ruleBasedPredictRisks provides a clinical heuristic fallback when ML service is down
+func (s *PredictionService) ruleBasedPredictRisks(p models.PatientData) *models.PredictResponse {
+	risks := &models.PredictResponse{
+		ModelPrecisions: map[string]float64{
+			"Heart_Model":    0.0, // Indicated as rule-based
+			"Diabetes_Model": 0.0,
+			"Stroke_Model":   0.0,
+			"Kidney_Model":   0.0,
+		},
+		Explanations: make(map[string]map[string]float64),
+	}
+
+	// Heuristic 1: Heart Risk
+	if p.SystolicBP > 160 || p.Cholesterol > 240 {
+		risks.HeartRisk = 0.85
+	} else if p.SystolicBP > 140 || p.Cholesterol > 200 {
+		risks.HeartRisk = 0.45
+	} else {
+		risks.HeartRisk = 0.15
+	}
+
+	// Heuristic 2: Diabetes Risk
+	if p.Glucose > 200 || p.BMI > 35 {
+		risks.DiabetesRisk = 0.90
+	} else if p.Glucose > 125 || p.BMI > 30 {
+		risks.DiabetesRisk = 0.50
+	} else {
+		risks.DiabetesRisk = 0.10
+	}
+
+	// Heuristic 3: Stroke Risk
+	if p.Age > 65 && p.SystolicBP > 160 {
+		risks.StrokeRisk = 0.75
+	} else if p.Age > 50 && p.SystolicBP > 140 {
+		risks.StrokeRisk = 0.35
+	} else {
+		risks.StrokeRisk = 0.05
+	}
+
+	// Global Stats
+	risks.GeneralHealthScore = 1.0 - (risks.HeartRisk+risks.DiabetesRisk+risks.StrokeRisk)/3.0
+	risks.ClinicalConfidence = 0.50 // Low confidence since it's rule-based
+	
+	return risks
 }
 
 func (s *PredictionService) PredictDisease(req models.DiseaseRequest) (*models.DiseaseResponse, error) {

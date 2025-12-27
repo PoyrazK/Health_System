@@ -23,6 +23,8 @@ import (
 	"healthcare-backend/pkg/repositories"
 	"healthcare-backend/pkg/services"
 	"healthcare-backend/pkg/workers"
+
+	"github.com/ansrivas/fiberprometheus/v2"
 )
 
 func main() {
@@ -59,18 +61,57 @@ func main() {
 	app.Use(cors.New())
 	app.Use(logger.New())
 	app.Use(middleware.ErrorHandler)
+	app.Use(middleware.PerformanceMiddleware)
 
-	// Rate Limiting (100 req/min)
+	// Prometheus Metrics
+	prometheus := fiberprometheus.New("healthcare-backend")
+	prometheus.RegisterAt(app, "/metrics")
+	app.Use(prometheus.Middleware)
+
+	// Rate Limiting (Global)
 	app.Use(limiter.New(limiter.Config{
-		Max:        100,
+		Max:        cfg.RateLimitGlobalMax,
 		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			return c.IP() // Explicitly key by IP
+		},
 		LimitReached: func(c *fiber.Ctx) error {
 			return c.Status(429).JSON(fiber.Map{
 				"success": false,
-				"error":   "Too many requests, slow down!",
+				"error":   "Too many global requests, slow down!",
 			})
 		},
 	}))
+
+	// Specific Limiter: ML Inference (Expensive)
+	mlLimiter := limiter.New(limiter.Config{
+		Max:        cfg.RateLimitMLMax,
+		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			return c.IP()
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"success": false,
+				"error":   "ML Service rate limit exceeded. Please wait.",
+			})
+		},
+	})
+
+	// Specific Limiter: Feedback (Spam Prevention)
+	feedbackLimiter := limiter.New(limiter.Config{
+		Max:        cfg.RateLimitFeedbackMax,
+		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			return c.IP()
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"success": false,
+				"error":   "Feedback submission rate limit exceeded.",
+			})
+		},
+	})
 
 	// Repositories
 	patientRepo := repositories.NewPatientRepository(database.DB)
@@ -94,6 +135,7 @@ func main() {
 	diseaseHandler := handlers.NewDiseaseHandler(predService)
 	ekgHandler := handlers.NewEKGHandler(predService)
 	blockchainHandler := handlers.NewBlockchainHandler(auditService, ipfsService)
+	dashboardHandler := handlers.NewDashboardHandler(database.DB, predService, auditService)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 8 (Scalability Stack)")
@@ -159,9 +201,10 @@ func main() {
 	// API Routes
 	app.Get("/api/patients", patientHandler.GetPatients)
 	app.Get("/api/defaults", patientHandler.GetDefaults)
-	app.Post("/api/assess", patientHandler.AssessPatient)
+	app.Post("/api/assess", mlLimiter, patientHandler.AssessPatient)
 	app.Get("/api/diagnosis/:id", patientHandler.GetDiagnosis)
-	app.Post("/api/feedback", feedbackHandler.SubmitFeedback)
+	app.Post("/api/feedback", feedbackLimiter, feedbackHandler.SubmitFeedback)
+	app.Get("/api/dashboard/summary", dashboardHandler.GetSummary)
 
 	// New AI Services
 	app.Post("/api/disease/predict", diseaseHandler.Predict)

@@ -158,3 +158,23 @@ type OverrideLog struct {
 	Reason             string `json:"reason"`         // "Clinical Intuition", "Patient History Discrepancy"
 	OversightType      string `json:"oversight_type"` // "Human-in-the-Loop"
 }
+
+// -- Dashboard Structs --
+
+type DashboardSummary struct {
+	TotalPatients     int64              `json:"total_patients"`
+	HighRiskPatients  int64              `json:"high_risk_patients"`
+	RecentAssessments int64              `json:"recent_assessments"`
+	SystemHealth      string             `json:"system_health"`
+	MLServicePulse    string             `json:"ml_service_pulse"`
+	AuditChainValid   bool               `json:"audit_chain_valid"`
+	RiskDistribution  map[string]int64    `json:"risk_distribution"`
+	Performance       PerformanceMetrics `json:"performance"`
+}
+
+type PerformanceMetrics struct {
+	AvgMLInferenceTimeMs int64   `json:"avg_ml_inference_time_ms"`
+	UptimeSeconds        float64 `json:"uptime_seconds"`
+	RequestCount         int64   `json:"request_count"`
+	ErrorRate            float64 `json:"error_rate"` // % of last 100 requests
+}

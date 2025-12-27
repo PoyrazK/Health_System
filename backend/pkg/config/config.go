@@ -26,8 +26,13 @@ type Config struct {
 	NatsURL      string
 
 	// Feature Flags
-	EnableAuditLog bool
+	EnableAuditLog  bool
 	EnableWebSocket bool
+
+	// Rate Limits
+	RateLimitGlobalMax   int
+	RateLimitMLMax       int
+	RateLimitFeedbackMax int
 }
 
 // Global config instance
@@ -59,6 +64,11 @@ func Load() *Config {
 		// Feature Flags
 		EnableAuditLog:  getEnvBool("ENABLE_AUDIT_LOG", true),
 		EnableWebSocket: getEnvBool("ENABLE_WEBSOCKET", true),
+
+		// Rate Limits
+		RateLimitGlobalMax:   getEnvInt("RATE_LIMIT_GLOBAL_MAX", 100),
+		RateLimitMLMax:       getEnvInt("RATE_LIMIT_ML_MAX", 20),
+		RateLimitFeedbackMax: getEnvInt("RATE_LIMIT_FEEDBACK_MAX", 10),
 	}
 
 	AppConfig = config
@@ -87,6 +97,17 @@ func getEnvBool(key string, defaultValue bool) bool {
 		b, err := strconv.ParseBool(value)
 		if err == nil {
 			return b
+		}
+	}
+	return defaultValue
+}
+
+// getEnvInt returns environment variable as int or default value
+func getEnvInt(key string, defaultValue int) int {
+	if value := os.Getenv(key); value != "" {
+		i, err := strconv.Atoi(value)
+		if err == nil {
+			return i
 		}
 	}
 	return defaultValue
