@@ -237,9 +237,12 @@ GET /health
 ```json
 {
   "status": "ok",
-  "models_loaded": ["heart", "diabetes", "stroke", "kidney"]
+  "models_loaded": ["heart", "diabetes", "stroke", "kidney"],
+  "disease_model": true,
+  "ekg_model": true
 }
 ```
+
 
 ---
 
@@ -383,7 +386,98 @@ Generates LLM-powered clinical synthesis using Google Gemini.
 
 ---
 
+### Disease Prediction
+
+```http
+POST /disease/predict
+Content-Type: application/json
+```
+
+Analyzes symptoms and returns top disease predictions.
+
+**Request Body:**
+```json
+{
+  "symptoms": ["fever", "cough", "headache"],
+  "patient_id": "optional_id"
+}
+```
+
+**Response:**
+```json
+{
+  "predictions": [
+    {"disease": "Influenza", "probability": 78.5, "confidence": "high"},
+    {"disease": "Common Cold", "probability": 45.2, "confidence": "medium"},
+    {"disease": "COVID-19", "probability": 32.1, "confidence": "medium"}
+  ]
+}
+```
+
+---
+
+### Disease Feedback
+
+```http
+POST /disease/feedback
+Content-Type: application/json
+```
+
+Logs physician confirmation for model improvement.
+
+**Request Body:**
+```json
+{
+  "symptoms": ["fever", "cough"],
+  "confirmed_diagnosis": "Influenza",
+  "doctor_id": "DR001",
+  "notes": "Patient responded well to Tamiflu"
+}
+```
+
+**Response:**
+```json
+{"success": true}
+```
+
+---
+
+### EKG Analysis
+
+```http
+POST /ekg/analyze
+Content-Type: application/json
+```
+
+Analyzes raw EKG signal and classifies rhythm.
+
+**Request Body:**
+```json
+{
+  "signal": [0.1, 0.5, 2.0, -0.3, ...],
+  "sampling_rate": 360
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "predictions": [
+    {"condition": "Normal Sinus Rhythm", "probability": 0.92, "confidence": "high"}
+  ],
+  "features": {
+    "heart_rate": 72.5,
+    "rr_mean": 833.2,
+    "rr_std": 45.1
+  }
+}
+```
+
+---
+
 ## Data Models
+
 
 ### PatientData
 

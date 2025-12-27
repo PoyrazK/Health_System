@@ -12,8 +12,11 @@ This document provides detailed model cards for all machine learning models depl
 | [Diabetes](#diabetes-risk-model) | Type 2 Diabetes | XGBoost | 22 | 253,680 |
 | [Stroke](#stroke-risk-model) | Stroke Event | XGBoost | 10 | 5,110 |
 | [Kidney Disease](#kidney-disease-model) | Chronic Kidney Disease | Random Forest | 24 | 400 |
+| [Disease Classifier](#disease-classifier-model) | Multi-Disease Diagnosis | XGBoost | 316 | ~100,000 |
+| [EKG Analyzer](#ekg-analyzer-model) | Arrhythmia Classification | XGBoost | 32 | 109,440 |
 
 ---
+
 
 ## Heart Disease Model
 
@@ -321,7 +324,111 @@ Doctor feedback stored in the `feedbacks` table can be used to:
 
 ---
 
+## Disease Classifier Model
+
+### Model Card
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `models/disease/disease_classifier_pruned.joblib` |
+| **Algorithm** | XGBoost Classifier (Pruned) |
+| **Training Data** | Kaggle Disease-Symptom Dataset |
+| **Samples** | ~100,000 |
+| **Features** | 316 (symptom columns) |
+| **Target** | Multi-class (527 diseases) |
+
+### Features
+
+The model uses **316 binary symptom features**, including:
+
+| Category | Examples |
+|----------|----------|
+| Cardiovascular | chest pain, palpitations, irregular heartbeat |
+| Respiratory | cough, shortness of breath, wheezing |
+| Neurological | headache, dizziness, seizures |
+| Gastrointestinal | nausea, vomiting, diarrhea |
+| Dermatological | skin rash, itching, swelling |
+
+### Output
+
+Returns **Top-K** predictions with:
+- Disease name
+- Probability (0-100%)
+- Confidence level (high/medium/low)
+
+### Clinical Interpretation
+
+| Probability | Meaning | Action |
+|-------------|---------|--------|
+| >70% | Highly likely | Primary consideration |
+| 30-70% | Possible | Differential diagnosis |
+| <30% | Unlikely | Rule-out consideration |
+
+### Feedback Loop
+
+- Physicians can log confirmed diagnoses via `/disease/feedback`
+- Feedback stored in `models/disease/feedback_log.csv`
+- Supports incremental model retraining
+
+---
+
+## EKG Analyzer Model
+
+### Model Card
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `models/ekg/ekg_xgboost.joblib` |
+| **Algorithm** | XGBoost Classifier |
+| **Training Data** | MIT-BIH Arrhythmia Database |
+| **Samples** | 109,440 annotated beats |
+| **Features** | 32 (signal features) |
+| **Target** | Multi-class (N, S, V - 3 classes) |
+
+### Classes
+
+| Class | Name | Description | Urgency |
+|-------|------|-------------|---------|
+| N | Normal | Normal sinus rhythm | Low |
+| S | SVEB | Supraventricular ectopic beat | Medium |
+| V | VEB | Ventricular ectopic beat | **High** |
+
+### Features Extracted
+
+| Feature Group | Features |
+|---------------|----------|
+| RR Intervals | pre-RR, post-RR, RR ratio |
+| Peak Amplitudes | pPeak, qPeak, rPeak, sPeak, tPeak |
+| Intervals | QRS, PQ, QT, ST intervals |
+| Morphology | qrs_morph0-4 (5 coefficients) |
+
+### Signal Preprocessing
+
+1. **High-pass filter** (0.5 Hz) - Remove baseline wander
+2. **Z-score normalization** - Standardize amplitude
+3. **Resampling** - Fixed window extraction
+
+### Performance Metrics
+
+| Metric | Value |
+|--------|-------|
+| Accuracy | 99.2% |
+| Top-3 Accuracy | 100% |
+| Macro F1 | 94.0% |
+| Train-Test Gap | <5% |
+
+### Clinical Interpretation
+
+| Prediction | Meaning | Recommended Action |
+|------------|---------|-------------------|
+| Normal Sinus Rhythm | Healthy rhythm | Routine monitoring |
+| SVEB (Supraventricular) | Atrial origin ectopy | Cardiology follow-up |
+| VEB (Ventricular) | **Life-threatening risk** | **Immediate evaluation** |
+
+---
+
 ## File Locations
+
 
 ```
 /models/
@@ -329,8 +436,17 @@ Doctor feedback stored in the `feedbacks` table can be used to:
 ├── diabetes_model.pkl        # 437 KB - XGBoost  
 ├── stroke_model.pkl          # 259 KB - XGBoost
 ├── kidney_model.pkl          # 195 KB - Random Forest
-└── model_metadata.json       # Feature specifications
+├── model_metadata.json       # Feature specifications
+├── disease/
+│   ├── disease_classifier_pruned.joblib  # 28 MB - XGBoost
+│   ├── feature_columns.json              # Symptom list
+│   └── disease_encoding.json             # Disease labels
+└── ekg/
+    ├── ekg_xgboost.joblib    # 3.7 MB - XGBoost
+    ├── ekg_scaler.joblib     # Normalization scaler
+    └── ekg_classes.json      # Class labels
 ```
+
 
 ---
 

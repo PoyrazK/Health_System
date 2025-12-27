@@ -64,6 +64,8 @@ graph TB
 | **Neural Differential Panel** | LLM diagnosis display |
 | **Medication HUD** | Drug interaction warnings |
 | **Patient Queue** | Sidebar patient list |
+| **EKG Panel** | ECG waveform visualization & AI analysis |
+| **Disease Checker Modal** | Symptom-based AI differential diagnosis |
 
 **Key Technologies:**
 - **Framework:** Next.js 14 with App Router
