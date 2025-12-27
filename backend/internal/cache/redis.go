@@ -46,3 +46,11 @@ func Set(key string, value interface{}, ttl time.Duration) error {
 func Delete(key string) error {
 	return RedisClient.Del(ctx, key).Err()
 }
+
+// Ping checks if Redis is alive
+func Ping() error {
+	if RedisClient == nil {
+		return context.DeadlineExceeded
+	}
+	return RedisClient.Ping(ctx).Err()
+}

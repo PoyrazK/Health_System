@@ -78,16 +78,51 @@ func main() {
 	feedbackHandler := handlers.NewFeedbackHandler(database.DB, auditService)
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 7 (Refactored)")
+		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 8 (Scalability Stack)")
 	})
 
-	// Health Check Endpoint
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"status":  "healthy",
-			"version": "1.0.0",
-			"db":      "connected",
-			"ml":      cfg.MLServiceURL,
+	// 7. Health Probes (K8s Ready)
+	app.Get("/health/live", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{"status": "live", "uptime": "ok"})
+	})
+
+	app.Get("/health/ready", func(c *fiber.Ctx) error {
+		ready := true
+		dependencies := fiber.Map{}
+
+		// DB Check
+		sqlDB, _ := database.DB.DB()
+		if err := sqlDB.Ping(); err != nil {
+			ready = false
+			dependencies["db"] = "unhealthy"
+		} else {
+			dependencies["db"] = "healthy"
+		}
+
+		// Redis Check
+		if err := cache.Ping(); err != nil {
+			ready = false
+			dependencies["redis"] = "unhealthy"
+		} else {
+			dependencies["redis"] = "healthy"
+		}
+
+		// NATS Check
+		if !queue.IsConnected() {
+			ready = false
+			dependencies["nats"] = "unhealthy"
+		} else {
+			dependencies["nats"] = "healthy"
+		}
+
+		status := 200
+		if !ready {
+			status = 503
+		}
+
+		return c.Status(status).JSON(fiber.Map{
+			"status":       map[bool]string{true: "ready", false: "not ready"}[ready],
+			"dependencies": dependencies,
 		})
 	})
 

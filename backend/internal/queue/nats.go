@@ -59,3 +59,8 @@ func Close() {
 		NC.Close()
 	}
 }
+
+// IsConnected checks if NATS is connected
+func IsConnected() bool {
+	return NC != nil && NC.Status() == nats.CONNECTED
+}
