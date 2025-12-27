@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-12-27T00:25:47.082281",
+  "model_type": "XGBoost",
+  "accuracy": 0.9917240466101694,
+  "top3_accuracy": 1.0,
+  "precision_macro": 0.9369147432411308,
+  "recall_macro": 0.9433018244518808,
+  "f1_macro": 0.9400226748149006,
+  "num_features": 32,
+  "num_classes": 3,
+  "train_samples": 189282,
+  "test_samples": 15104,
+  "best_iteration": 343
+}

@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-12-27T00:44:27.503426",
+  "version": "OPTIMIZED_v3_regularized",
+  "train_accuracy": 0.9948529667048571,
+  "val_accuracy": 0.9731945758435825,
+  "test_accuracy": 0.8766548984995587,
+  "train_test_gap": 0.11819806820529843,
+  "macro_f1": 0.4810134701358768,
+  "per_class_f1": {
+    "F": 0.007590132827324478,
+    "N": 0.9313062364256903,
+    "Q": 0.5041440411546156
+  },
+  "regularization": {
+    "max_depth": 4,
+    "min_child_weight": 5,
+    "gamma": 0.3,
+    "reg_alpha": 0.5,
+    "reg_lambda": 2.0
+  },
+  "class_weights": {
+    "N": 1.0,
+    "S": 2.0,
+    "V": 5.0,
+    "F": 8.0,
+    "Q": 1.5
+  },
+  "best_iteration": 532
+}

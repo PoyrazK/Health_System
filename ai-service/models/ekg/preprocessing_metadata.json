@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-12-27T00:00:39.548014",
+  "source_file": "MIT-BIH Arrhythmia Database.csv",
+  "original_samples": 100689,
+  "train_samples": 189282,
+  "val_samples": 15063,
+  "test_samples": 15104,
+  "num_features": 32,
+  "num_classes": 3,
+  "classes": [
+    "F",
+    "N",
+    "Q"
+  ],
+  "smote_applied": true,
+  "normalization": "StandardScaler"
+}

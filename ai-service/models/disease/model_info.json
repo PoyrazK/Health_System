@@ -1,0 +1,11 @@
+{
+  "model_type": "XGBClassifier",
+  "n_estimators": 100,
+  "max_depth": 6,
+  "num_features": 316,
+  "num_classes": 527,
+  "accuracy": 0.850848295173777,
+  "top5_accuracy": 0.9768160105419206,
+  "train_samples": 194269,
+  "test_samples": 48568
+}
