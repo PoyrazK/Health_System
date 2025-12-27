@@ -31,7 +31,7 @@ func (w *LLMWorker) Start() {
 			return
 		}
 
-		log.Printf("🤖 LLM Worker: Processing diagnosis for patient %d", req.PatientID)
+		log.Printf("🤖 LLM Worker: Processing diagnosis for patient %d", req.Patient.ID)
 		
 		llmStart := time.Now()
 		diagPayload, _ := json.Marshal(req)
@@ -39,7 +39,7 @@ func (w *LLMWorker) Start() {
 		resp, err := http.Post(w.MLServiceURL+"/diagnose", "application/json", bytes.NewBuffer(diagPayload))
 		if err != nil {
 			log.Printf("❌ LLM Worker: HTTP error: %v", err)
-			w.updateStatus(req.PatientID, "Diagnosis unavailable - LLM service error", "error")
+			w.updateStatus(req.Patient.ID, "Diagnosis unavailable - LLM service error", "error")
 			return
 		}
 		defer resp.Body.Close()
@@ -47,12 +47,12 @@ func (w *LLMWorker) Start() {
 		var diagRes models.DiagnosisResponse
 		if err := json.NewDecoder(resp.Body).Decode(&diagRes); err != nil {
 			log.Printf("❌ LLM Worker: Decode error: %v", err)
-			w.updateStatus(req.PatientID, "Diagnosis unavailable - Decode error", "error")
+			w.updateStatus(req.Patient.ID, "Diagnosis unavailable - Decode error", "error")
 			return
 		}
 
-		log.Printf("✅ LLM Worker: Completed diagnosis for patient %d in %v", req.PatientID, time.Since(llmStart))
-		w.updateStatus(req.PatientID, diagRes.Diagnosis, "ready")
+		log.Printf("✅ LLM Worker: Completed diagnosis for patient %d in %v", req.Patient.ID, time.Since(llmStart))
+		w.updateStatus(req.Patient.ID, diagRes.Diagnosis, "ready")
 	})
 
 	if err != nil {
