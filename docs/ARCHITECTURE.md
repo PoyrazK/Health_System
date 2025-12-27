@@ -4,41 +4,48 @@ This document provides a comprehensive overview of the Clinical Copilot system a
 
 ---
 
-## High-Level Architecture
+## High-Level Architecture (v3.1 Distributed)
 
 ```mermaid
 graph TB
     subgraph Frontend["🖥️ Frontend (Next.js)"]
         UI[X-Terminal Dashboard]
-        TM[Telemetry Module]
-        RG[Risk Gauges]
+        WS_CLIENT[WebSocket Client]
     end
     
     subgraph Backend["⚙️ Go Backend (Fiber)"]
         API[REST API Router]
-        CACHE[Diagnosis Cache]
-        RAG[RAG-Lite Semantic Search]
-        MED[Medication Safety Engine]
+        WS[WebSocket Handler]
+        RAG[RAG-Lite Engine]
+        CB[Circuit Breaker]
     end
     
-    subgraph ML["🧠 ML API (FastAPI)"]
-        PRED[Prediction Engine]
-        MODELS[Model Registry]
-        LLM[Gemini LLM]
+    subgraph Infra["📡 Scalability Layer"]
+        REDIS[(Redis Cache / State)]
+        NATS{NATS Task Queue}
     end
     
-    subgraph Data["💾 Data Layer"]
-        DB[(SQLite DB)]
+    subgraph ML["🧠 ML API & Workers"]
+        PRED[FastAPI Risk Engine]
+        WORKER[LLM Worker Node]
+    end
+    
+    subgraph Data["💾 Persistent Storage"]
+        DB[(PostgreSQL DB)]
         PKL[Model Files .pkl]
     end
     
     UI --> API
-    API --> PRED
+    UI --> WS_CLIENT
+    WS_CLIENT <--> WS
+    API --> CB
+    CB --> PRED
     API --> DB
+    API --> REDIS
+    API --> NATS
+    NATS --> WORKER
+    WORKER --> REDIS
     RAG --> DB
-    PRED --> MODELS
-    MODELS --> PKL
-    PRED --> LLM
 ```
 
 ---

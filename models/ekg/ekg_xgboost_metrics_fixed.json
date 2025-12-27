@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-12-27T00:41:01.053010",
+  "version": "FIXED_v2_patient_level_split",
+  "train_accuracy": 0.9998611255771969,
+  "val_accuracy": 0.9818984547461369,
+  "test_accuracy": 0.9247021182700794,
+  "train_test_gap": 0.07515900730711744,
+  "num_classes": 3,
+  "train_samples": 172818,
+  "test_samples": 18128,
+  "best_iteration": 224,
+  "patient_level_split": true,
+  "expected_range": "85-92% (inter-patient benchmark)"
+}

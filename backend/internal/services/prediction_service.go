@@ -18,12 +18,16 @@ import (
 	"github.com/sony/gobreaker"
 )
 
-// -- Diagnosis Cache (RESTORED AS STATELESS REDIS WRAPPER) --
+// -- Diagnosis Cache (HYBRID: In-Memory + Redis) --
 
-type DiagnosisCache struct{}
+type DiagnosisCache struct{
+	memCache map[uint]map[string]string
+}
 
 func NewDiagnosisCache() *DiagnosisCache {
-	return &DiagnosisCache{}
+	return &DiagnosisCache{
+		memCache: make(map[uint]map[string]string),
+	}
 }
 
 func (c *DiagnosisCache) Set(id uint, diagnosis string, status string) {
@@ -31,11 +35,22 @@ func (c *DiagnosisCache) Set(id uint, diagnosis string, status string) {
 		"diagnosis": diagnosis,
 		"status":    status,
 	}
+	
+	// Store in memory (always works)
+	c.memCache[id] = data
+	
+	// Try Redis as secondary (may fail silently)
 	jsonData, _ := json.Marshal(data)
 	cache.Set(fmt.Sprintf("diag:status:%d", id), jsonData, 1*time.Hour)
 }
 
 func (c *DiagnosisCache) Get(id uint) (string, string) {
+	// Try memory first
+	if data, ok := c.memCache[id]; ok {
+		return data["diagnosis"], data["status"]
+	}
+	
+	// Try Redis as fallback
 	val, err := cache.Get(fmt.Sprintf("diag:status:%d", id))
 	if err != nil {
 		return "", ""
@@ -120,21 +135,97 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 	return risks, nil
 }
 
+func (s *PredictionService) PredictDisease(req models.DiseaseRequest) (*models.DiseaseResponse, error) {
+	body, err := s.CB.Execute(func() (interface{}, error) {
+		payload, _ := json.Marshal(req)
+		resp, err := http.Post(s.MLServiceURL+"/disease/predict", "application/json", bytes.NewBuffer(payload))
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		var result models.DiseaseResponse
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			return nil, err
+		}
+		return &result, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return body.(*models.DiseaseResponse), nil
+}
+
+func (s *PredictionService) AnalyzeEKG(req models.EKGRequest) (*models.EKGResponse, error) {
+	body, err := s.CB.Execute(func() (interface{}, error) {
+		payload, _ := json.Marshal(req)
+		resp, err := http.Post(s.MLServiceURL+"/ekg/analyze", "application/json", bytes.NewBuffer(payload))
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		var result models.EKGResponse
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			return nil, err
+		}
+		return &result, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return body.(*models.EKGResponse), nil
+}
+
 func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest, onComplete func(uint, string, string)) {
 	// 1. Mark as pending in Redis
 	s.Cache.Set(patientID, "", "pending")
 	
-	// 2. Publish to NATS for Worker pick-up
+	// 2. Try to publish to NATS for Worker pick-up
 	reqData, _ := json.Marshal(req)
 	if err := queue.Publish("llm.tasks", reqData); err != nil {
-		log.Printf("❌ Failed to publish LLM task to NATS: %v", err)
-		s.Cache.Set(patientID, "System overloaded - please retry", "error")
+		log.Printf("⚠️ NATS unavailable, falling back to sync LLM call for patient %d", patientID)
+		// Fallback: Call LLM directly in a goroutine
+		go s.callLLMDirectly(patientID, req, onComplete)
 		return
 	}
 
 	log.Printf("🚀 LLM Task Published to NATS for patient %d", patientID)
-	// onComplete is now slightly trickier in distributed system, 
-	// typically handled via WS Pub/Sub in later phase.
+}
+
+// callLLMDirectly is a fallback when NATS is unavailable
+func (s *PredictionService) callLLMDirectly(patientID uint, req models.DiagnosisRequest, onComplete func(uint, string, string)) {
+	llmStart := time.Now()
+	diagPayload, _ := json.Marshal(req)
+	
+	resp, err := http.Post(s.MLServiceURL+"/diagnose", "application/json", bytes.NewBuffer(diagPayload))
+	if err != nil {
+		log.Printf("❌ LLM Direct Call Error: %v", err)
+		s.Cache.Set(patientID, "Diagnosis unavailable - LLM service error", "error")
+		if onComplete != nil {
+			onComplete(patientID, "Diagnosis unavailable - LLM service error", "error")
+		}
+		return
+	}
+	defer resp.Body.Close()
+
+	var diagRes models.DiagnosisResponse
+	if err := json.NewDecoder(resp.Body).Decode(&diagRes); err != nil {
+		log.Printf("❌ LLM Direct Decode Error: %v", err)
+		s.Cache.Set(patientID, "Diagnosis unavailable - Decode error", "error")
+		if onComplete != nil {
+			onComplete(patientID, "Diagnosis unavailable - Decode error", "error")
+		}
+		return
+	}
+
+	log.Printf("✅ LLM Direct Call completed for patient %d in %v", patientID, time.Since(llmStart))
+	s.Cache.Set(patientID, diagRes.Diagnosis, "ready")
+	if onComplete != nil {
+		onComplete(patientID, diagRes.Diagnosis, "ready")
+	}
 }
 
 func (s *PredictionService) CheckMedications(medStr string) models.InteractionResult {

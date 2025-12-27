@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import List, Optional
 import joblib
 import pandas as pd
 import numpy as np
@@ -12,7 +13,14 @@ from dotenv import load_dotenv
 
 load_dotenv() # Load from .env
 
+from src.api.ml_api.services.disease_classifier import DiseaseClassifier
+from src.api.ml_api.services.ekg_analyzer import EKGAnalyzer
+
 app = FastAPI(title="Healthcare Risk Engine")
+
+# Initialize New Services
+disease_svc = DiseaseClassifier()
+ekg_svc = EKGAnalyzer()
 
 # Paths & Load Models
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -52,10 +60,7 @@ class PatientData(BaseModel):
     history_stroke: str = "No"
     history_diabetes: str = "No"
     history_high_chol: str = "No"
-    history_heart_disease: str = "No"
-    history_stroke: str = "No"
-    history_diabetes: str = "No"
-    history_high_chol: str = "No"
+    symptoms: List[str] = [] # For disease prediction
 
 def transform_features(data: PatientData, target_model: str):
     """
@@ -259,7 +264,59 @@ def check_interaction(meds: list[str]):
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "models_loaded": list(models.keys())}
+    return {
+        "status": "ok", 
+        "models_loaded": list(models.keys()),
+        "disease_model": disease_svc.model is not None,
+        "ekg_model": ekg_svc.model is not None
+    }
+
+# --- Disease Prediction Endpoints ---
+
+class DiseaseRequest(BaseModel):
+    symptoms: List[str]
+    patient_id: Optional[str] = None
+
+@app.post("/disease/predict")
+def predict_disease(request: DiseaseRequest):
+    try:
+        results = disease_svc.predict_topk(request.symptoms)
+        return {"predictions": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class DiseaseFeedback(BaseModel):
+    symptoms: List[str]
+    confirmed_diagnosis: str
+    doctor_id: Optional[str] = None
+    notes: Optional[str] = None
+
+@app.post("/disease/feedback")
+def log_disease_feedback(request: DiseaseFeedback):
+    try:
+        success = disease_svc.log_feedback(
+            request.symptoms, 
+            request.confirmed_diagnosis, 
+            request.doctor_id, 
+            request.notes
+        )
+        return {"success": success}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# --- EKG Analysis Endpoints ---
+
+class EKGRequest(BaseModel):
+    signal: List[float]
+    sampling_rate: int = 360
+
+@app.post("/ekg/analyze")
+def analyze_ekg(request: EKGRequest):
+    try:
+        result = ekg_svc.analyze(request.signal, request.sampling_rate)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # --- OpenAI Integration ---
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

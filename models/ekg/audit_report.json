@@ -1,0 +1,17 @@
+{
+  "train_accuracy": 0.9999049037943386,
+  "val_accuracy": 0.9909712540662551,
+  "test_accuracy": 0.991061970338983,
+  "train_test_gap": 0.008842933455355584,
+  "cv_mean": 0.9822000000000001,
+  "cv_std": 0.0006782329983125372,
+  "test_imbalance_ratio": 112.60833333333333,
+  "issues": [
+    "❌ %99+ accuracy literatür ortalamasının ÜZERİNDE - leakage şüphesi"
+  ],
+  "warnings": [
+    "⚠️ Patient-level split yapılmadı - aynı hasta train/test'te olabilir",
+    "⚠️ Scaler fit verisi doğrulanamıyor - ekg_prepare_data.py'yi kontrol et"
+  ],
+  "verdict": "FAIL"
+}

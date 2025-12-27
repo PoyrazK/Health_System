@@ -1,0 +1,95 @@
+{
+  "timestamp": "2025-12-26T23:56:18.468310",
+  "file": "MIT-BIH Arrhythmia Database.csv",
+  "checks": {
+    "basic": {
+      "total_samples": 100689,
+      "total_features": 34,
+      "memory_mb": 30.17,
+      "columns": [
+        "record",
+        "type",
+        "0_pre-RR",
+        "0_post-RR",
+        "0_pPeak",
+        "0_tPeak",
+        "0_rPeak",
+        "0_sPeak",
+        "0_qPeak",
+        "0_qrs_interval",
+        "0_pq_interval",
+        "0_qt_interval",
+        "0_st_interval",
+        "0_qrs_morph0",
+        "0_qrs_morph1",
+        "0_qrs_morph2",
+        "0_qrs_morph3",
+        "0_qrs_morph4",
+        "1_pre-RR",
+        "1_post-RR"
+      ]
+    },
+    "missing": {
+      "total_missing": 0,
+      "total_cells": 3423426,
+      "missing_ratio": 0.0,
+      "columns_with_missing": [],
+      "status": "✅ PASS"
+    },
+    "duplicates": {
+      "duplicate_rows": 0,
+      "duplicate_ratio": 0.0,
+      "status": "✅ PASS"
+    },
+    "dtypes": {
+      "dtypes": {
+        "float64": 22,
+        "int64": 11,
+        "object": 1
+      },
+      "label_candidates": [
+        "type"
+      ],
+      "numeric_columns": 33,
+      "categorical_columns": 1
+    },
+    "class_distribution": {
+      "label_column": null,
+      "status": "❌ ETİKET SÜTUNU BULUNAMADI"
+    },
+    "signal_quality": {
+      "signal_columns": 32,
+      "signal_length": 32,
+      "mean": 52.6619,
+      "std": 8.3841,
+      "min": -1.9521,
+      "max": 426.0,
+      "flat_signals": 0,
+      "status": "✅ PASS"
+    },
+    "noise": {
+      "avg_noise_ratio": 0.3793,
+      "high_noise_signals": 999,
+      "analyzed_signals": 1000,
+      "status": "⚠️ WARN - FİLTRELEME GEREKLİ"
+    },
+    "outliers": {
+      "outlier_count": 277,
+      "outlier_ratio": 0.87,
+      "z_threshold": 3.0,
+      "status": "✅ PASS"
+    }
+  },
+  "summary": {
+    "readiness_score": 66.67,
+    "overall_status": "⚠️ KÜÇÜK DÜZELTMELERLE EĞİTİME HAZIR",
+    "status_counts": {
+      "pass": 4,
+      "warn": 1,
+      "fail": 1
+    },
+    "recommendations": [
+      "❌ class_distribution kontrolünü düzelt"
+    ]
+  }
+}

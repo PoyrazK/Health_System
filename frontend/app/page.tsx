@@ -18,6 +18,9 @@ import { RiskAnalysis } from "@/components/dashboard/RiskAnalysis";
 import { DiagnosisPanel } from "@/components/dashboard/DiagnosisPanel";
 import { FeedbackPanel } from "@/components/dashboard/FeedbackPanel";
 import { IntakeModal } from "@/components/modals/IntakeModal";
+import DiseaseCheckerModal from "@/components/modals/DiseaseCheckerModal";
+import EKGPanel from "@/components/dashboard/EKGPanel";
+import { Activity } from "lucide-react";
 
 // --- Types ---
 interface RiskScores {
@@ -77,6 +80,7 @@ export default function ClinicalCockpit() {
     latency: 0
   });
   const [showModal, setShowModal] = useState(false);
+  const [showDiseaseModal, setShowDiseaseModal] = useState(false);
 
   const mountedRef = useRef(true);
   const loadingRef = useRef(false);
@@ -303,6 +307,12 @@ export default function ClinicalCockpit() {
             </div>
           </div>
           <button
+            onClick={() => setShowDiseaseModal(true)}
+            className="px-6 py-2 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-[11px] font-black tracking-[0.2em] text-white hover:opacity-90 transition-all uppercase shadow-lg shadow-purple-600/20 flex items-center gap-2"
+          >
+            <Activity className="w-4 h-4" /> AI Disease Check
+          </button>
+          <button
             onClick={() => setShowModal(true)}
             className="px-6 py-2 rounded-2xl bg-blue-600 text-[11px] font-black tracking-[0.2em] text-white hover:bg-blue-500 transition-all uppercase shadow-lg shadow-blue-600/20 flex items-center gap-2 disabled:opacity-50"
             disabled={loading}
@@ -343,7 +353,8 @@ export default function ClinicalCockpit() {
               <VitalsGrid patient={patient} />
             </div>
 
-            <div className="mt-4 flex-1 overflow-y-auto custom-scrollbar pr-1 -mr-1">
+            <div className="mt-4 flex-1 overflow-y-auto custom-scrollbar pr-1 -mr-1 space-y-4">
+              <EKGPanel />
               {data && <FeedbackPanel assessmentId={data.id} risks={data.risks} />}
             </div>
 
@@ -461,6 +472,7 @@ export default function ClinicalCockpit() {
         </div>
 
       </div>
+      <DiseaseCheckerModal isOpen={showDiseaseModal} onClose={() => setShowDiseaseModal(false)} />
     </main>
   );
 }

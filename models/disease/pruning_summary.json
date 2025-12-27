@@ -1,0 +1,7 @@
+{
+  "original_size_mb": 103.71,
+  "pruned_size_mb": 28.58,
+  "reduction_percent": 72.4,
+  "target_met": true,
+  "pruned_path": "c:\\Users\\muham\\OneDrive\\Masa\u00fcst\u00fc\\AdvanceUpHackhathon\\ai-service\\models\\disease\\disease_classifier_pruned.joblib"
+}

@@ -1,0 +1,27 @@
+{
+  "N": {
+    "level": 0,
+    "name": "Normal",
+    "urgency": "Düþük"
+  },
+  "S": {
+    "level": 1,
+    "name": "SVEB",
+    "urgency": "Orta"
+  },
+  "F": {
+    "level": 2,
+    "name": "Fusion",
+    "urgency": "Orta-Yüksek"
+  },
+  "V": {
+    "level": 3,
+    "name": "VEB",
+    "urgency": "Yüksek"
+  },
+  "Q": {
+    "level": 4,
+    "name": "Belirsiz",
+    "urgency": "Deðerlendirme Gerekli"
+  }
+}

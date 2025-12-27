@@ -29,13 +29,13 @@ func main() {
 	// Load configuration
 	cfg := config.Load()
 
-	// Initialize database
-	database.InitDB(cfg)
+	// Initialize database (SQLite for local dev)
+	database.InitDB()
 
-	// Initialize Redis
+	// Initialize Redis (optional - will fail gracefully)
 	cache.InitRedis(cfg.RedisURL)
 
-	// Initialize NATS
+	// Initialize NATS (optional - will fail gracefully)
 	queue.InitNATS(cfg.NatsURL)
 	defer queue.Close()
 
@@ -90,6 +90,8 @@ func main() {
 	wsHandler.StartGlobalListener() // Listen for Redis updates
 	patientHandler := handlers.NewPatientHandler(database.DB, ragService, predService, wsHandler, auditService)
 	feedbackHandler := handlers.NewFeedbackHandler(database.DB, auditService)
+	diseaseHandler := handlers.NewDiseaseHandler(predService)
+	ekgHandler := handlers.NewEKGHandler(predService)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("🏥 Healthcare Clinical Copilot | Phase 8 (Scalability Stack)")
@@ -158,6 +160,10 @@ func main() {
 	app.Post("/api/assess", patientHandler.AssessPatient)
 	app.Get("/api/diagnosis/:id", patientHandler.GetDiagnosis)
 	app.Post("/api/feedback", feedbackHandler.SubmitFeedback)
+
+	// New AI Services
+	app.Post("/api/disease/predict", diseaseHandler.Predict)
+	app.Post("/api/ekg/analyze", ekgHandler.Analyze)
 
 	// 8. Blockchain Audit Endpoints
 	app.Get("/api/audit/chain", func(c *fiber.Ctx) error {

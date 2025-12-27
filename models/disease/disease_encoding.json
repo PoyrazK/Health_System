@@ -1,0 +1,2110 @@
+[
+  {
+    "disease":"abdominal aortic aneurysm",
+    "label":0
+  },
+  {
+    "disease":"abdominal hernia",
+    "label":1
+  },
+  {
+    "disease":"abscess of nose",
+    "label":2
+  },
+  {
+    "disease":"abscess of the pharynx",
+    "label":3
+  },
+  {
+    "disease":"achalasia",
+    "label":4
+  },
+  {
+    "disease":"acne",
+    "label":5
+  },
+  {
+    "disease":"actinic keratosis",
+    "label":6
+  },
+  {
+    "disease":"acute bronchiolitis",
+    "label":7
+  },
+  {
+    "disease":"acute bronchitis",
+    "label":8
+  },
+  {
+    "disease":"acute bronchospasm",
+    "label":9
+  },
+  {
+    "disease":"acute glaucoma",
+    "label":10
+  },
+  {
+    "disease":"acute kidney injury",
+    "label":11
+  },
+  {
+    "disease":"acute otitis media",
+    "label":12
+  },
+  {
+    "disease":"acute pancreatitis",
+    "label":13
+  },
+  {
+    "disease":"acute respiratory distress syndrome (ards)",
+    "label":14
+  },
+  {
+    "disease":"acute sinusitis",
+    "label":15
+  },
+  {
+    "disease":"acute stress reaction",
+    "label":16
+  },
+  {
+    "disease":"adhesive capsulitis of the shoulder",
+    "label":17
+  },
+  {
+    "disease":"adjustment reaction",
+    "label":18
+  },
+  {
+    "disease":"alcohol abuse",
+    "label":19
+  },
+  {
+    "disease":"alcohol intoxication",
+    "label":20
+  },
+  {
+    "disease":"alcohol withdrawal",
+    "label":21
+  },
+  {
+    "disease":"alcoholic liver disease",
+    "label":22
+  },
+  {
+    "disease":"allergy",
+    "label":23
+  },
+  {
+    "disease":"alopecia",
+    "label":24
+  },
+  {
+    "disease":"alzheimer disease",
+    "label":25
+  },
+  {
+    "disease":"amyotrophic lateral sclerosis (als)",
+    "label":26
+  },
+  {
+    "disease":"anal fissure",
+    "label":27
+  },
+  {
+    "disease":"anemia",
+    "label":28
+  },
+  {
+    "disease":"anemia due to chronic kidney disease",
+    "label":29
+  },
+  {
+    "disease":"angina",
+    "label":30
+  },
+  {
+    "disease":"ankylosing spondylitis",
+    "label":31
+  },
+  {
+    "disease":"anxiety",
+    "label":32
+  },
+  {
+    "disease":"aortic valve disease",
+    "label":33
+  },
+  {
+    "disease":"aphthous ulcer",
+    "label":34
+  },
+  {
+    "disease":"aplastic anemia",
+    "label":35
+  },
+  {
+    "disease":"appendicitis",
+    "label":36
+  },
+  {
+    "disease":"arrhythmia",
+    "label":37
+  },
+  {
+    "disease":"arthritis of the hip",
+    "label":38
+  },
+  {
+    "disease":"ascending cholangitis",
+    "label":39
+  },
+  {
+    "disease":"asperger syndrome",
+    "label":40
+  },
+  {
+    "disease":"asthma",
+    "label":41
+  },
+  {
+    "disease":"astigmatism",
+    "label":42
+  },
+  {
+    "disease":"atelectasis",
+    "label":43
+  },
+  {
+    "disease":"athlete's foot",
+    "label":44
+  },
+  {
+    "disease":"atonic bladder",
+    "label":45
+  },
+  {
+    "disease":"atrial fibrillation",
+    "label":46
+  },
+  {
+    "disease":"atrial flutter",
+    "label":47
+  },
+  {
+    "disease":"atrophic skin condition",
+    "label":48
+  },
+  {
+    "disease":"atrophic vaginitis",
+    "label":49
+  },
+  {
+    "disease":"attention deficit hyperactivity disorder (adhd)",
+    "label":50
+  },
+  {
+    "disease":"autism",
+    "label":51
+  },
+  {
+    "disease":"autonomic nervous system disorder",
+    "label":52
+  },
+  {
+    "disease":"balanitis",
+    "label":53
+  },
+  {
+    "disease":"bell palsy",
+    "label":54
+  },
+  {
+    "disease":"benign kidney cyst",
+    "label":55
+  },
+  {
+    "disease":"benign paroxysmal positional vertical (bppv)",
+    "label":56
+  },
+  {
+    "disease":"benign prostatic hyperplasia (bph)",
+    "label":57
+  },
+  {
+    "disease":"benign vaginal discharge (leukorrhea)",
+    "label":58
+  },
+  {
+    "disease":"bipolar disorder",
+    "label":59
+  },
+  {
+    "disease":"bladder cancer",
+    "label":60
+  },
+  {
+    "disease":"bladder disorder",
+    "label":61
+  },
+  {
+    "disease":"bladder obstruction",
+    "label":62
+  },
+  {
+    "disease":"blepharitis",
+    "label":63
+  },
+  {
+    "disease":"bone cancer",
+    "label":64
+  },
+  {
+    "disease":"bone disorder",
+    "label":65
+  },
+  {
+    "disease":"brachial neuritis",
+    "label":66
+  },
+  {
+    "disease":"brain cancer",
+    "label":67
+  },
+  {
+    "disease":"breast infection (mastitis)",
+    "label":68
+  },
+  {
+    "disease":"broken tooth",
+    "label":69
+  },
+  {
+    "disease":"burn",
+    "label":70
+  },
+  {
+    "disease":"bursitis",
+    "label":71
+  },
+  {
+    "disease":"callus",
+    "label":72
+  },
+  {
+    "disease":"carbon monoxide poisoning",
+    "label":73
+  },
+  {
+    "disease":"cardiac arrest",
+    "label":74
+  },
+  {
+    "disease":"cardiomyopathy",
+    "label":75
+  },
+  {
+    "disease":"carpal tunnel syndrome",
+    "label":76
+  },
+  {
+    "disease":"cataract",
+    "label":77
+  },
+  {
+    "disease":"celiac disease",
+    "label":78
+  },
+  {
+    "disease":"cellulitis or abscess of mouth",
+    "label":79
+  },
+  {
+    "disease":"central retinal artery or vein occlusion",
+    "label":80
+  },
+  {
+    "disease":"cerebral edema",
+    "label":81
+  },
+  {
+    "disease":"cerebral palsy",
+    "label":82
+  },
+  {
+    "disease":"cervical cancer",
+    "label":83
+  },
+  {
+    "disease":"cervicitis",
+    "label":84
+  },
+  {
+    "disease":"chalazion",
+    "label":85
+  },
+  {
+    "disease":"chickenpox",
+    "label":86
+  },
+  {
+    "disease":"chlamydia",
+    "label":87
+  },
+  {
+    "disease":"cholecystitis",
+    "label":88
+  },
+  {
+    "disease":"choledocholithiasis",
+    "label":89
+  },
+  {
+    "disease":"chondromalacia of the patella",
+    "label":90
+  },
+  {
+    "disease":"chorioretinitis",
+    "label":91
+  },
+  {
+    "disease":"chronic back pain",
+    "label":92
+  },
+  {
+    "disease":"chronic constipation",
+    "label":93
+  },
+  {
+    "disease":"chronic glaucoma",
+    "label":94
+  },
+  {
+    "disease":"chronic knee pain",
+    "label":95
+  },
+  {
+    "disease":"chronic obstructive pulmonary disease (copd)",
+    "label":96
+  },
+  {
+    "disease":"chronic otitis media",
+    "label":97
+  },
+  {
+    "disease":"chronic pain disorder",
+    "label":98
+  },
+  {
+    "disease":"chronic pancreatitis",
+    "label":99
+  },
+  {
+    "disease":"chronic rheumatic fever",
+    "label":100
+  },
+  {
+    "disease":"chronic sinusitis",
+    "label":101
+  },
+  {
+    "disease":"cirrhosis",
+    "label":102
+  },
+  {
+    "disease":"coagulation (bleeding) disorder",
+    "label":103
+  },
+  {
+    "disease":"cold sore",
+    "label":104
+  },
+  {
+    "disease":"colonic polyp",
+    "label":105
+  },
+  {
+    "disease":"common cold",
+    "label":106
+  },
+  {
+    "disease":"complex regional pain syndrome",
+    "label":107
+  },
+  {
+    "disease":"concussion",
+    "label":108
+  },
+  {
+    "disease":"conduct disorder",
+    "label":109
+  },
+  {
+    "disease":"conductive hearing loss",
+    "label":110
+  },
+  {
+    "disease":"conjunctivitis",
+    "label":111
+  },
+  {
+    "disease":"conjunctivitis due to allergy",
+    "label":112
+  },
+  {
+    "disease":"conjunctivitis due to bacteria",
+    "label":113
+  },
+  {
+    "disease":"conjunctivitis due to virus",
+    "label":114
+  },
+  {
+    "disease":"contact dermatitis",
+    "label":115
+  },
+  {
+    "disease":"cornea infection",
+    "label":116
+  },
+  {
+    "disease":"corneal abrasion",
+    "label":117
+  },
+  {
+    "disease":"corneal disorder",
+    "label":118
+  },
+  {
+    "disease":"coronary atherosclerosis",
+    "label":119
+  },
+  {
+    "disease":"cranial nerve palsy",
+    "label":120
+  },
+  {
+    "disease":"crohn disease",
+    "label":121
+  },
+  {
+    "disease":"croup",
+    "label":122
+  },
+  {
+    "disease":"crushing injury",
+    "label":123
+  },
+  {
+    "disease":"cystitis",
+    "label":124
+  },
+  {
+    "disease":"de quervain disease",
+    "label":125
+  },
+  {
+    "disease":"deep vein thrombosis (dvt)",
+    "label":126
+  },
+  {
+    "disease":"degenerative disc disease",
+    "label":127
+  },
+  {
+    "disease":"delirium",
+    "label":128
+  },
+  {
+    "disease":"dementia",
+    "label":129
+  },
+  {
+    "disease":"dental caries",
+    "label":130
+  },
+  {
+    "disease":"depression",
+    "label":131
+  },
+  {
+    "disease":"dermatitis due to sun exposure",
+    "label":132
+  },
+  {
+    "disease":"developmental disability",
+    "label":133
+  },
+  {
+    "disease":"deviated nasal septum",
+    "label":134
+  },
+  {
+    "disease":"diabetic ketoacidosis",
+    "label":135
+  },
+  {
+    "disease":"diabetic peripheral neuropathy",
+    "label":136
+  },
+  {
+    "disease":"diabetic retinopathy",
+    "label":137
+  },
+  {
+    "disease":"diaper rash",
+    "label":138
+  },
+  {
+    "disease":"dislocation of the elbow",
+    "label":139
+  },
+  {
+    "disease":"dislocation of the shoulder",
+    "label":140
+  },
+  {
+    "disease":"dissociative disorder",
+    "label":141
+  },
+  {
+    "disease":"diverticulitis",
+    "label":142
+  },
+  {
+    "disease":"diverticulosis",
+    "label":143
+  },
+  {
+    "disease":"down syndrome",
+    "label":144
+  },
+  {
+    "disease":"drug abuse",
+    "label":145
+  },
+  {
+    "disease":"drug abuse (barbiturates)",
+    "label":146
+  },
+  {
+    "disease":"drug abuse (cocaine)",
+    "label":147
+  },
+  {
+    "disease":"drug abuse (methamphetamine)",
+    "label":148
+  },
+  {
+    "disease":"drug abuse (opioids)",
+    "label":149
+  },
+  {
+    "disease":"drug poisoning due to medication",
+    "label":150
+  },
+  {
+    "disease":"drug reaction",
+    "label":151
+  },
+  {
+    "disease":"drug withdrawal",
+    "label":152
+  },
+  {
+    "disease":"dry eye of unknown cause",
+    "label":153
+  },
+  {
+    "disease":"dyshidrosis",
+    "label":154
+  },
+  {
+    "disease":"dysthymic disorder",
+    "label":155
+  },
+  {
+    "disease":"ear drum damage",
+    "label":156
+  },
+  {
+    "disease":"ear wax impaction",
+    "label":157
+  },
+  {
+    "disease":"eating disorder",
+    "label":158
+  },
+  {
+    "disease":"ectopic pregnancy",
+    "label":159
+  },
+  {
+    "disease":"eczema",
+    "label":160
+  },
+  {
+    "disease":"encephalitis",
+    "label":161
+  },
+  {
+    "disease":"endocarditis",
+    "label":162
+  },
+  {
+    "disease":"endometrial cancer",
+    "label":163
+  },
+  {
+    "disease":"endometriosis",
+    "label":164
+  },
+  {
+    "disease":"endophthalmitis",
+    "label":165
+  },
+  {
+    "disease":"envenomation from spider or animal bite",
+    "label":166
+  },
+  {
+    "disease":"epididymitis",
+    "label":167
+  },
+  {
+    "disease":"epilepsy",
+    "label":168
+  },
+  {
+    "disease":"erectile dysfunction",
+    "label":169
+  },
+  {
+    "disease":"esophageal cancer",
+    "label":170
+  },
+  {
+    "disease":"esophagitis",
+    "label":171
+  },
+  {
+    "disease":"essential tremor",
+    "label":172
+  },
+  {
+    "disease":"eustachian tube dysfunction (ear disorder)",
+    "label":173
+  },
+  {
+    "disease":"extrapyramidal effect of drugs",
+    "label":174
+  },
+  {
+    "disease":"eye alignment disorder",
+    "label":175
+  },
+  {
+    "disease":"female genitalia infection",
+    "label":176
+  },
+  {
+    "disease":"fibroadenoma",
+    "label":177
+  },
+  {
+    "disease":"fibromyalgia",
+    "label":178
+  },
+  {
+    "disease":"flu",
+    "label":179
+  },
+  {
+    "disease":"fluid overload",
+    "label":180
+  },
+  {
+    "disease":"food allergy",
+    "label":181
+  },
+  {
+    "disease":"foreign body in the eye",
+    "label":182
+  },
+  {
+    "disease":"foreign body in the gastrointestinal tract",
+    "label":183
+  },
+  {
+    "disease":"foreign body in the throat",
+    "label":184
+  },
+  {
+    "disease":"fracture of the arm",
+    "label":185
+  },
+  {
+    "disease":"fracture of the facial bones",
+    "label":186
+  },
+  {
+    "disease":"fracture of the hand",
+    "label":187
+  },
+  {
+    "disease":"fracture of the jaw",
+    "label":188
+  },
+  {
+    "disease":"fracture of the leg",
+    "label":189
+  },
+  {
+    "disease":"fracture of the patella",
+    "label":190
+  },
+  {
+    "disease":"fracture of the pelvis",
+    "label":191
+  },
+  {
+    "disease":"fracture of the rib",
+    "label":192
+  },
+  {
+    "disease":"fracture of the shoulder",
+    "label":193
+  },
+  {
+    "disease":"fracture of the skull",
+    "label":194
+  },
+  {
+    "disease":"fracture of the vertebra",
+    "label":195
+  },
+  {
+    "disease":"fungal infection of the hair",
+    "label":196
+  },
+  {
+    "disease":"fungal infection of the skin",
+    "label":197
+  },
+  {
+    "disease":"gallstone",
+    "label":198
+  },
+  {
+    "disease":"ganglion cyst",
+    "label":199
+  },
+  {
+    "disease":"gastritis",
+    "label":200
+  },
+  {
+    "disease":"gastroduodenal ulcer",
+    "label":201
+  },
+  {
+    "disease":"gastroesophageal reflux disease (gerd)",
+    "label":202
+  },
+  {
+    "disease":"gastrointestinal hemorrhage",
+    "label":203
+  },
+  {
+    "disease":"gastroparesis",
+    "label":204
+  },
+  {
+    "disease":"genital herpes",
+    "label":205
+  },
+  {
+    "disease":"glaucoma",
+    "label":206
+  },
+  {
+    "disease":"goiter",
+    "label":207
+  },
+  {
+    "disease":"gonorrhea",
+    "label":208
+  },
+  {
+    "disease":"gout",
+    "label":209
+  },
+  {
+    "disease":"graves disease",
+    "label":210
+  },
+  {
+    "disease":"guillain barre syndrome",
+    "label":211
+  },
+  {
+    "disease":"gum disease",
+    "label":212
+  },
+  {
+    "disease":"gynecomastia",
+    "label":213
+  },
+  {
+    "disease":"head and neck cancer",
+    "label":214
+  },
+  {
+    "disease":"head injury",
+    "label":215
+  },
+  {
+    "disease":"headache after lumbar puncture",
+    "label":216
+  },
+  {
+    "disease":"heart attack",
+    "label":217
+  },
+  {
+    "disease":"heart block",
+    "label":218
+  },
+  {
+    "disease":"heart failure",
+    "label":219
+  },
+  {
+    "disease":"heat exhaustion",
+    "label":220
+  },
+  {
+    "disease":"hemangioma",
+    "label":221
+  },
+  {
+    "disease":"hematoma",
+    "label":222
+  },
+  {
+    "disease":"hemiplegia",
+    "label":223
+  },
+  {
+    "disease":"hemorrhoids",
+    "label":224
+  },
+  {
+    "disease":"hepatitis due to a toxin",
+    "label":225
+  },
+  {
+    "disease":"herniated disk",
+    "label":226
+  },
+  {
+    "disease":"herpangina",
+    "label":227
+  },
+  {
+    "disease":"hiatal hernia",
+    "label":228
+  },
+  {
+    "disease":"hidradenitis suppurativa",
+    "label":229
+  },
+  {
+    "disease":"hormone disorder",
+    "label":230
+  },
+  {
+    "disease":"hydatidiform mole",
+    "label":231
+  },
+  {
+    "disease":"hydrocele of the testicle",
+    "label":232
+  },
+  {
+    "disease":"hydrocephalus",
+    "label":233
+  },
+  {
+    "disease":"hydronephrosis",
+    "label":234
+  },
+  {
+    "disease":"hyperemesis gravidarum",
+    "label":235
+  },
+  {
+    "disease":"hyperkalemia",
+    "label":236
+  },
+  {
+    "disease":"hypernatremia",
+    "label":237
+  },
+  {
+    "disease":"hyperopia",
+    "label":238
+  },
+  {
+    "disease":"hypertension of pregnancy",
+    "label":239
+  },
+  {
+    "disease":"hypertensive heart disease",
+    "label":240
+  },
+  {
+    "disease":"hypoglycemia",
+    "label":241
+  },
+  {
+    "disease":"hypokalemia",
+    "label":242
+  },
+  {
+    "disease":"hyponatremia",
+    "label":243
+  },
+  {
+    "disease":"hypothyroidism",
+    "label":244
+  },
+  {
+    "disease":"hypovolemia",
+    "label":245
+  },
+  {
+    "disease":"idiopathic absence of menstruation",
+    "label":246
+  },
+  {
+    "disease":"idiopathic excessive menstruation",
+    "label":247
+  },
+  {
+    "disease":"idiopathic infrequent menstruation",
+    "label":248
+  },
+  {
+    "disease":"idiopathic irregular menstrual cycle",
+    "label":249
+  },
+  {
+    "disease":"idiopathic nonmenstrual bleeding",
+    "label":250
+  },
+  {
+    "disease":"idiopathic painful menstruation",
+    "label":251
+  },
+  {
+    "disease":"ileus",
+    "label":252
+  },
+  {
+    "disease":"impetigo",
+    "label":253
+  },
+  {
+    "disease":"impulse control disorder",
+    "label":254
+  },
+  {
+    "disease":"indigestion",
+    "label":255
+  },
+  {
+    "disease":"induced abortion",
+    "label":256
+  },
+  {
+    "disease":"infectious gastroenteritis",
+    "label":257
+  },
+  {
+    "disease":"ingrown toe nail",
+    "label":258
+  },
+  {
+    "disease":"inguinal hernia",
+    "label":259
+  },
+  {
+    "disease":"injury of the ankle",
+    "label":260
+  },
+  {
+    "disease":"injury to internal organ",
+    "label":261
+  },
+  {
+    "disease":"injury to the abdomen",
+    "label":262
+  },
+  {
+    "disease":"injury to the arm",
+    "label":263
+  },
+  {
+    "disease":"injury to the face",
+    "label":264
+  },
+  {
+    "disease":"injury to the hand",
+    "label":265
+  },
+  {
+    "disease":"injury to the knee",
+    "label":266
+  },
+  {
+    "disease":"injury to the leg",
+    "label":267
+  },
+  {
+    "disease":"injury to the shoulder",
+    "label":268
+  },
+  {
+    "disease":"injury to the trunk",
+    "label":269
+  },
+  {
+    "disease":"insect bite",
+    "label":270
+  },
+  {
+    "disease":"interstitial lung disease",
+    "label":271
+  },
+  {
+    "disease":"intertrigo (skin condition)",
+    "label":272
+  },
+  {
+    "disease":"intestinal disease",
+    "label":273
+  },
+  {
+    "disease":"intestinal malabsorption",
+    "label":274
+  },
+  {
+    "disease":"intestinal obstruction",
+    "label":275
+  },
+  {
+    "disease":"intracerebral hemorrhage",
+    "label":276
+  },
+  {
+    "disease":"intracranial hemorrhage",
+    "label":277
+  },
+  {
+    "disease":"iridocyclitis",
+    "label":278
+  },
+  {
+    "disease":"iron deficiency anemia",
+    "label":279
+  },
+  {
+    "disease":"irritable bowel syndrome",
+    "label":280
+  },
+  {
+    "disease":"ischemia of the bowel",
+    "label":281
+  },
+  {
+    "disease":"ischemic heart disease",
+    "label":282
+  },
+  {
+    "disease":"itching of unknown cause",
+    "label":283
+  },
+  {
+    "disease":"jaw disorder",
+    "label":284
+  },
+  {
+    "disease":"joint effusion",
+    "label":285
+  },
+  {
+    "disease":"kidney cancer",
+    "label":286
+  },
+  {
+    "disease":"kidney failure",
+    "label":287
+  },
+  {
+    "disease":"kidney stone",
+    "label":288
+  },
+  {
+    "disease":"knee ligament or meniscus tear",
+    "label":289
+  },
+  {
+    "disease":"labyrinthitis",
+    "label":290
+  },
+  {
+    "disease":"lactose intolerance",
+    "label":291
+  },
+  {
+    "disease":"laryngitis",
+    "label":292
+  },
+  {
+    "disease":"lateral epicondylitis (tennis elbow)",
+    "label":293
+  },
+  {
+    "disease":"lewy body dementia",
+    "label":294
+  },
+  {
+    "disease":"lice",
+    "label":295
+  },
+  {
+    "disease":"lichen simplex",
+    "label":296
+  },
+  {
+    "disease":"lipoma",
+    "label":297
+  },
+  {
+    "disease":"liver disease",
+    "label":298
+  },
+  {
+    "disease":"lumbago",
+    "label":299
+  },
+  {
+    "disease":"lung cancer",
+    "label":300
+  },
+  {
+    "disease":"lyme disease",
+    "label":301
+  },
+  {
+    "disease":"lymphadenitis",
+    "label":302
+  },
+  {
+    "disease":"lymphedema",
+    "label":303
+  },
+  {
+    "disease":"lymphoma",
+    "label":304
+  },
+  {
+    "disease":"macular degeneration",
+    "label":305
+  },
+  {
+    "disease":"male genitalia infection",
+    "label":306
+  },
+  {
+    "disease":"malignant hypertension",
+    "label":307
+  },
+  {
+    "disease":"marijuana abuse",
+    "label":308
+  },
+  {
+    "disease":"mastoiditis",
+    "label":309
+  },
+  {
+    "disease":"melanoma",
+    "label":310
+  },
+  {
+    "disease":"meniere disease",
+    "label":311
+  },
+  {
+    "disease":"meningitis",
+    "label":312
+  },
+  {
+    "disease":"menopause",
+    "label":313
+  },
+  {
+    "disease":"migraine",
+    "label":314
+  },
+  {
+    "disease":"missed abortion",
+    "label":315
+  },
+  {
+    "disease":"mitral valve disease",
+    "label":316
+  },
+  {
+    "disease":"mittelschmerz",
+    "label":317
+  },
+  {
+    "disease":"molluscum contagiosum",
+    "label":318
+  },
+  {
+    "disease":"mononeuritis",
+    "label":319
+  },
+  {
+    "disease":"mononucleosis",
+    "label":320
+  },
+  {
+    "disease":"mucositis",
+    "label":321
+  },
+  {
+    "disease":"multiple myeloma",
+    "label":322
+  },
+  {
+    "disease":"multiple sclerosis",
+    "label":323
+  },
+  {
+    "disease":"muscle spasm",
+    "label":324
+  },
+  {
+    "disease":"myasthenia gravis",
+    "label":325
+  },
+  {
+    "disease":"myopia",
+    "label":326
+  },
+  {
+    "disease":"myositis",
+    "label":327
+  },
+  {
+    "disease":"narcolepsy",
+    "label":328
+  },
+  {
+    "disease":"nasal polyp",
+    "label":329
+  },
+  {
+    "disease":"nerve impingement near the shoulder",
+    "label":330
+  },
+  {
+    "disease":"neuralgia",
+    "label":331
+  },
+  {
+    "disease":"neurosis",
+    "label":332
+  },
+  {
+    "disease":"nonalcoholic liver disease (nash)",
+    "label":333
+  },
+  {
+    "disease":"noninfectious gastroenteritis",
+    "label":334
+  },
+  {
+    "disease":"nose disorder",
+    "label":335
+  },
+  {
+    "disease":"obsessive compulsive disorder (ocd)",
+    "label":336
+  },
+  {
+    "disease":"obstructive sleep apnea (osa)",
+    "label":337
+  },
+  {
+    "disease":"onychomycosis",
+    "label":338
+  },
+  {
+    "disease":"open wound of the mouth",
+    "label":339
+  },
+  {
+    "disease":"oppositional disorder",
+    "label":340
+  },
+  {
+    "disease":"oral mucosal lesion",
+    "label":341
+  },
+  {
+    "disease":"oral thrush (yeast infection)",
+    "label":342
+  },
+  {
+    "disease":"orbital cellulitis",
+    "label":343
+  },
+  {
+    "disease":"orthostatic hypotension",
+    "label":344
+  },
+  {
+    "disease":"osteoarthritis",
+    "label":345
+  },
+  {
+    "disease":"osteochondroma",
+    "label":346
+  },
+  {
+    "disease":"osteochondrosis",
+    "label":347
+  },
+  {
+    "disease":"osteomyelitis",
+    "label":348
+  },
+  {
+    "disease":"osteoporosis",
+    "label":349
+  },
+  {
+    "disease":"otitis externa (swimmer's ear)",
+    "label":350
+  },
+  {
+    "disease":"otitis media",
+    "label":351
+  },
+  {
+    "disease":"ovarian cyst",
+    "label":352
+  },
+  {
+    "disease":"ovarian torsion",
+    "label":353
+  },
+  {
+    "disease":"overflow incontinence",
+    "label":354
+  },
+  {
+    "disease":"pain after an operation",
+    "label":355
+  },
+  {
+    "disease":"pain disorder affecting the neck",
+    "label":356
+  },
+  {
+    "disease":"pancreatic cancer",
+    "label":357
+  },
+  {
+    "disease":"panic attack",
+    "label":358
+  },
+  {
+    "disease":"panic disorder",
+    "label":359
+  },
+  {
+    "disease":"parasitic disease",
+    "label":360
+  },
+  {
+    "disease":"parkinson disease",
+    "label":361
+  },
+  {
+    "disease":"paronychia",
+    "label":362
+  },
+  {
+    "disease":"paroxysmal supraventricular tachycardia",
+    "label":363
+  },
+  {
+    "disease":"paroxysmal ventricular tachycardia",
+    "label":364
+  },
+  {
+    "disease":"pelvic inflammatory disease",
+    "label":365
+  },
+  {
+    "disease":"pelvic organ prolapse",
+    "label":366
+  },
+  {
+    "disease":"pericarditis",
+    "label":367
+  },
+  {
+    "disease":"peripheral arterial disease",
+    "label":368
+  },
+  {
+    "disease":"peripheral arterial embolism",
+    "label":369
+  },
+  {
+    "disease":"peripheral nerve disorder",
+    "label":370
+  },
+  {
+    "disease":"perirectal infection",
+    "label":371
+  },
+  {
+    "disease":"peritonitis",
+    "label":372
+  },
+  {
+    "disease":"peritonsillar abscess",
+    "label":373
+  },
+  {
+    "disease":"persistent vomiting of unknown cause",
+    "label":374
+  },
+  {
+    "disease":"personality disorder",
+    "label":375
+  },
+  {
+    "disease":"phimosis",
+    "label":376
+  },
+  {
+    "disease":"pilonidal cyst",
+    "label":377
+  },
+  {
+    "disease":"pinworm infection",
+    "label":378
+  },
+  {
+    "disease":"pityriasis rosea",
+    "label":379
+  },
+  {
+    "disease":"plantar fasciitis",
+    "label":380
+  },
+  {
+    "disease":"pleural effusion",
+    "label":381
+  },
+  {
+    "disease":"pneumonia",
+    "label":382
+  },
+  {
+    "disease":"pneumothorax",
+    "label":383
+  },
+  {
+    "disease":"poisoning due to analgesics",
+    "label":384
+  },
+  {
+    "disease":"poisoning due to antimicrobial drugs",
+    "label":385
+  },
+  {
+    "disease":"poisoning due to gas",
+    "label":386
+  },
+  {
+    "disease":"poisoning due to sedatives",
+    "label":387
+  },
+  {
+    "disease":"polycystic kidney disease",
+    "label":388
+  },
+  {
+    "disease":"polycystic ovarian syndrome (pcos)",
+    "label":389
+  },
+  {
+    "disease":"polymyalgia rheumatica",
+    "label":390
+  },
+  {
+    "disease":"post-traumatic stress disorder (ptsd)",
+    "label":391
+  },
+  {
+    "disease":"postoperative infection",
+    "label":392
+  },
+  {
+    "disease":"postpartum depression",
+    "label":393
+  },
+  {
+    "disease":"preeclampsia",
+    "label":394
+  },
+  {
+    "disease":"premature atrial contractions (pacs)",
+    "label":395
+  },
+  {
+    "disease":"premature ventricular contractions (pvcs)",
+    "label":396
+  },
+  {
+    "disease":"premenstrual tension syndrome",
+    "label":397
+  },
+  {
+    "disease":"presbyacusis",
+    "label":398
+  },
+  {
+    "disease":"presbyopia",
+    "label":399
+  },
+  {
+    "disease":"primary insomnia",
+    "label":400
+  },
+  {
+    "disease":"problem during pregnancy",
+    "label":401
+  },
+  {
+    "disease":"prostate cancer",
+    "label":402
+  },
+  {
+    "disease":"prostatitis",
+    "label":403
+  },
+  {
+    "disease":"protein deficiency",
+    "label":404
+  },
+  {
+    "disease":"psoriasis",
+    "label":405
+  },
+  {
+    "disease":"psychosexual disorder",
+    "label":406
+  },
+  {
+    "disease":"psychotic disorder",
+    "label":407
+  },
+  {
+    "disease":"pterygium",
+    "label":408
+  },
+  {
+    "disease":"pulmonary congestion",
+    "label":409
+  },
+  {
+    "disease":"pulmonary embolism",
+    "label":410
+  },
+  {
+    "disease":"pulmonary eosinophilia",
+    "label":411
+  },
+  {
+    "disease":"pulmonary fibrosis",
+    "label":412
+  },
+  {
+    "disease":"pulmonary hypertension",
+    "label":413
+  },
+  {
+    "disease":"pyelonephritis",
+    "label":414
+  },
+  {
+    "disease":"pyogenic skin infection",
+    "label":415
+  },
+  {
+    "disease":"rectal disorder",
+    "label":416
+  },
+  {
+    "disease":"restless leg syndrome",
+    "label":417
+  },
+  {
+    "disease":"retinal detachment",
+    "label":418
+  },
+  {
+    "disease":"retinopathy due to high blood pressure",
+    "label":419
+  },
+  {
+    "disease":"rheumatoid arthritis",
+    "label":420
+  },
+  {
+    "disease":"rosacea",
+    "label":421
+  },
+  {
+    "disease":"rotator cuff injury",
+    "label":422
+  },
+  {
+    "disease":"salivary gland disorder",
+    "label":423
+  },
+  {
+    "disease":"sarcoidosis",
+    "label":424
+  },
+  {
+    "disease":"scabies",
+    "label":425
+  },
+  {
+    "disease":"scar",
+    "label":426
+  },
+  {
+    "disease":"scarlet fever",
+    "label":427
+  },
+  {
+    "disease":"schizophrenia",
+    "label":428
+  },
+  {
+    "disease":"sciatica",
+    "label":429
+  },
+  {
+    "disease":"scleroderma",
+    "label":430
+  },
+  {
+    "disease":"scoliosis",
+    "label":431
+  },
+  {
+    "disease":"seasonal allergies (hay fever)",
+    "label":432
+  },
+  {
+    "disease":"sebaceous cyst",
+    "label":433
+  },
+  {
+    "disease":"seborrheic dermatitis",
+    "label":434
+  },
+  {
+    "disease":"seborrheic keratosis",
+    "label":435
+  },
+  {
+    "disease":"sensorineural hearing loss",
+    "label":436
+  },
+  {
+    "disease":"sepsis",
+    "label":437
+  },
+  {
+    "disease":"septic arthritis",
+    "label":438
+  },
+  {
+    "disease":"shingles (herpes zoster)",
+    "label":439
+  },
+  {
+    "disease":"sialoadenitis",
+    "label":440
+  },
+  {
+    "disease":"sick sinus syndrome",
+    "label":441
+  },
+  {
+    "disease":"sickle cell anemia",
+    "label":442
+  },
+  {
+    "disease":"sickle cell crisis",
+    "label":443
+  },
+  {
+    "disease":"sinus bradycardia",
+    "label":444
+  },
+  {
+    "disease":"sjogren syndrome",
+    "label":445
+  },
+  {
+    "disease":"skin cancer",
+    "label":446
+  },
+  {
+    "disease":"skin disorder",
+    "label":447
+  },
+  {
+    "disease":"skin pigmentation disorder",
+    "label":448
+  },
+  {
+    "disease":"skin polyp",
+    "label":449
+  },
+  {
+    "disease":"smoking or tobacco addiction",
+    "label":450
+  },
+  {
+    "disease":"social phobia",
+    "label":451
+  },
+  {
+    "disease":"soft tissue sarcoma",
+    "label":452
+  },
+  {
+    "disease":"somatization disorder",
+    "label":453
+  },
+  {
+    "disease":"spermatocele",
+    "label":454
+  },
+  {
+    "disease":"spina bifida",
+    "label":455
+  },
+  {
+    "disease":"spinal stenosis",
+    "label":456
+  },
+  {
+    "disease":"spondylitis",
+    "label":457
+  },
+  {
+    "disease":"spondylolisthesis",
+    "label":458
+  },
+  {
+    "disease":"spondylosis",
+    "label":459
+  },
+  {
+    "disease":"spontaneous abortion",
+    "label":460
+  },
+  {
+    "disease":"sprain or strain",
+    "label":461
+  },
+  {
+    "disease":"stenosis of the tear duct",
+    "label":462
+  },
+  {
+    "disease":"stomach cancer",
+    "label":463
+  },
+  {
+    "disease":"strep throat",
+    "label":464
+  },
+  {
+    "disease":"stress incontinence",
+    "label":465
+  },
+  {
+    "disease":"stricture of the esophagus",
+    "label":466
+  },
+  {
+    "disease":"stroke",
+    "label":467
+  },
+  {
+    "disease":"stye",
+    "label":468
+  },
+  {
+    "disease":"subarachnoid hemorrhage",
+    "label":469
+  },
+  {
+    "disease":"subconjunctival hemorrhage",
+    "label":470
+  },
+  {
+    "disease":"subdural hemorrhage",
+    "label":471
+  },
+  {
+    "disease":"substance-related mental disorder",
+    "label":472
+  },
+  {
+    "disease":"systemic lupus erythematosis (sle)",
+    "label":473
+  },
+  {
+    "disease":"teething syndrome",
+    "label":474
+  },
+  {
+    "disease":"temporary or benign blood in urine",
+    "label":475
+  },
+  {
+    "disease":"temporomandibular joint disorder",
+    "label":476
+  },
+  {
+    "disease":"tendinitis",
+    "label":477
+  },
+  {
+    "disease":"tension headache",
+    "label":478
+  },
+  {
+    "disease":"testicular disorder",
+    "label":479
+  },
+  {
+    "disease":"testicular torsion",
+    "label":480
+  },
+  {
+    "disease":"thoracic aortic aneurysm",
+    "label":481
+  },
+  {
+    "disease":"thoracic outlet syndrome",
+    "label":482
+  },
+  {
+    "disease":"threatened pregnancy",
+    "label":483
+  },
+  {
+    "disease":"thrombocytopenia",
+    "label":484
+  },
+  {
+    "disease":"thrombophlebitis",
+    "label":485
+  },
+  {
+    "disease":"thyroid nodule",
+    "label":486
+  },
+  {
+    "disease":"tic (movement) disorder",
+    "label":487
+  },
+  {
+    "disease":"tietze syndrome",
+    "label":488
+  },
+  {
+    "disease":"tinnitus of unknown cause",
+    "label":489
+  },
+  {
+    "disease":"tonsillar hypertrophy",
+    "label":490
+  },
+  {
+    "disease":"tonsillitis",
+    "label":491
+  },
+  {
+    "disease":"tooth abscess",
+    "label":492
+  },
+  {
+    "disease":"tooth disorder",
+    "label":493
+  },
+  {
+    "disease":"torticollis",
+    "label":494
+  },
+  {
+    "disease":"toxic multinodular goiter",
+    "label":495
+  },
+  {
+    "disease":"tracheitis",
+    "label":496
+  },
+  {
+    "disease":"transient ischemic attack",
+    "label":497
+  },
+  {
+    "disease":"trichomonas infection",
+    "label":498
+  },
+  {
+    "disease":"trigeminal neuralgia",
+    "label":499
+  },
+  {
+    "disease":"trigger finger (finger disorder)",
+    "label":500
+  },
+  {
+    "disease":"ulcerative colitis",
+    "label":501
+  },
+  {
+    "disease":"urethral disorder",
+    "label":502
+  },
+  {
+    "disease":"urethral stricture",
+    "label":503
+  },
+  {
+    "disease":"urethritis",
+    "label":504
+  },
+  {
+    "disease":"urge incontinence",
+    "label":505
+  },
+  {
+    "disease":"urinary tract infection",
+    "label":506
+  },
+  {
+    "disease":"urinary tract obstruction",
+    "label":507
+  },
+  {
+    "disease":"uterine atony",
+    "label":508
+  },
+  {
+    "disease":"uterine fibroids",
+    "label":509
+  },
+  {
+    "disease":"vaginal cyst",
+    "label":510
+  },
+  {
+    "disease":"vaginal yeast infection",
+    "label":511
+  },
+  {
+    "disease":"vaginismus",
+    "label":512
+  },
+  {
+    "disease":"vaginitis",
+    "label":513
+  },
+  {
+    "disease":"varicocele of the testicles",
+    "label":514
+  },
+  {
+    "disease":"varicose veins",
+    "label":515
+  },
+  {
+    "disease":"vasculitis",
+    "label":516
+  },
+  {
+    "disease":"venous insufficiency",
+    "label":517
+  },
+  {
+    "disease":"viral exanthem",
+    "label":518
+  },
+  {
+    "disease":"viral warts",
+    "label":519
+  },
+  {
+    "disease":"vitamin b12 deficiency",
+    "label":520
+  },
+  {
+    "disease":"vitreous degeneration",
+    "label":521
+  },
+  {
+    "disease":"vocal cord polyp",
+    "label":522
+  },
+  {
+    "disease":"vulvar disorder",
+    "label":523
+  },
+  {
+    "disease":"vulvodynia",
+    "label":524
+  },
+  {
+    "disease":"white blood cell disease",
+    "label":525
+  },
+  {
+    "disease":"yeast infection",
+    "label":526
+  }
+]

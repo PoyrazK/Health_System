@@ -81,3 +81,37 @@ type ModelPrecision struct {
 	ModelName  string  `json:"model_name"`
 	Confidence float64 `json:"confidence"`
 }
+
+// -- Disease & EKG Structs --
+
+type DiseaseRequest struct {
+	Symptoms  []string `json:"symptoms"`
+	PatientID string   `json:"patient_id,omitempty"`
+}
+
+type DiseasePrediction struct {
+	Disease     string  `json:"disease"`
+	Probability float64 `json:"probability"`
+	Confidence  string  `json:"confidence"`
+}
+
+type DiseaseResponse struct {
+	Predictions []DiseasePrediction `json:"predictions"`
+}
+
+type EKGRequest struct {
+	Signal       []float64 `json:"signal"`
+	SamplingRate int       `json:"sampling_rate"`
+}
+
+type EKGPrediction struct {
+	Condition   string  `json:"condition"`
+	Probability float64 `json:"probability"`
+	Confidence  string  `json:"confidence"`
+}
+
+type EKGResponse struct {
+	Status      string          `json:"status"`
+	Predictions []EKGPrediction `json:"predictions"`
+	Features    map[string]any  `json:"features"`
+}
