@@ -13,16 +13,16 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/contrib/websocket"
 
-	"healthcare-backend/internal/blockchain"
-	"healthcare-backend/internal/cache"
-	"healthcare-backend/internal/config"
-	"healthcare-backend/internal/database"
-	"healthcare-backend/internal/handlers"
-	"healthcare-backend/internal/middleware"
-	"healthcare-backend/internal/queue"
-	"healthcare-backend/internal/repositories"
-	"healthcare-backend/internal/services"
-	"healthcare-backend/internal/workers"
+	"healthcare-backend/pkg/blockchain"
+	"healthcare-backend/pkg/cache"
+	"healthcare-backend/pkg/config"
+	"healthcare-backend/pkg/database"
+	"healthcare-backend/pkg/handlers"
+	"healthcare-backend/pkg/middleware"
+	"healthcare-backend/pkg/queue"
+	"healthcare-backend/pkg/repositories"
+	"healthcare-backend/pkg/services"
+	"healthcare-backend/pkg/workers"
 )
 
 func main() {

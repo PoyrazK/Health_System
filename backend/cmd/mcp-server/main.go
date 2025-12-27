@@ -2,16 +2,14 @@ package main
 
 import (
 	"log"
-	"healthcare-backend/internal/config"
-	"healthcare-backend/internal/database"
-	"healthcare-backend/internal/mcp"
-	"healthcare-backend/internal/repositories"
-	"healthcare-backend/internal/services"
+	"healthcare-backend/pkg/database"
+	"healthcare-backend/pkg/mcp"
+	"healthcare-backend/pkg/repositories"
+	"healthcare-backend/pkg/services"
 )
 
 func main() {
-	cfg := config.Load()
-	database.InitDB(cfg)
+	database.InitDB()
 
 	// Repositories
 	patientRepo := repositories.NewPatientRepository(database.DB)
