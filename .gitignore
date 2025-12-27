@@ -8,44 +8,27 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-eggs/
-.eggs/
-*.manifest
-*.spec
-
-# Virtual Environment
 venv/
 env/
 .env
 .venv
-
-# IDE
 .idea/
 .vscode/
 *.swp
-*.swo
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Logs
 *.log
 logs/
-
-# Test
 .pytest_cache/
 .coverage
-htmlcov/
-
-# Jupyter
 .ipynb_checkpoints/
-
-# Large files (will be tracked with Git LFS if needed)
-# *.pkl
-# *.joblib
-# *.h5
-
-# Temp
 *.tmp
 *.temp
+
+# Training Data - DO NOT PUSH
+*.npz
+*.csv
+
+# Large model files over 100MB - use Git LFS or external storage
+# disease_classifier.joblib is 103MB - exclude from normal push
+ai-service/models/disease/disease_classifier.joblib
