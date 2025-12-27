@@ -1,0 +1,49 @@
+
+# Datasets
+*.csv
+*.xlsx
+*.xls
+data/
+dataset/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+*.log
+audit_output.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Virtual Env
+venv/
+env/
+.env
+
+# Large outputs (Optional - model dosyası küçük olduğu için tutuyoruz)
+# golden_hour_model/models/*.pkl

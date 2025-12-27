@@ -1,0 +1,255 @@
+# Golden Hour Disease Configuration
+# 20 Critical Diseases with Evidence-Based Golden Hour Values
+# All values are based on peer-reviewed medical guidelines
+
+diseases:
+  # CARDIAC EMERGENCIES
+  - id: "stemi"
+    name: "STEMI (ST-Elevation Myocardial Infarction)"
+    name_tr: "STEMI (ST Elevasyonlu Miyokard Enfarktüsü)"
+    golden_hour_minutes: 90
+    urgency_level: 5  # Maximum urgency
+    category: "cardiac"
+    reference: "ACC/AHA Guidelines 2023 - Door-to-balloon time"
+    symptoms_keywords: ["chest_pain", "radiating_arm_pain", "diaphoresis", "dyspnea", "nausea"]
+    
+  - id: "nstemi"
+    name: "NSTEMI (Non-ST-Elevation Myocardial Infarction)"
+    name_tr: "NSTEMI (ST Elevasyonsuz Miyokard Enfarktüsü)"
+    golden_hour_minutes: 120
+    urgency_level: 5
+    category: "cardiac"
+    reference: "ESC Guidelines 2023"
+    symptoms_keywords: ["chest_pain", "dyspnea", "fatigue", "diaphoresis"]
+
+  - id: "cardiac_arrest"
+    name: "Cardiac Arrest"
+    name_tr: "Kardiyak Arrest"
+    golden_hour_minutes: 4
+    urgency_level: 5
+    category: "cardiac"
+    reference: "AHA ACLS Guidelines 2020"
+    symptoms_keywords: ["unresponsive", "no_pulse", "not_breathing"]
+
+  # NEUROLOGICAL EMERGENCIES
+  - id: "ischemic_stroke"
+    name: "Ischemic Stroke"
+    name_tr: "İskemik İnme"
+    golden_hour_minutes: 270  # 4.5 hours for tPA
+    urgency_level: 5
+    category: "neurological"
+    reference: "AHA/ASA Guidelines 2019 - tPA window"
+    symptoms_keywords: ["facial_drooping", "arm_weakness", "speech_difficulty", "sudden_headache", "vision_loss"]
+
+  - id: "hemorrhagic_stroke"
+    name: "Hemorrhagic Stroke"
+    name_tr: "Hemorajik İnme"
+    golden_hour_minutes: 60
+    urgency_level: 5
+    category: "neurological"
+    reference: "AHA/ASA Guidelines 2022"
+    symptoms_keywords: ["severe_headache", "vomiting", "altered_consciousness", "neck_stiffness"]
+
+  - id: "status_epilepticus"
+    name: "Status Epilepticus"
+    name_tr: "Status Epileptikus"
+    golden_hour_minutes: 5
+    urgency_level: 5
+    category: "neurological"
+    reference: "AES Guidelines 2016"
+    symptoms_keywords: ["prolonged_seizure", "multiple_seizures", "unconscious"]
+
+  # RESPIRATORY EMERGENCIES
+  - id: "tension_pneumothorax"
+    name: "Tension Pneumothorax"
+    name_tr: "Tansiyon Pnömotoraks"
+    golden_hour_minutes: 10
+    urgency_level: 5
+    category: "respiratory"
+    reference: "ATLS Guidelines"
+    symptoms_keywords: ["severe_dyspnea", "chest_pain", "tracheal_deviation", "hypotension"]
+
+  - id: "pulmonary_embolism"
+    name: "Massive Pulmonary Embolism"
+    name_tr: "Masif Pulmoner Emboli"
+    golden_hour_minutes: 60
+    urgency_level: 5
+    category: "respiratory"
+    reference: "ESC Guidelines 2019"
+    symptoms_keywords: ["sudden_dyspnea", "chest_pain", "hemoptysis", "syncope", "tachycardia"]
+
+  - id: "severe_asthma"
+    name: "Severe Asthma Attack"
+    name_tr: "Ağır Astım Atağı"
+    golden_hour_minutes: 30
+    urgency_level: 4
+    category: "respiratory"
+    reference: "GINA Guidelines 2023"
+    symptoms_keywords: ["severe_wheezing", "unable_to_speak", "cyanosis", "altered_mental_status"]
+
+  # INFECTIOUS/SEPSIS
+  - id: "sepsis"
+    name: "Sepsis / Septic Shock"
+    name_tr: "Sepsis / Septik Şok"
+    golden_hour_minutes: 60
+    urgency_level: 5
+    category: "infectious"
+    reference: "Surviving Sepsis Campaign 2021 - Hour-1 Bundle"
+    symptoms_keywords: ["fever", "tachycardia", "hypotension", "altered_mental_status", "tachypnea"]
+
+  - id: "meningitis"
+    name: "Bacterial Meningitis"
+    name_tr: "Bakteriyel Menenjit"
+    golden_hour_minutes: 60
+    urgency_level: 5
+    category: "infectious"
+    reference: "IDSA Guidelines 2017"
+    symptoms_keywords: ["fever", "severe_headache", "neck_stiffness", "photophobia", "altered_consciousness"]
+
+  # ALLERGIC/IMMUNOLOGICAL
+  - id: "anaphylaxis"
+    name: "Anaphylaxis"
+    name_tr: "Anafilaksi"
+    golden_hour_minutes: 10
+    urgency_level: 5
+    category: "allergic"
+    reference: "WAO Anaphylaxis Guidelines 2020"
+    symptoms_keywords: ["urticaria", "angioedema", "dyspnea", "hypotension", "throat_swelling"]
+
+  # GASTROINTESTINAL EMERGENCIES
+  - id: "acute_appendicitis"
+    name: "Acute Appendicitis"
+    name_tr: "Akut Apandisit"
+    golden_hour_minutes: 1440  # 24 hours before perforation risk increases
+    urgency_level: 4
+    category: "gastrointestinal"
+    reference: "WSES Guidelines 2020"
+    symptoms_keywords: ["right_lower_quadrant_pain", "nausea", "vomiting", "fever", "anorexia"]
+
+  - id: "acute_pancreatitis"
+    name: "Acute Pancreatitis"
+    name_tr: "Akut Pankreatit"
+    golden_hour_minutes: 360  # 6 hours for aggressive fluid resuscitation
+    urgency_level: 4
+    category: "gastrointestinal"
+    reference: "ACG Guidelines 2013"
+    symptoms_keywords: ["epigastric_pain", "radiating_back_pain", "nausea", "vomiting"]
+
+  - id: "gi_hemorrhage"
+    name: "Acute GI Hemorrhage"
+    name_tr: "Akut GI Kanama"
+    golden_hour_minutes: 60
+    urgency_level: 5
+    category: "gastrointestinal"
+    reference: "ESGE Guidelines 2021"
+    symptoms_keywords: ["hematemesis", "melena", "hematochezia", "hypotension", "tachycardia"]
+
+  # METABOLIC EMERGENCIES
+  - id: "dka"
+    name: "Diabetic Ketoacidosis (DKA)"
+    name_tr: "Diyabetik Ketoasidoz (DKA)"
+    golden_hour_minutes: 120
+    urgency_level: 4
+    category: "metabolic"
+    reference: "ADA Guidelines 2023"
+    symptoms_keywords: ["polyuria", "polydipsia", "nausea", "vomiting", "abdominal_pain", "altered_mental_status"]
+
+  - id: "hhs"
+    name: "Hyperosmolar Hyperglycemic State"
+    name_tr: "Hiperosmolar Hiperglisemik Durum"
+    golden_hour_minutes: 120
+    urgency_level: 4
+    category: "metabolic"
+    reference: "ADA Guidelines 2023"
+    symptoms_keywords: ["severe_dehydration", "altered_mental_status", "weakness", "polyuria"]
+
+  # TRAUMA
+  - id: "traumatic_hemorrhage"
+    name: "Traumatic Hemorrhage/Shock"
+    name_tr: "Travmatik Kanama/Şok"
+    golden_hour_minutes: 60
+    urgency_level: 5
+    category: "trauma"
+    reference: "ATLS Guidelines 10th Ed"
+    symptoms_keywords: ["trauma", "hypotension", "tachycardia", "altered_mental_status", "visible_bleeding"]
+
+  # UROLOGICAL EMERGENCIES
+  - id: "testicular_torsion"
+    name: "Testicular Torsion"
+    name_tr: "Testis Torsiyonu"
+    golden_hour_minutes: 360  # 6 hours for salvage
+    urgency_level: 4
+    category: "urological"
+    reference: "EAU Guidelines 2023"
+    symptoms_keywords: ["sudden_testicular_pain", "nausea", "vomiting", "absent_cremasteric_reflex"]
+
+  # OBSTETRIC EMERGENCIES
+  - id: "ectopic_rupture"
+    name: "Ruptured Ectopic Pregnancy"
+    name_tr: "Rüptüre Ektopik Gebelik"
+    golden_hour_minutes: 30
+    urgency_level: 5
+    category: "obstetric"
+    reference: "ACOG Practice Bulletin 2018"
+    symptoms_keywords: ["abdominal_pain", "vaginal_bleeding", "amenorrhea", "hypotension", "syncope"]
+
+# Urgency Level Definitions
+urgency_levels:
+  5:
+    name: "Critical"
+    name_tr: "Kritik"
+    description: "Immediate life threat, requires intervention within minutes"
+    color: "#FF0000"
+  4:
+    name: "Emergent"
+    name_tr: "Acil"
+    description: "Serious condition, requires intervention within hours"
+    color: "#FF6600"
+  3:
+    name: "Urgent"
+    name_tr: "Öncelikli"
+    description: "Needs attention within 24 hours"
+    color: "#FFCC00"
+  2:
+    name: "Standard"
+    name_tr: "Standart"
+    description: "Needs attention within 2-3 days"
+    color: "#00CC00"
+  1:
+    name: "Elective"
+    name_tr: "Elektif"
+    description: "Can be scheduled"
+    color: "#0066CC"
+
+# Category Definitions
+categories:
+  cardiac:
+    name: "Cardiac"
+    name_tr: "Kardiyak"
+  neurological:
+    name: "Neurological"
+    name_tr: "Nörolojik"
+  respiratory:
+    name: "Respiratory"
+    name_tr: "Solunum"
+  infectious:
+    name: "Infectious/Sepsis"
+    name_tr: "Enfeksiyon/Sepsis"
+  allergic:
+    name: "Allergic/Immunological"
+    name_tr: "Alerjik/İmmünolojik"
+  gastrointestinal:
+    name: "Gastrointestinal"
+    name_tr: "Gastrointestinal"
+  metabolic:
+    name: "Metabolic"
+    name_tr: "Metabolik"
+  trauma:
+    name: "Trauma"
+    name_tr: "Travma"
+  urological:
+    name: "Urological"
+    name_tr: "Ürolojik"
+  obstetric:
+    name: "Obstetric"
+    name_tr: "Obstetrik"
