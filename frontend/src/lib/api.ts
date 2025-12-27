@@ -116,7 +116,7 @@ export async function analyzeEKG(signal: number[], samplingRate: number = 360): 
 /**
  * Predict disease from symptoms
  */
-export async function predictDisease(symptoms: string[], patientId?: string): Promise<DiseasePredictionResponse> {
+export async function predictDisease(symptoms: string[], patientId?: string): Promise<DiseasePrediction> {
     const response = await fetch(`${API_BASE_URL}/disease/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -134,7 +134,7 @@ export async function predictDisease(symptoms: string[], patientId?: string): Pr
 export async function predictUrgency(
     symptoms: string[],
     patientData: PatientFormData
-): Promise<UrgencyResponse> {
+): Promise<UrgencyPrediction> {
     const response = await fetch(`${API_BASE_URL}/urgency/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -149,7 +149,7 @@ export async function predictUrgency(
 /**
  * Get golden hour information for a disease
  */
-export async function getGoldenHour(disease: string): Promise<GoldenHourResponse> {
+export async function getGoldenHour(disease: string): Promise<GoldenHour> {
     const response = await fetch(`${API_BASE_URL}/urgency/golden-hour/${encodeURIComponent(disease)}`);
     if (!response.ok) {
         throw new Error('Failed to get golden hour info');
@@ -157,16 +157,57 @@ export async function getGoldenHour(disease: string): Promise<GoldenHourResponse
     return response.json();
 }
 
-// ==========================================
-// Type imports for new endpoints
-// ==========================================
-import type {
-    DashboardSummary,
-    EKGAnalysisResponse,
-    DiseasePredictionResponse,
-    UrgencyResponse,
-    GoldenHourResponse,
-} from './types';
+// Type definitions for new endpoints
+export interface DashboardSummary {
+    TotalPatients: number;
+    HighRiskPatients: number;
+    RecentAssessments: number;
+    SystemHealth: string;
+    MLServicePulse: string;
+    AuditChainValid: boolean;
+    RiskDistribution: Record<string, number>;
+    Performance: {
+        AvgMLInferenceTimeMs: number;
+        UptimeSeconds: number;
+        RequestCount: number;
+        ErrorRate: number;
+    };
+}
+
+export interface EKGAnalysisResponse {
+    status: string;
+    predictions: Array<{
+        condition: string;
+        probability: number;
+        confidence: string;
+    }>;
+    features: {
+        heart_rate: number;
+        rr_mean: number;
+        rr_std: number;
+    };
+}
+
+export interface DiseasePrediction {
+    predictions: Array<{
+        disease: string;
+        probability: number;
+        confidence: string;
+    }>;
+}
+
+export interface UrgencyPrediction {
+    urgency_level: number;
+    urgency_name: string;
+    probability: number;
+    confidence: string;
+}
+
+export interface GoldenHour {
+    urgency: number;
+    golden_hour: number;
+    description: string;
+}
 
 /**
  * Default form values (fallback when API is unavailable)
@@ -185,3 +226,4 @@ export const DEFAULT_FORM_VALUES: DefaultFormValues = {
     alcohol: 'No',
     medications: 'Lisinopril, Atorvastatin',
 };
+

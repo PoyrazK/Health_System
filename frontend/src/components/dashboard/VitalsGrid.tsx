@@ -1,17 +1,9 @@
 'use client';
 
-// Flexible interface that works with both old and new Patient types
-interface VitalsPatient {
-    systolic_bp: number;
-    diastolic_bp: number;
-    heart_rate: number;
-    glucose: number;
-    bmi: number;
-    steps: number;
-}
+import { Patient } from '@/lib/types';
 
 interface VitalsGridProps {
-    patient: VitalsPatient;
+    patient: Patient;
 }
 
 export default function VitalsGrid({ patient }: VitalsGridProps) {
@@ -38,4 +30,3 @@ export default function VitalsGrid({ patient }: VitalsGridProps) {
         </div>
     );
 }
-

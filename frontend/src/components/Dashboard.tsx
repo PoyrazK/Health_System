@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Patient, AssessmentResult, AssessmentAPIResponse, PatientRecord } from '@/lib/types';
-import { pollDiagnosis, fetchPatients, submitAssessment } from '@/lib/api';
+import { MOCK_PATIENTS } from '@/lib/constants';
+import { Patient, AssessmentResult, AssessmentAPIResponse } from '@/lib/types';
+import { pollDiagnosis } from '@/lib/api';
 import Sidebar from './dashboard/Sidebar';
 import PatientHeader from './dashboard/PatientHeader';
 import VitalsGrid from './dashboard/VitalsGrid';
@@ -14,164 +15,53 @@ import VitalsChart from './dashboard/VitalsChart';
 import IntakeModal from './dashboard/IntakeModal';
 import SystemStatus from './dashboard/SystemStatus';
 
-// Convert PatientRecord from API to Patient for UI
-function recordToPatient(record: PatientRecord, index: number): Patient {
-    return {
-        id: String(record.id),
-        name: `Patient #${record.id}`,
-        age: record.age,
-        gender: record.gender,
-        systolic_bp: record.systolic_bp,
-        diastolic_bp: record.diastolic_bp,
-        glucose: record.glucose,
-        bmi: record.bmi,
-        cholesterol: record.cholesterol,
-        heart_rate: record.heart_rate,
-        steps: record.steps,
-        smoking: record.smoking === 'Yes',
-        alcohol: record.alcohol === 'Yes',
-        medications: record.medications ? record.medications.split(',').map(m => m.trim()) : [],
-        history_heart_disease: false,
-        history_stroke: false,
-        history_diabetes: false,
-        history_high_chol: false,
-        admitted_at: record.created_at,
-        attending: 'Dr. AI Copilot',
-        status: record.systolic_bp > 160 ? 'Critical' : record.systolic_bp > 140 ? 'Observing' : 'Stable',
-    };
-}
 
 interface DashboardProps {
     onExit: () => void;
 }
 
 export default function Dashboard({ onExit }: DashboardProps) {
-    const [patients, setPatients] = useState<Patient[]>([]);
-    const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+    const [selectedPatient, setSelectedPatient] = useState<Patient>(MOCK_PATIENTS[0]);
     const [assessment, setAssessment] = useState<AssessmentResult | null>(null);
     const [isNewPatientModalOpen, setIsNewPatientModalOpen] = useState(false);
     const [lastAPIResult, setLastAPIResult] = useState<AssessmentAPIResponse | null>(null);
     const [diagnosisPolling, setDiagnosisPolling] = useState(false);
-    const [loading, setLoading] = useState(true);
 
-    // Fetch patients from backend
-    useEffect(() => {
-        async function loadPatients() {
-            try {
-                const records = await fetchPatients();
-                const patientList = records.map(recordToPatient);
-                setPatients(patientList);
-                if (patientList.length > 0) {
-                    setSelectedPatient(patientList[0]);
-                }
-            } catch (error) {
-                console.error('Failed to load patients:', error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        loadPatients();
-    }, []);
-
-    // Mock historical data for charts (based on selected patient)
-    const historyData = selectedPatient ? [
+    // Mock historical data for charts
+    const historyData = [
         { time: '08:00', value: selectedPatient.heart_rate - 10 },
         { time: '10:00', value: selectedPatient.heart_rate + 5 },
         { time: '12:00', value: selectedPatient.heart_rate - 2 },
         { time: '14:00', value: selectedPatient.heart_rate + 8 },
         { time: '16:00', value: selectedPatient.heart_rate },
-    ] : [];
+    ];
 
-    // Fetch real assessment when patient changes
     useEffect(() => {
-        if (!selectedPatient) return;
-
-        const patient = selectedPatient; // Capture for TypeScript narrowing
         setAssessment(null);
-
-        // Trigger real ML assessment via backend
-        async function fetchAssessment() {
-            try {
-                const result = await submitAssessment({
-                    age: patient.age,
-                    gender: patient.gender as 'Male' | 'Female',
-                    systolic_bp: patient.systolic_bp,
-                    diastolic_bp: patient.diastolic_bp,
-                    glucose: patient.glucose,
-                    bmi: patient.bmi,
-                    cholesterol: patient.cholesterol,
-                    heart_rate: patient.heart_rate,
-                    steps: patient.steps,
-                    smoking: patient.smoking ? 'Yes' : 'No',
-                    alcohol: patient.alcohol ? 'Yes' : 'No',
-                    medications: patient.medications.join(', '),
-                });
-
-                // Map API response to AssessmentResult
-                setAssessment({
-                    risk_scores: {
-                        heart: result.risks.heart_risk_score,
-                        diabetes: result.risks.diabetes_risk_score,
-                        stroke: result.risks.stroke_risk_score,
-                        kidney: result.risks.kidney_risk_score,
-                        general_health: result.risks.general_health_score,
-                        clinical_confidence: result.risks.clinical_confidence,
-                    },
-                    diagnosis: result.diagnosis || 'Analysis pending...',
-                    medication_analysis: result.medication_analysis,
-                    model_precisions: result.model_precisions.map(m => ({
-                        name: m.model_name,
-                        confidence: m.confidence / 100,
-                    })),
-                    emergency: result.emergency,
-                });
-
-                // Poll for diagnosis if pending
-                if (result.diagnosis_status === 'pending') {
-                    setDiagnosisPolling(true);
-                    const pollInterval = setInterval(async () => {
-                        try {
-                            const diagResult = await pollDiagnosis(result.id);
-                            if (diagResult.status === 'ready') {
-                                setAssessment(prev => prev ? { ...prev, diagnosis: diagResult.diagnosis } : null);
-                                clearInterval(pollInterval);
-                                setDiagnosisPolling(false);
-                            } else if (diagResult.status === 'error') {
-                                clearInterval(pollInterval);
-                                setDiagnosisPolling(false);
-                            }
-                        } catch {
-                            clearInterval(pollInterval);
-                            setDiagnosisPolling(false);
-                        }
-                    }, 2000);
-
-                    setTimeout(() => {
-                        clearInterval(pollInterval);
-                        setDiagnosisPolling(false);
-                    }, 30000);
-                }
-            } catch (error) {
-                console.error('Failed to fetch assessment:', error);
-                // Fallback to mock data if API fails
-                setAssessment({
-                    risk_scores: {
-                        heart: 35,
-                        diabetes: 25,
-                        stroke: 15,
-                        kidney: 20,
-                        general_health: 82,
-                        clinical_confidence: 94.5
-                    },
-                    diagnosis: '⚠️ **ML Service Unavailable** - Using fallback assessment',
-                    medication_analysis: { risky: [], safe: [] },
-                    model_precisions: [],
-                    emergency: patient.status === 'Critical'
-                });
-            }
-        }
-
-        fetchAssessment();
+        const timer = setTimeout(() => {
+            setAssessment({
+                risk_scores: {
+                    heart: Math.floor(Math.random() * 60) + 10,
+                    diabetes: Math.floor(Math.random() * 50) + 20,
+                    stroke: Math.floor(Math.random() * 30) + 5,
+                    kidney: Math.floor(Math.random() * 40) + 10,
+                    general_health: 82,
+                    clinical_confidence: 99.8
+                },
+                diagnosis: `### Clinical Impression for ${selectedPatient.name}\n\nBased on the analysis of **vitals** and **EHR history**, the neural engine indicates a probable diagnosis of **Bacterial Pneumonia**.\n\n- **Consolidation**: Indicated in lower right lobe\n- **Biomarkers**: Elevated WBC counts (${selectedPatient.systolic_bp > 150 ? 'Severe' : 'Moderate'})\n- **Oxygen Saturation**: Stable but trending down.\n\n#### Recommendations\n1. Initiate broad-spectrum antibiotics (Vancomycin/Piperacillin).\n2. Schedule repeat CXR in 12 hours.\n3. Monitor renal clearance given age and baseline GFR.`,
+                medication_analysis: {
+                    risky: ['Warfarin'],
+                    safe: ['Vancomycin', 'Piperacillin', 'Insulin']
+                },
+                model_precisions: [
+                    { name: 'XGBoost Cardio', confidence: 0.99 },
+                    { name: 'LSTM Glycemic', confidence: 0.98 },
+                    { name: 'CNN Imaging', confidence: 0.95 }
+                ],
+                emergency: selectedPatient.status === 'Critical'
+            });
+        }, 1500);
+        return () => clearTimeout(timer);
     }, [selectedPatient]);
 
     // Handle IntakeModal submission result
@@ -230,44 +120,10 @@ export default function Dashboard({ onExit }: DashboardProps) {
         }
     }, []);
 
-    // Show loading state
-    if (loading) {
-        return (
-            <div className="flex h-screen bg-[#0A0F1C] text-white items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p className="text-slate-400">Loading patients...</p>
-                </div>
-            </div>
-        );
-    }
-
-    // Handle no patients case
-    if (!selectedPatient) {
-        return (
-            <div className="flex h-screen bg-[#0A0F1C] text-white items-center justify-center">
-                <div className="text-center">
-                    <p className="text-xl text-slate-300 mb-4">No patients found</p>
-                    <button
-                        onClick={() => setIsNewPatientModalOpen(true)}
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
-                    >
-                        Add New Patient
-                    </button>
-                    <IntakeModal
-                        isOpen={isNewPatientModalOpen}
-                        onClose={() => setIsNewPatientModalOpen(false)}
-                        onSubmitSuccess={handleAssessmentResult}
-                    />
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className={`flex h-screen bg-[#0A0F1C] text-white overflow-hidden transition-all duration-700 ${assessment?.emergency ? 'ring-[4px] ring-red-500/50 ring-inset' : ''}`}>
             <Sidebar
-                patients={patients}
+                patients={MOCK_PATIENTS}
                 selectedId={selectedPatient.id}
                 onSelect={setSelectedPatient}
                 onNew={() => setIsNewPatientModalOpen(true)}
@@ -374,4 +230,3 @@ export default function Dashboard({ onExit }: DashboardProps) {
         </div>
     );
 }
-
