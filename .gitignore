@@ -25,3 +25,5 @@ models/*.joblib
 data/*.csv
 data/*.xlsx
 !data/demo_placeholder.txt
+backend/mcp-server
+backend/server

@@ -5,16 +5,19 @@ import (
 	"math"
 	"sort"
 	"healthcare-backend/internal/models"
-	
-	"gorm.io/gorm"
+	"healthcare-backend/internal/repositories"
 )
 
 type RAGService struct {
-	DB *gorm.DB
+	PatientRepo  repositories.PatientRepository
+	FeedbackRepo repositories.FeedbackRepository
 }
 
-func NewRAGService(db *gorm.DB) *RAGService {
-	return &RAGService{DB: db}
+func NewRAGService(patientRepo repositories.PatientRepository, feedbackRepo repositories.FeedbackRepository) *RAGService {
+	return &RAGService{
+		PatientRepo:  patientRepo,
+		FeedbackRepo: feedbackRepo,
+	}
 }
 
 type ScoredFeedback struct {
@@ -23,16 +26,17 @@ type ScoredFeedback struct {
 }
 
 func (s *RAGService) FindSimilarCases(patient models.PatientData) string {
-	var approvedFeedbacks []models.Feedback
-	// Fetch all approved feedbacks
-	s.DB.Where("doctor_approved = ?", true).Find(&approvedFeedbacks)
+	approvedFeedbacks, err := s.FeedbackRepo.GetApproved()
+	if err != nil {
+		return "Error fetching past cases."
+	}
 
 	var scored []ScoredFeedback
 
 	for _, f := range approvedFeedbacks {
 		// Fetch associated patient data
-		var histP models.PatientData
-		if result := s.DB.First(&histP, f.PatientID); result.Error == nil {
+		histP, err := s.PatientRepo.GetByID(f.PatientID)
+		if err == nil {
 			// Calculate Normalized Euclidean Distance
 			// Features: Age (0-100), SystolicBP (90-200), Glucose (70-300), BMI (15-50)
 			

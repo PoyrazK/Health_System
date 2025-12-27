@@ -16,14 +16,16 @@ type PatientHandler struct {
 	RAG        *services.RAGService
 	Prediction *services.PredictionService
 	WS         *WebSocketHandler
+	Audit      *services.AuditService
 }
 
-func NewPatientHandler(db *gorm.DB, rag *services.RAGService, pred *services.PredictionService, ws *WebSocketHandler) *PatientHandler {
+func NewPatientHandler(db *gorm.DB, rag *services.RAGService, pred *services.PredictionService, ws *WebSocketHandler, audit *services.AuditService) *PatientHandler {
 	return &PatientHandler{
 		DB:         db,
 		RAG:        rag,
 		Prediction: pred,
 		WS:         ws,
+		Audit:      audit,
 	}
 }
 
@@ -94,6 +96,9 @@ func (h *PatientHandler) AssessPatient(c *fiber.Ctx) error {
 	for name, conf := range risks.ModelPrecisions {
 		precisions = append(precisions, models.ModelPrecision{ModelName: name, Confidence: conf})
 	}
+
+	// 📜 Audit: Log AI Prediction
+	h.Audit.LogEvent("AI_PREDICTION", patient.ID, risks, "system")
 
 	// 3. Start LLM Diagnosis ASYNC (non-blocking)
 	h.Prediction.StartAsyncDiagnosis(patient.ID, models.DiagnosisRequest{

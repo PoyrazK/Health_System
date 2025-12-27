@@ -5,17 +5,19 @@ import (
 	"time"
 
 	"healthcare-backend/internal/models"
+	"healthcare-backend/internal/services"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
 type FeedbackHandler struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	Audit *services.AuditService
 }
 
-func NewFeedbackHandler(db *gorm.DB) *FeedbackHandler {
-	return &FeedbackHandler{DB: db}
+func NewFeedbackHandler(db *gorm.DB, audit *services.AuditService) *FeedbackHandler {
+	return &FeedbackHandler{DB: db, Audit: audit}
 }
 
 func (h *FeedbackHandler) SubmitFeedback(c *fiber.Ctx) error {
@@ -41,5 +43,9 @@ func (h *FeedbackHandler) SubmitFeedback(c *fiber.Ctx) error {
 	}
 
 	h.DB.Create(&fb)
+
+	// 📜 Audit: Log Doctor Feedback
+	h.Audit.LogEvent("DOCTOR_FEEDBACK", fb.PatientID, req, "doctor")
+
 	return c.JSON(fiber.Map{"status": "recorded", "id": fb.ID})
 }

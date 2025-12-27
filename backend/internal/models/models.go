@@ -9,22 +9,22 @@ import (
 type PatientData struct {
 	ID          uint      `gorm:"primaryKey" json:"id"`
 	CreatedAt   time.Time `json:"created_at"`
-	Age         int       `json:"age"`
-	Gender      string    `json:"gender"`
-	SystolicBP  int       `json:"systolic_bp"`
-	DiastolicBP int       `json:"diastolic_bp"`
-	Glucose     int       `json:"glucose"`
-	BMI         float64   `json:"bmi"`
-	Cholesterol int       `json:"cholesterol"`
-	HeartRate   int       `json:"heart_rate"`
-	Steps       int       `json:"steps"`
-	Smoking     string    `json:"smoking"`
-	Alcohol     string    `json:"alcohol"`
+	Age         int       `json:"age" validate:"required,min=0,max=150"`
+	Gender      string    `json:"gender" validate:"required,oneof=Male Female Other"`
+	SystolicBP  int       `json:"systolic_bp" validate:"required,min=50,max=300"`
+	DiastolicBP int       `json:"diastolic_bp" validate:"required,min=30,max=200"`
+	Glucose     int       `json:"glucose" validate:"required,min=20,max=600"`
+	BMI         float64   `json:"bmi" validate:"required,min=10,max=80"`
+	Cholesterol int       `json:"cholesterol" validate:"min=50,max=500"`
+	HeartRate   int       `json:"heart_rate" validate:"min=30,max=250"`
+	Steps       int       `json:"steps" validate:"min=0,max=100000"`
+	Smoking     string    `json:"smoking" validate:"oneof=Yes No Former"`
+	Alcohol     string    `json:"alcohol" validate:"oneof=Yes No"`
 	Medications string    `json:"medications"` // Comma-separated
-	HistoryHeartDisease string `json:"history_heart_disease"`
-	HistoryStroke       string `json:"history_stroke"`
-	HistoryDiabetes     string `json:"history_diabetes"`
-	HistoryHighChol     string `json:"history_high_chol"`
+	HistoryHeartDisease string `json:"history_heart_disease" validate:"oneof=Yes No"`
+	HistoryStroke       string `json:"history_stroke" validate:"oneof=Yes No"`
+	HistoryDiabetes     string `json:"history_diabetes" validate:"oneof=Yes No"`
+	HistoryHighChol     string `json:"history_high_chol" validate:"oneof=Yes No"`
 }
 
 type Feedback struct {
