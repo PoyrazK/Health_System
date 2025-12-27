@@ -17,6 +17,7 @@ Clinical Copilot is a state-of-the-art medical decision support system designed 
 - **Live System Telemetry:** Real-time monitoring of network latency and microservice performance.
 - **Biometric Telemetry:** Live streaming of BP, Glucose, BMI, Cholesterol, Heart Rate, and Steps.
 - **New Triage System:** Seamless entry of new patient data with instant analysis.
+- **🛡️ Blockchain Audit Layer:** High-performance, internal ledger that hashes every decision for regulatory compliance (FDA PCCP).
 
 > [!TIP]
 > **New in v2.0**: See [System Upgrades](./docs/UPGRADES.md) for a deep dive into the latest architectural and feature enhancements.
@@ -27,9 +28,10 @@ The system follows a high-performance distributed architecture:
 
 1.  **Frontend (Next.js 14 + Tailwind + Framer Motion):**
     *   Highly responsive viewport with glassmorphism aesthetics.
-    *   Real-time state management for telemetry and risk updates.
+    *   **Blockchain Verification UI** for real-time audit proofs.
 2.  **Backend Orchestrator (Go Fiber):**
-    *   Handles patient persistence (SQLite + GORM).
+    *   Handles patient persistence (PostgreSQL + GORM).
+    *   **Internal Blockchain Engine:** Custom SHA-256 implementation for immutable logging.
     *   Manages RAG-lite context retrieval.
     *   Coordinates requests between Frontend and ML microservices.
 3.  **ML Microservice (Python FastAPI):**
