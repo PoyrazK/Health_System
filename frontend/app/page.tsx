@@ -13,7 +13,7 @@ import {
 
 // Components
 import { PatientSidebar } from "@/components/dashboard/PatientSidebar";
-import { VitalsGrid } from "@/components/dashboard/VitalsGrid";
+import VitalsGrid from "@/components/dashboard/VitalsGrid";
 import { RiskAnalysis } from "@/components/dashboard/RiskAnalysis";
 import { DiagnosisPanel } from "@/components/dashboard/DiagnosisPanel";
 import { FeedbackPanel } from "@/components/dashboard/FeedbackPanel";
