@@ -2,6 +2,7 @@ package workers
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -75,5 +76,12 @@ func (w *LLMWorker) updateStatus(patientID uint, diagnosis string, status string
 	jsonData, _ := json.Marshal(cacheData)
 	cache.Set(fmt.Sprintf("diag:status:%d", patientID), jsonData, 1*time.Hour)
 	
-	// Phase 6 will add Redis Pub/Sub broadcast here
+	// Globally broadcast via Redis Pub/Sub (Phase 6)
+	broadcastPayload := map[string]interface{}{
+		"patient_id": patientID,
+		"diagnosis":  diagnosis,
+		"status":     status,
+	}
+	bpJSON, _ := json.Marshal(broadcastPayload)
+	cache.RedisClient.Publish(context.Background(), "diagnosis_updates", bpJSON)
 }

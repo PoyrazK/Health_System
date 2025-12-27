@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"sync"
 
+	"healthcare-backend/internal/cache"
 	"github.com/gofiber/contrib/websocket"
 )
 
@@ -67,12 +70,36 @@ func (h *WebSocketHandler) HandleConnection(c *websocket.Conn) {
 	}
 }
 
+// StartGlobalListener listens for diagnosis updates on Redis and broadcasts them locally
+func (h *WebSocketHandler) StartGlobalListener() {
+	pubsub := cache.RedisClient.Subscribe(context.Background(), "diagnosis_updates")
+	ch := pubsub.Channel()
+
+	go func() {
+		log.Println("🌐 WS Handler: Listening for global diagnosis updates on Redis...")
+		for msg := range ch {
+			var update struct {
+				PatientID uint   `json:"patient_id"`
+				Diagnosis string `json:"diagnosis"`
+				Status    string `json:"status"`
+			}
+
+			if err := json.Unmarshal([]byte(msg.Payload), &update); err != nil {
+				log.Printf("❌ WS Handler: Redis msg unmarshal error: %v", err)
+				continue
+			}
+
+			h.BroadcastDiagnosis(update.PatientID, update.Diagnosis, update.Status)
+		}
+	}()
+}
+
 func (h *WebSocketHandler) BroadcastDiagnosis(patientID uint, diagnosis string, status string) {
 	h.mu.RLock()
 	subs, ok := h.patientSubs[patientID]
 	h.mu.RUnlock()
 
-	if !ok {
+	if !ok || len(subs) == 0 {
 		return
 	}
 

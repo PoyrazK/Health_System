@@ -73,6 +73,7 @@ func main() {
 
 	// Handlers
 	wsHandler := handlers.NewWebSocketHandler()
+	wsHandler.StartGlobalListener() // Listen for Redis updates
 	patientHandler := handlers.NewPatientHandler(database.DB, ragService, predService, wsHandler, auditService)
 	feedbackHandler := handlers.NewFeedbackHandler(database.DB, auditService)
 
