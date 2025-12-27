@@ -12,6 +12,7 @@ import (
 	"github.com/gofiber/contrib/websocket"
 
 	"healthcare-backend/internal/blockchain"
+	"healthcare-backend/internal/cache"
 	"healthcare-backend/internal/config"
 	"healthcare-backend/internal/database"
 	"healthcare-backend/internal/handlers"
@@ -26,6 +27,9 @@ func main() {
 
 	// Initialize database
 	database.InitDB(cfg)
+
+	// Initialize Redis
+	cache.InitRedis(cfg.RedisURL)
 
 	// Create Fiber app with custom error handler
 	app := fiber.New(fiber.Config{

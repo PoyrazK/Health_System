@@ -16,15 +16,23 @@
 
 ### Source Code
 - [x] `src/api/ml_api/main.py` - Python ML API service
-- [x] `backend/main.go` - Go orchestration backend
+- [x] `backend/cmd/server/main.go` - Go orchestration backend (Refactored)
 - [x] `frontend/` - Next.js web application
+- [x] `docker-compose.yml` - Container orchestration
 
 ### Documentation
 - [x] `docs/approach.md` - Solution methodology
-- [x] `docs/FULL_PROJECT_DOCUMENTATION.md` - Technical deep-dive
-- [x] `docs/project_brief.md` - Design document
-- [ ] `docs/API_REFERENCE.md` - API documentation
-- [ ] `docs/ARCHITECTURE.md` - System architecture
+- [x] `docs/ARCHITECTURE.md` - System architecture (v3.0 Updated)
+- [x] `docs/API_REFERENCE.md` - API documentation (v3.0 Updated)
+- [x] `docs/V3_SUMMARY.md` - v3.0 Intelligence & Real-Time Upgrades
+- [x] `docs/ML_EXPLAINABILITY.md` - SHAP & XAI Deep Dive
+- [x] `docs/DATA_PIPELINE.md` - Feature Engineering & MICE Pipeline
+- [x] `docs/REALTIME_INFRASTRUCTURE.md` - WebSocket & Async Logic
+- [x] `docs/DEPLOYMENT_DOCKER.md` - Production Deployment Guide
+- [x] `docs/TESTING_AND_VALIDATION.md` - Clinical Validation Report
+- [x] `docs/DEVELOPER_GUIDE.md` - Contributor & Extension Guide
+- [x] `docs/USER_MANUAL.md` - End-user clinician guide
+- [x] `docs/PRESENTATION_OUTLINE.md` - 8-slide pitch deck structure
 
 ---
 
