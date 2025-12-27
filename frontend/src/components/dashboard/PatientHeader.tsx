@@ -23,7 +23,9 @@ export default function PatientHeader({ patient, onExit }: PatientHeaderProps) {
                     <div className="flex items-center gap-2 mt-1">
                         <span className="text-[10px] text-slate-400 uppercase tracking-widest">{patient.gender}, {patient.age}y</span>
                         <span className="text-slate-700">•</span>
-                        <span className="text-[10px] text-slate-400 uppercase tracking-widest">Admitted: {new Date(patient.admitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <span className="text-[10px] text-slate-400 uppercase tracking-widest">
+                            Admitted: <span suppressHydrationWarning>{new Date(patient.admitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </span>
                     </div>
                 </div>
             </div>

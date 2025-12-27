@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"log"
+	"math"
+	"math/rand"
 	"time"
 
 	"healthcare-backend/pkg/models"
@@ -37,26 +39,44 @@ func (h *PatientHandler) GetPatients(c *fiber.Ctx) error {
 	return c.JSON(patients)
 }
 
-// Get Default Form Values for New Patient Intake
+// Get Default Form Values for New Patient Intake (Randomized)
 func (h *PatientHandler) GetDefaults(c *fiber.Ctx) error {
-		defaults := fiber.Map{
-			"age":          45,
-			"gender":       "Male",
-			"systolic_bp":  120,
-			"diastolic_bp": 80,
-			"glucose":      100,
-			"bmi":          24.5,
-			"cholesterol":  190,
-			"heart_rate":   72,
-			"steps":        6000,
-			"smoking":      "No",
-			"alcohol":      "No",
-			"medications":  "Lisinopril, Atorvastatin",
-			"history_heart_disease": "No",
-			"history_stroke":       "No",
-			"history_diabetes":     "No",
-			"history_high_chol":     "No",
-		}
+	// Randomize logic
+	rand.Seed(time.Now().UnixNano())
+	
+	genders := []string{"Male", "Female"}
+	gender := genders[rand.Intn(len(genders))]
+	
+	age := 30 + rand.Intn(50) // 30-80
+	
+	// Create correlated vitals (rough approximation)
+	systolic := 110 + rand.Intn(30)
+	diastolic := 70 + rand.Intn(20)
+	if age > 60 {
+		systolic += 10
+		diastolic += 5
+	}
+	
+	bmi := 20.0 + rand.Float64()*15.0 // 20.0 - 35.0
+	
+	defaults := fiber.Map{
+		"age":          age,
+		"gender":       gender,
+		"systolic_bp":  systolic,
+		"diastolic_bp": diastolic,
+		"glucose":      85 + rand.Intn(40),
+		"bmi":          math.Round(bmi*10) / 10,
+		"cholesterol":  160 + rand.Intn(80),
+		"heart_rate":   60 + rand.Intn(30),
+		"steps":        2000 + rand.Intn(8000),
+		"smoking":      []string{"No", "No", "Yes", "No"}[rand.Intn(4)], // 25% smoker
+		"alcohol":      []string{"No", "Yes"}[rand.Intn(2)],
+		"medications":  "",
+		"history_heart_disease": "No",
+		"history_stroke":       "No",
+		"history_diabetes":     "No",
+		"history_high_chol":     "No",
+	}
 	return c.JSON(defaults)
 }
 

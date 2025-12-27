@@ -17,8 +17,12 @@ const (
 
 // isServiceRunning checks if a service is available
 func isServiceRunning(url string) bool {
+	endpoint := "/health"
+	if url == BackendURL {
+		endpoint = "/health/ready"
+	}
 	client := &http.Client{Timeout: 2 * time.Second}
-	resp, err := client.Get(url + "/health")
+	resp, err := client.Get(url + endpoint)
 	if err != nil {
 		return false
 	}
@@ -32,7 +36,7 @@ func TestHealthEndpoint(t *testing.T) {
 		t.Skip("Backend not running, skipping integration test")
 	}
 
-	resp, err := http.Get(BackendURL + "/health")
+	resp, err := http.Get(BackendURL + "/health/ready")
 	if err != nil {
 		t.Fatalf("Health check failed: %v", err)
 	}
