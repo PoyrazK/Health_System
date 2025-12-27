@@ -36,7 +36,9 @@ var AppConfig *Config
 // Load initializes configuration from environment variables
 func Load() *Config {
 	// Try to load .env file (ignore error if not found)
-	_ = godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Println("ℹ️ No .env file found, using environment variables")
+	}
 
 	config := &Config{
 		// Server

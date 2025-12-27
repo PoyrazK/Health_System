@@ -21,57 +21,22 @@ import { IntakeModal } from "@/components/modals/IntakeModal";
 import DiseaseCheckerModal from "@/components/modals/DiseaseCheckerModal";
 import EKGPanel from "@/components/dashboard/EKGPanel";
 import { Activity } from "lucide-react";
+import { useTelemetry } from "@/hooks/useTelemetry";
+// Shared interfaces imported from types.ts
+import { Patient, AssessmentResponse, ModelPrecision } from '../types';
 
-// --- Types ---
-interface RiskScores {
-  heart_risk_score: number;
-  diabetes_risk_score: number;
-  stroke_risk_score: number;
-  kidney_risk_score: number;
-  general_health_score: number;
-  clinical_confidence: number;
-}
-
-interface Patient {
-  id: number;
-  age: number;
-  gender: string;
-  systolic_bp: number;
-  diastolic_bp: number;
-  glucose: number;
-  bmi: number;
-  cholesterol: number;
-  heart_rate: number;
-  steps: number;
-  smoking: string;
-  alcohol: string;
-  medications: string;
-  history_heart_disease: string;
-  history_stroke: string;
-  history_diabetes: string;
-  history_high_chol: string;
-}
-
-interface AssessmentResponse {
-  id: number;
-  risks: RiskScores;
-  diagnosis: string;
-  diagnosis_status: string; // "pending", "ready", "error"
-  emergency: boolean;
-  patient: Patient;
-  medication_analysis: { risky: string[]; safe: string[] };
-  model_precisions: { model_name: string; confidence: number }[];
-}
+// Redundant local interfaces removed in favor of types.ts
 
 interface DashboardState {
   loading: boolean;
   data: AssessmentResponse | null;
-  patients: any[];
+  patients: Patient[];
   patient: Patient | null;
   latency: number;
 }
 
 export default function ClinicalCockpit() {
+  const telemetry = useTelemetry(10000);
   const [state, setState] = useState<DashboardState>({
     loading: true,
     data: null,
@@ -142,7 +107,7 @@ export default function ClinicalCockpit() {
   useEffect(() => { patientRef.current = patient; }, [patient]);
 
   // Run assessment (Stable Function)
-  const runAssessment = useCallback(async (targetPatient?: any) => {
+  const runAssessment = useCallback(async (targetPatient?: Patient) => {
     if (loadingRef.current) return;
     loadingRef.current = true;
 
@@ -160,11 +125,27 @@ export default function ClinicalCockpit() {
         const defRes = await fetch("http://localhost:3000/api/defaults");
         target = await defRes.json();
       } catch {
-        target = {
-          age: 45, gender: 'Male', systolic_bp: 120, diastolic_bp: 80,
-          glucose: 100, bmi: 24.5, cholesterol: 190, heart_rate: 72, steps: 6000,
-          smoking: 'No', alcohol: 'No', medications: 'Lisinopril'
+        const initialPatient: Patient = {
+          id: 0,
+          age: 65,
+          gender: "Male",
+          systolic_bp: 145,
+          diastolic_bp: 90,
+          glucose: 110,
+          bmi: 27.5,
+          cholesterol: 190,
+          heart_rate: 72,
+          steps: 4500,
+          smoking: "No",
+          alcohol: "No",
+          medications: "Lisinopril",
+          history_heart_disease: "No",
+          history_stroke: "No",
+          history_diabetes: "No",
+          history_high_chol: "No",
+          created_at: new Date().toISOString()
         };
+        target = initialPatient;
       }
     }
 
@@ -223,7 +204,7 @@ export default function ClinicalCockpit() {
   }, [fetchPatients, runAssessment]);
 
   // Select patient handler
-  const selectPatient = useCallback((p: any) => {
+  const selectPatient = useCallback((p: Patient) => {
     if (patientRef.current?.id === p.id) return;
     runAssessment(p);
   }, [runAssessment]); // Stabilized
@@ -379,13 +360,15 @@ export default function ClinicalCockpit() {
         {/* COL 3: Intelligence Core */}
         <div className="col-span-5 flex flex-col gap-5 h-full min-h-0">
           <div className="shrink-0">
-            <RiskAnalysis risks={data?.risks} />
+            <RiskAnalysis risks={data?.risks} explanations={data?.risks.explanations} />
           </div>
 
           <DiagnosisPanel
             diagnosis={data?.diagnosis || ""}
             status={data?.diagnosis_status || "pending"}
             loading={loading}
+            urgency={data?.urgency}
+            auditHash={data?.audit_hash}
           />
         </div>
 
@@ -400,7 +383,7 @@ export default function ClinicalCockpit() {
             </h3>
 
             <div className="space-y-3 relative z-10">
-              {medInfo.risky.map((m, i) => (
+              {medInfo.risky.map((m: string, i: number) => (
                 <div key={i} className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 group hover:bg-red-500/15 transition-colors">
                   <div className="flex items-center gap-2 mb-1">
                     <AlertTriangle className="w-3 h-3 text-red-500 animate-pulse" />
@@ -411,7 +394,7 @@ export default function ClinicalCockpit() {
                 </div>
               ))}
 
-              {medInfo.safe.slice(0, 3).map((m, i) => (
+              {medInfo.safe.slice(0, 3).map((m: string, i: number) => (
                 <div key={i} className="px-3 py-2.5 bg-white/[0.02] border border-white/5 rounded-xl flex items-center justify-between group hover:bg-white/[0.05] transition-colors">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 group-hover:bg-emerald-500 transition-colors shadow"></div>
@@ -437,10 +420,11 @@ export default function ClinicalCockpit() {
 
             <div className="text-[9px] font-mono text-slate-500 space-y-3 flex-1">
               {[
-                { l: 'Node Status', v: 'ONLINE', c: 'text-emerald-500' },
-                { l: 'Health Score', v: `${data?.risks.general_health_score?.toFixed(1) || '0.0'}%`, c: 'text-blue-400' },
-                { l: 'Precision', v: `${data?.risks.clinical_confidence || '0.0'}%`, c: 'text-slate-200' },
-                { l: 'Latency', v: `${latency}ms`, c: 'text-amber-500' }
+                { l: 'Node Status', v: telemetry.status === 'ready' ? 'ONLINE' : 'DEGRADED', c: telemetry.status === 'ready' ? 'text-emerald-500' : 'text-amber-500' },
+                { l: 'DB Link', v: telemetry.dependencies.db.toUpperCase(), c: telemetry.dependencies.db === 'healthy' ? 'text-emerald-500' : 'text-red-500' },
+                { l: 'Redis/Cache', v: telemetry.dependencies.redis.toUpperCase(), c: telemetry.dependencies.redis === 'healthy' ? 'text-emerald-500' : 'text-red-500' },
+                { l: 'NATS/Queue', v: telemetry.dependencies.nats.toUpperCase(), c: telemetry.dependencies.nats === 'healthy' ? 'text-emerald-500' : 'text-red-500' },
+                { l: 'Latency', v: `${telemetry.latency}ms`, c: 'text-amber-500' }
               ].map((t, idx) => (
                 <div key={idx} className="flex justify-between uppercase p-2 rounded-lg hover:bg-white/[0.02] transition-colors">
                   <span className="font-bold tracking-tighter opacity-70">{t.l}</span>
@@ -450,7 +434,7 @@ export default function ClinicalCockpit() {
 
               <div className="pt-6 mt-6 border-t border-white/5 space-y-4">
                 <p className="text-white font-black text-[9px] uppercase tracking-[0.3em] mb-2 opacity-50">Model Weights</p>
-                {(data?.model_precisions || []).map((m: any) => (
+                {(data?.model_precisions || []).map((m: ModelPrecision) => (
                   <div key={m.model_name} className="space-y-1">
                     <div className="flex justify-between text-slate-500 uppercase tracking-tighter text-[7.5px] font-black">
                       <span>{m.model_name}</span>

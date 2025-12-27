@@ -236,12 +236,14 @@ GET /health
 **Response:**
 ```json
 {
-  "status": "ok",
+  "status": "ok", 
   "models_loaded": ["heart", "diabetes", "stroke", "kidney"],
   "disease_model": true,
-  "ekg_model": true
+  "ekg_model": true,
+  "urgency_model": true
 }
 ```
+
 
 
 ---
@@ -286,9 +288,14 @@ Runs all 4 ML models and returns risk scores.
     "XGBoost Heart": 87.0,
     "RF Diabetes": 91.5,
     "GBM Stroke": 89.3
+  },
+  "explanations": {
+    "heart": { "SystolicBP": 2.15, "Age": 1.2, "Cholesterol": 0.8 },
+    "diabetes": { "Glucose": 4.5, "BMI": 1.2 }
   }
 }
 ```
+
 
 **Score Interpretation:**
 | Risk Score | Clinical Meaning |
@@ -476,7 +483,64 @@ Analyzes raw EKG signal and classifies rhythm.
 
 ---
 
+### Medical Urgency Prediction
+
+```http
+POST /urgency/predict
+Content-Type: application/json
+```
+
+Predicts triage level and golden hour intervention based on vitals and symptoms.
+
+**Request Body:**
+```json
+{
+  "symptoms": ["chest pain", "shortness of breath"],
+  "patient_data": {
+    "age": 65,
+    "systolic_bp": 165,
+    "diastolic_bp": 95,
+    "glucose": 140,
+    "bmi": 30.5,
+    "cholesterol": 240,
+    "heart_rate": 88
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "urgency_level": 5,
+  "urgency_name": "Critical - Immediate",
+  "probability": 0.8842,
+  "confidence": "high"
+}
+```
+
+---
+
+### Golden Hour Information
+
+```http
+GET /urgency/golden-hour/{disease}
+```
+
+Returns predefined golden hour metadata for a specific disease.
+
+**Response:**
+```json
+{
+  "urgency": 5,
+  "golden_hour": 60,
+  "description": "Critical - Immediate"
+}
+```
+
+---
+
 ## Data Models
+
 
 
 ### PatientData
@@ -495,6 +559,12 @@ Analyzes raw EKG signal and classifies rhythm.
 | `smoking` | string | ❌ | "Yes", "No", or "Former" |
 | `alcohol` | string | ❌ | "Yes" or "No" |
 | `medications` | string | ❌ | Comma-separated list |
+| `history_heart_disease` | string | ❌ | "Yes" or "No" |
+| `history_stroke` | string | ❌ | "Yes" or "No" |
+| `history_diabetes` | string | ❌ | "Yes" or "No" |
+| `history_high_chol` | string | ❌ | "Yes" or "No" |
+| `symptoms` | list[str] | ❌ | List of symptoms for triage |
+
 
 ### Feedback
 

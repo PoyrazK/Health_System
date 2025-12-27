@@ -1,9 +1,10 @@
 import React from 'react';
+import { Patient } from "../../types";
 
 interface PatientSidebarProps {
-    patients: any[];
-    selectedId?: number;
-    onSelect: (patient: any) => void;
+    patients: Patient[];
+    selectedId: number | undefined;
+    onSelect: (patient: Patient) => void;
 }
 
 export const PatientSidebar: React.FC<PatientSidebarProps> = ({

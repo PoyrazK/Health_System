@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Check, X, Send } from 'lucide-react';
+import { RiskScores } from "../../types";
 
 interface FeedbackPanelProps {
     assessmentId: number;
-    risks: any;
+    risks: RiskScores;
 }
 
 export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({ assessmentId, risks }) => {

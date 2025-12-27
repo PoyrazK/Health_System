@@ -25,6 +25,7 @@ type PatientData struct {
 	HistoryStroke       string `json:"history_stroke" validate:"oneof=Yes No"`
 	HistoryDiabetes     string `json:"history_diabetes" validate:"oneof=Yes No"`
 	HistoryHighChol     string `json:"history_high_chol" validate:"oneof=Yes No"`
+	Symptoms            string `json:"symptoms"` // Comma-separated list for ML
 }
 
 type Feedback struct {
@@ -64,12 +65,14 @@ type DiagnosisResponse struct {
 type FullAssessmentResponse struct {
 	ID              uint              `json:"id"`
 	Risks           PredictResponse   `json:"risks"`
+	Urgency         UrgencyResponse   `json:"urgency"`
 	Diagnosis       string            `json:"diagnosis"`
 	DiagnosisStatus string            `json:"diagnosis_status"` // "pending", "ready", "error"
 	Emergency       bool              `json:"emergency"`
 	Patient         PatientData       `json:"patient"`
 	Medications     InteractionResult `json:"medication_analysis"`
 	ModelPrecisions []ModelPrecision  `json:"model_precisions"`
+	AuditHash       string            `json:"audit_hash"`
 }
 
 type InteractionResult struct {
@@ -114,6 +117,21 @@ type EKGResponse struct {
 	Status      string          `json:"status"`
 	Predictions []EKGPrediction `json:"predictions"`
 	Features    map[string]any  `json:"features"`
+}
+
+// -- Medical Urgency Structs --
+
+type UrgencyResponse struct {
+	UrgencyLevel      int     `json:"urgency_level"`
+	UrgencyName       string  `json:"urgency_name"`
+	Probability       float64 `json:"probability"`
+	Confidence        string  `json:"confidence"`
+	GoldenHourMinutes *int    `json:"golden_hour_minutes"`
+}
+
+type MLUrgencyRequest struct {
+	Symptoms    []string       `json:"symptoms"`
+	PatientData map[string]any `json:"patient_data"`
 }
 
 // -- Audit Trail Models --

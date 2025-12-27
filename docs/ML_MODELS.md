@@ -14,6 +14,8 @@ This document provides detailed model cards for all machine learning models depl
 | [Kidney Disease](#kidney-disease-model) | Chronic Kidney Disease | Random Forest | 24 | 400 |
 | [Disease Classifier](#disease-classifier-model) | Multi-Disease Diagnosis | XGBoost | 316 | ~100,000 |
 | [EKG Analyzer](#ekg-analyzer-model) | Arrhythmia Classification | XGBoost | 32 | 109,440 |
+| [Golden Hour](#golden-hour-model) | Medical Urgency (1-5) | XGBoost | 15+ | ~50,000 |
+
 
 ---
 
@@ -427,7 +429,48 @@ Returns **Top-K** predictions with:
 
 ---
 
+## Golden Hour Model
+
+### Model Card
+
+| Attribute | Value |
+|-----------|-------|
+| **File** | `src/api/ml_api/models/golden_hour/golden_hour_model.pkl` |
+| **Algorithm** | XGBoost Multi-Class Classifier |
+| **Training Data** | Synthetic Emergency Triage Dataset |
+| **Samples** | ~50,000 |
+| **Features** | 15+ (Vitals + Select Symptoms) |
+| **Target** | Triage Category (1-5) |
+
+### Urgency levels
+
+| Level | Name | Description | Golden Hour |
+|-------|------|-------------|-------------|
+| 5 | Critical | Life-threatening, immediate intervention required | < 15 mins |
+| 4 | Emergent | Severe condition, high risk of deterioration | < 60 mins |
+| 3 | Urgent | Stable but requires evaluation within 24h | < 24 hours |
+| 2 | Standard | Non-urgent, routine care | N/A |
+| 1 | Elective | Preventive or scheduled care | N/A |
+
+### Features
+
+- **Vitals**: Age, Systolic BP, Diastolic BP, Glucose, BMI, Cholesterol, Heart Rate.
+- **Critical Symptoms**: Chest pain, shortness of breath, dizziness, sudden weakness, severe pain.
+
+### Clinical Interpretation
+
+The model predicts the probability of each triage level. The highest probability level is returned as the primary recommendation.
+
+| Probability | Interpretation |
+|-------------|----------------|
+| >0.7 | High Confidence Triage |
+| 0.4 - 0.7 | Moderate Confidence - Monitor closely |
+| <0.4 | Low Confidence - Human triage required |
+
+---
+
 ## File Locations
+
 
 
 ```

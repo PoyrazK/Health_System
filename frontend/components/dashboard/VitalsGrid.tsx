@@ -8,9 +8,10 @@ import {
     Zap
 } from 'lucide-react';
 import { MetricCard } from '@/components/ui/MetricCard';
+import { Patient } from "../../types";
 
 interface VitalsGridProps {
-    patient: any; // Type should be imported ideally
+    patient: Patient | null;
 }
 
 export const VitalsGrid: React.FC<VitalsGridProps> = ({ patient }) => {

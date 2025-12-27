@@ -13,13 +13,14 @@ The backend has transitioned from a monolithic script to a professional, scalabl
 backend/
 ├── cmd/
 │   └── server/          # Application entry point
-├── internal/
+├── pkg/
 │   ├── handlers/        # HTTP route controllers
 │   ├── services/        # Business logic & integrations
 │   ├── models/          # Data structures & GORM models
 │   └── database/        # DB connection & migrations
 ├── go.mod
-└── clinical.db
+└── clinical.db (legacy)
+
 ```
 
 ### Key Benefits

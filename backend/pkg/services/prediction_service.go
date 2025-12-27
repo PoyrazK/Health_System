@@ -45,21 +45,23 @@ func (c *DiagnosisCache) Set(id uint, diagnosis string, status string) {
 }
 
 func (c *DiagnosisCache) Get(id uint) (string, string) {
-	// Try memory first
+	// Try Redis first as workers update Redis
+	val, err := cache.Get(fmt.Sprintf("diag:status:%d", id))
+	if err == nil {
+		var data map[string]string
+		if err := json.Unmarshal([]byte(val), &data); err == nil {
+			// Update local memory for faster subsequent hits
+			c.memCache[id] = data
+			return data["diagnosis"], data["status"]
+		}
+	}
+	
+	// Fallback to memory
 	if data, ok := c.memCache[id]; ok {
 		return data["diagnosis"], data["status"]
 	}
 	
-	// Try Redis as fallback
-	val, err := cache.Get(fmt.Sprintf("diag:status:%d", id))
-	if err != nil {
-		return "", ""
-	}
-	var data map[string]string
-	if err := json.Unmarshal([]byte(val), &data); err != nil {
-		return "", ""
-	}
-	return data["diagnosis"], data["status"]
+	return "", ""
 }
 
 // -- Service --
@@ -99,16 +101,44 @@ func (s *PredictionService) PredictRisks(patient models.PatientData) (*models.Pr
 
 	// 2. Cache Miss - Call ML API (with Circuit Breaker)
 	body, err := s.CB.Execute(func() (interface{}, error) {
-		predictPayload, err := json.Marshal(patient)
-		if err != nil {
-			return nil, err
+		// Convert patient to map to handle symptoms as list
+		symptomsSlice := []string{}
+		if patient.Symptoms != "" {
+			parts := strings.Split(patient.Symptoms, ",")
+			for _, p := range parts {
+				symptomsSlice = append(symptomsSlice, strings.TrimSpace(p))
+			}
 		}
+
+		predictPayload, _ := json.Marshal(map[string]interface{}{
+			"age":                   patient.Age,
+			"gender":                patient.Gender,
+			"systolic_bp":           patient.SystolicBP,
+			"diastolic_bp":          patient.DiastolicBP,
+			"glucose":               patient.Glucose,
+			"bmi":                   patient.BMI,
+			"cholesterol":           patient.Cholesterol,
+			"heart_rate":            patient.HeartRate,
+			"steps":                 patient.Steps,
+			"smoking":               patient.Smoking,
+			"alcohol":               patient.Alcohol,
+			"medications":           patient.Medications,
+			"history_heart_disease": patient.HistoryHeartDisease,
+			"history_stroke":        patient.HistoryStroke,
+			"history_diabetes":      patient.HistoryDiabetes,
+			"history_high_chol":     patient.HistoryHighChol,
+			"symptoms":              symptomsSlice,
+		})
 
 		resp, err := http.Post(s.MLServiceURL+"/predict", "application/json", bytes.NewBuffer(predictPayload))
 		if err != nil {
 			return nil, err
 		}
 		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("ML API returned status %d", resp.StatusCode)
+		}
 
 		var risks models.PredictResponse
 		if err := json.NewDecoder(resp.Body).Decode(&risks); err != nil {
@@ -177,6 +207,44 @@ func (s *PredictionService) AnalyzeEKG(req models.EKGRequest) (*models.EKGRespon
 		return nil, err
 	}
 	return body.(*models.EKGResponse), nil
+}
+
+func (s *PredictionService) PredictUrgency(symptoms []string, patient models.PatientData) (*models.UrgencyResponse, error) {
+	body, err := s.CB.Execute(func() (interface{}, error) {
+		// Prepare patient data as map for the ML API
+		patientMap := map[string]interface{}{
+			"age":          patient.Age,
+			"systolic_bp":  patient.SystolicBP,
+			"diastolic_bp": patient.DiastolicBP,
+			"glucose":      patient.Glucose,
+			"bmi":          patient.BMI,
+			"cholesterol":  patient.Cholesterol,
+			"heart_rate":   patient.HeartRate,
+		}
+
+		req := models.MLUrgencyRequest{
+			Symptoms:    symptoms,
+			PatientData: patientMap,
+		}
+
+		payload, _ := json.Marshal(req)
+		resp, err := http.Post(s.MLServiceURL+"/urgency/predict", "application/json", bytes.NewBuffer(payload))
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		var urgency models.UrgencyResponse
+		if err := json.NewDecoder(resp.Body).Decode(&urgency); err != nil {
+			return nil, err
+		}
+		return &urgency, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return body.(*models.UrgencyResponse), nil
 }
 
 func (s *PredictionService) StartAsyncDiagnosis(patientID uint, req models.DiagnosisRequest, onComplete func(uint, string, string)) {

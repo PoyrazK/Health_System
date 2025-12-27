@@ -50,7 +50,7 @@ func hashString(s string) string {
 }
 
 // LogEvent creates a new audit log entry chained to the previous one
-func (a *AuditService) LogEvent(eventType string, patientID uint, payload interface{}, actorID string) error {
+func (a *AuditService) LogEvent(eventType string, patientID uint, payload interface{}, actorID string) (models.AuditLog, error) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 
@@ -85,7 +85,7 @@ func (a *AuditService) LogEvent(eventType string, patientID uint, payload interf
 	// Save to database
 	if err := a.DB.Create(&entry).Error; err != nil {
 		log.Printf("❌ Audit Log Error: %v", err)
-		return err
+		return entry, err
 	}
 
 	// Update the chain
@@ -110,7 +110,7 @@ func (a *AuditService) LogEvent(eventType string, patientID uint, payload interf
 		entry.CurrentHash[len(entry.CurrentHash)-8:],
 	)
 
-	return nil
+	return entry, nil
 }
 
 // VerifyChain checks if the entire audit chain is intact (no tampering)

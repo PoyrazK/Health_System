@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X, UserPlus, Dna } from 'lucide-react';
+import { Patient } from "../../types";
 
 interface IntakeModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: any) => void;
+    onSubmit: (data: Patient) => void;
 }
 
 export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose, onSubmit }) => {
@@ -28,7 +29,8 @@ export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose, onSub
                         glucose: 100, bmi: 24.5, cholesterol: 190, heart_rate: 72, steps: 6000,
                         smoking: 'No', alcohol: 'No', medications: 'Lisinopril, Atorvastatin',
                         history_heart_disease: 'No', history_stroke: 'No',
-                        history_diabetes: 'No', history_high_chol: 'No'
+                        history_diabetes: 'No', history_high_chol: 'No',
+                        symptoms: 'Chest pain, shortness of breath'
                     });
                     setLoading(false);
                 });
@@ -88,7 +90,7 @@ export const IntakeModal: React.FC<IntakeModalProps> = ({ isOpen, onClose, onSub
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar pb-4 relative">
                     {Object.keys(form).map((key) => (
-                        <div key={key} className={`space-y-1 ${key === 'medications' ? 'col-span-1 md:col-span-3' : ''}`}>
+                        <div key={key} className={`space-y-1 ${key === 'medications' || key === 'symptoms' ? 'col-span-1 md:col-span-3' : ''}`}>
                             <label className={labelClasses}>{key.replace('_', ' ')}</label>
 
                             {key === 'gender' ? (

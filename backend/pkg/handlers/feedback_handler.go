@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"healthcare-backend/pkg/models"
@@ -45,7 +46,9 @@ func (h *FeedbackHandler) SubmitFeedback(c *fiber.Ctx) error {
 	h.DB.Create(&fb)
 
 	// 📜 Audit: Log Doctor Feedback
-	h.Audit.LogEvent("DOCTOR_FEEDBACK", fb.PatientID, req, "doctor")
+	if _, err := h.Audit.LogEvent("DOCTOR_FEEDBACK", fb.PatientID, req, "doctor"); err != nil {
+		log.Printf("⚠️ Failed to log audit event: %v", err)
+	}
 
 	return c.JSON(fiber.Map{"status": "recorded", "id": fb.ID})
 }

@@ -7,9 +7,32 @@ interface DiagnosisPanelProps {
     diagnosis: string;
     status: string; // "pending", "ready", "error"
     loading: boolean;
+    urgency?: {
+        urgency_level: number;
+        urgency_name: string;
+        golden_hour_minutes?: number | null;
+        confidence: string;
+        probability?: number;
+    };
+    auditHash?: string;
 }
 
-export const DiagnosisPanel: React.FC<DiagnosisPanelProps> = ({ diagnosis, status, loading }) => {
+export const DiagnosisPanel: React.FC<DiagnosisPanelProps> = ({ diagnosis, status, loading, urgency, auditHash }) => {
+    const urgencyColors: Record<number, string> = {
+        5: "bg-red-500/20 text-red-500 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]",
+        4: "bg-orange-500/20 text-orange-500 border-orange-500/30",
+        3: "bg-amber-500/20 text-amber-500 border-amber-500/30",
+        2: "bg-blue-500/20 text-blue-500 border-blue-500/30",
+        1: "bg-emerald-500/20 text-emerald-500 border-emerald-500/30",
+    };
+
+    const urgencyDots: Record<number, string> = {
+        5: "bg-red-500 shadow-[0_0_8px_#ef4444]",
+        4: "bg-orange-500",
+        3: "bg-amber-500",
+        2: "bg-blue-500",
+        1: "bg-emerald-500",
+    };
     return (
         <div className="glass-card flex-1 rounded-[3rem] p-8 md:p-10 relative overflow-hidden bg-gradient-to-br from-black to-blue-950/20 border border-white/5 shadow-inner flex flex-col min-h-[400px]">
             {/* Header */}
@@ -56,6 +79,36 @@ export const DiagnosisPanel: React.FC<DiagnosisPanelProps> = ({ diagnosis, statu
                     </div>
                 </div>
             </div>
+
+            {/* Urgency Badge Row */}
+            {urgency && (
+                <div className="flex items-center gap-3 mb-6 relative z-10">
+                    <div className={`flex items-center gap-3 px-4 py-2 rounded-2xl border ${urgencyColors[urgency.urgency_level] || urgencyColors[2]}`}>
+                        <div className={`w-2 h-2 rounded-full ${urgencyDots[urgency.urgency_level] || urgencyDots[2]} ${urgency.urgency_level >= 4 ? 'animate-pulse' : ''}`} />
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-black tracking-widest uppercase italic leading-tight">
+                                Triage Level {urgency.urgency_level}: {urgency.urgency_name}
+                            </span>
+                            {urgency.golden_hour_minutes && (
+                                <span className="text-[8px] font-bold opacity-70 uppercase tracking-tighter">
+                                    Golden Hour: {urgency.golden_hour_minutes} min intervention window
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {urgency.confidence && (
+                        <div className="px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 flex flex-col">
+                            <span className="text-[7px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">
+                                {urgency.probability ? `Risk: ${urgency.probability.toFixed(1)}%` : 'Confidence'}
+                            </span>
+                            <span className={`text-[9px] font-black uppercase ${urgency.confidence === 'high' ? 'text-emerald-500' : 'text-amber-500'}`}>
+                                {urgency.confidence}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Content Area */}
             <div className="relative flex-1 min-h-0">
@@ -124,8 +177,8 @@ export const DiagnosisPanel: React.FC<DiagnosisPanelProps> = ({ diagnosis, statu
                                 {/* Bottom Audit Trace (Decorative but functional-looking) */}
                                 {diagnosis && (
                                     <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between text-[8px] font-mono text-slate-600">
-                                        <span>AUDIT_PROOF: 0x{Math.random().toString(16).slice(2)}{Math.random().toString(16).slice(2)}</span>
-                                        <span className="uppercase tracking-widest">Merkle Root Verified</span>
+                                        <span className="truncate max-w-[400px]">AUDIT_PROOF: 0x{auditHash || 'PENDING_INITIALIZATION'}</span>
+                                        <span className="uppercase tracking-widest shrink-0 ml-4">Merkle Root Verified</span>
                                     </div>
                                 )}
                             </>

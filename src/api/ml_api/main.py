@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Any
 import joblib
 import pandas as pd
 import numpy as np
@@ -9,18 +9,24 @@ import json
 from pathlib import Path
 from openai import OpenAI
 import os
+import logging
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv() # Load from .env
 
 from src.api.ml_api.services.disease_classifier import DiseaseClassifier
 from src.api.ml_api.services.ekg_analyzer import EKGAnalyzer
+from src.api.ml_api.services.golden_hour import GoldenHourService
 
 app = FastAPI(title="Healthcare Risk Engine")
 
 # Initialize New Services
 disease_svc = DiseaseClassifier()
 ekg_svc = EKGAnalyzer()
+urgency_svc = GoldenHourService()
 
 # Paths & Load Models
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -40,8 +46,10 @@ try:
     with open(METADATA_FILE, 'r') as f:
         features_map = json.load(f)
     print("✅ All models loaded successfully.")
+except FileNotFoundError as e:
+    logger.error(f"❌ Model files missing: {e}")
 except Exception as e:
-    print(f"❌ Error loading models: {e}")
+    logger.exception(f"❌ Critical error loading models: {e}")
 
 class PatientData(BaseModel):
     age: int
@@ -60,7 +68,7 @@ class PatientData(BaseModel):
     history_stroke: str = "No"
     history_diabetes: str = "No"
     history_high_chol: str = "No"
-    symptoms: List[str] = [] # For disease prediction
+    symptoms: Any = [] # Accepts list or comma-separated string
 
 def transform_features(data: PatientData, target_model: str):
     """
@@ -268,7 +276,8 @@ def health_check():
         "status": "ok", 
         "models_loaded": list(models.keys()),
         "disease_model": disease_svc.model is not None,
-        "ekg_model": ekg_svc.model is not None
+        "ekg_model": ekg_svc.model is not None,
+        "urgency_model": urgency_svc.model is not None
     }
 
 # --- Disease Prediction Endpoints ---
@@ -280,10 +289,18 @@ class DiseaseRequest(BaseModel):
 @app.post("/disease/predict")
 def predict_disease(request: DiseaseRequest):
     try:
-        results = disease_svc.predict_topk(request.symptoms)
+        symptoms = request.symptoms
+        if isinstance(symptoms, str):
+            symptoms = [s.strip() for s in symptoms.split(",")]
+        results = disease_svc.predict_topk(symptoms)
         return {"predictions": results}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid data: {str(e)}")
+    except KeyError as e:
+        raise HTTPException(status_code=500, detail=f"Model error: Missing field {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("Unexpected error in /predict")
+        raise HTTPException(status_code=500, detail="Internal risk prediction error")
 
 class DiseaseFeedback(BaseModel):
     symptoms: List[str]
@@ -301,8 +318,11 @@ def log_disease_feedback(request: DiseaseFeedback):
             request.notes
         )
         return {"success": success}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid symptoms: {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("Unexpected error in /disease/predict")
+        raise HTTPException(status_code=500, detail="Internal disease prediction error")
 
 # --- EKG Analysis Endpoints ---
 
@@ -315,6 +335,32 @@ def analyze_ekg(request: EKGRequest):
     try:
         result = ekg_svc.analyze(request.signal, request.sampling_rate)
         return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid EKG signal: {str(e)}")
+    except Exception as e:
+        logger.exception("Unexpected error in /ekg/analyze")
+        raise HTTPException(status_code=500, detail="Internal EKG analysis error")
+
+# --- Urgency & Golden Hour Endpoints ---
+
+class UrgencyRequest(BaseModel):
+    symptoms: Any
+    patient_data: dict
+
+@app.post("/urgency/predict")
+def predict_urgency(request: UrgencyRequest):
+    try:
+        return urgency_svc.predict_urgency(request.symptoms, request.patient_data)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid input for urgency: {str(e)}")
+    except Exception as e:
+        logger.exception("Unexpected error in /urgency/predict")
+        raise HTTPException(status_code=500, detail="Internal urgency prediction error")
+
+@app.get("/urgency/golden-hour/{disease}")
+def get_golden_hour_info(disease: str):
+    try:
+        return urgency_svc.get_clinical_urgency(disease)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -421,4 +467,5 @@ async def diagnose_patient(request: DiagnosisRequest):
         )
         return {"diagnosis": response.choices[0].message.content, "status": "success"}
     except Exception as e:
+        logger.exception("LLM generation failed")
         return {"diagnosis": f"Error generating diagnosis: {str(e)}", "status": "error"}

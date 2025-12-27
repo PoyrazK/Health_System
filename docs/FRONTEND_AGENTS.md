@@ -151,6 +151,17 @@ const fetchAssessment = async (patientData: any) => {
 }
 ```
 
+### Urgency Prediction Response (NEW)
+```json
+{
+  "urgency_level": 5,
+  "urgency_name": "Critical - Immediate",
+  "probability": 0.8842,
+  "confidence": "high"
+}
+```
+
+
 ---
 
 *Guide for AI Frontend Agents working on Clinical Copilot.*

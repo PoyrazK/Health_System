@@ -81,19 +81,21 @@ graph TB
 ### 2. Backend Orchestrator (Go Fiber)
 
 **Location:** `/backend/cmd/server/main.go`
-**Logic:** `/backend/internal/`
+**Logic:** `/backend/pkg/`
 
 The Go backend serves as the system orchestrator, handling:
 
 ```mermaid
 graph LR
     subgraph Responsibilities
-        A[Patient CRUD] --> B[SQLite]
+        A[Patient CRUD] --> B[PostgreSQL]
         C[ML Coordination] --> D[Python API]
         E[RAG-Lite] --> F[Feedback Query]
-        G[Async Diagnosis] --> H[In-Memory Cache]
+        G[Async Diagnosis] --> H[Redis/NATS]
+        I[Pre-Triage] --> J[Golden Hour Engine]
     end
 ```
+
 
 **Key Features:**
 

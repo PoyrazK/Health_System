@@ -42,4 +42,24 @@ Introduced a professional data engineering module in Python that handles name st
 - **Predict Response**: Now returns an `explanations` object mapping models to feature impacts.
 
 ---
-*Clinical Copilot v3.0 - Bridging the gap between raw data and clinical trust.*
+
+## 🌟 v3.1: Precision Triage & Explainability
+
+*Released December 27, 2025*
+
+This minor release introduces critical clinical depth and transparency tools.
+
+### 1. Golden Hour Urgency Model
+A new multi-class classifier that predicts the **Triage Level (1-5)** and specifies the **Golden Hour** intervention window (e.g., < 15 mins for Level 5).
+- *See [ML_MODELS.md](./ML_MODELS.md#golden-hour-model)*
+
+### 2. Deep Explainability (SHAP Values)
+The risk prediction engine now returns raw SHAP contribution scores, allowing the frontend to show *why* a risk is high (e.g., "Systolic BP is the primary driver").
+- *See [API_REFERENCE.md](./API_REFERENCE.md#risk-prediction)*
+
+### 3. Extended Clinical Context
+Integrated **Medical History** (Heart Disease, Stroke, Diabetes, Cholesterol) as first-class citizens in the data pipeline, improving model accuracy in chronic cases.
+
+---
+*Clinical Copilot v3.1 - Moving from 'What' to 'Why' and 'When'.*
+

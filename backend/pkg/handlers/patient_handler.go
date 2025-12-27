@@ -6,6 +6,7 @@ import (
 
 	"healthcare-backend/pkg/models"
 	"healthcare-backend/pkg/services"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -85,8 +86,18 @@ func (h *PatientHandler) AssessPatient(c *fiber.Ctx) error {
 		return c.Status(503).JSON(fiber.Map{"error": "ML Service Offline"})
 	}
 
+	// 2.5 Urgency Prediction
+	symptoms := []string{}
+	if patient.Symptoms != "" {
+		parts := strings.Split(patient.Symptoms, ",")
+		for _, p := range parts {
+			symptoms = append(symptoms, strings.TrimSpace(p))
+		}
+	}
+	urgency, _ := h.Prediction.PredictUrgency(symptoms, patient)
+
 	// Emergency Logic
-	isEmergency := risks.HeartRisk > 85 || patient.SystolicBP > 180
+	isEmergency := risks.HeartRisk > 85 || patient.SystolicBP > 180 || (urgency != nil && urgency.UrgencyLevel >= 4)
 
 	// Logic for Medications
 	medAnalysis := h.Prediction.CheckMedications(patient.Medications)
@@ -98,7 +109,7 @@ func (h *PatientHandler) AssessPatient(c *fiber.Ctx) error {
 	}
 
 	// 📜 Audit: Log AI Prediction
-	h.Audit.LogEvent("AI_PREDICTION", patient.ID, risks, "system")
+	auditBlock, _ := h.Audit.LogEvent("AI_PREDICTION", patient.ID, risks, "system")
 
 	// 3. Start LLM Diagnosis ASYNC (non-blocking)
 	h.Prediction.StartAsyncDiagnosis(patient.ID, models.DiagnosisRequest{
@@ -109,15 +120,22 @@ func (h *PatientHandler) AssessPatient(c *fiber.Ctx) error {
 
 	log.Printf("⏱️ FAST RESPONSE (no LLM wait): %v", time.Since(totalStart))
 
+	var urgencyVal models.UrgencyResponse
+	if urgency != nil {
+		urgencyVal = *urgency
+	}
+
 	return c.JSON(models.FullAssessmentResponse{
 		ID:              patient.ID,
 		Risks:           *risks,
+		Urgency:         urgencyVal,
 		Diagnosis:       "", // Will be fetched via polling
 		DiagnosisStatus: "pending",
 		Emergency:       isEmergency,
 		Patient:         patient,
 		Medications:     medAnalysis,
 		ModelPrecisions: precisions,
+		AuditHash:       auditBlock.CurrentHash,
 	})
 }
 
