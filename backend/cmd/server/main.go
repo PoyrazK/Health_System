@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/contrib/websocket"
 
+	"healthcare-backend/internal/blockchain"
 	"healthcare-backend/internal/config"
 	"healthcare-backend/internal/database"
 	"healthcare-backend/internal/handlers"
@@ -93,6 +94,24 @@ func main() {
 	app.Post("/api/assess", patientHandler.AssessPatient)
 	app.Get("/api/diagnosis/:id", patientHandler.GetDiagnosis)
 	app.Post("/api/feedback", feedbackHandler.SubmitFeedback)
+
+	// 8. Blockchain Audit Endpoints
+	app.Get("/api/audit/chain", func(c *fiber.Ctx) error {
+		// Just for safety if called before Init
+		if blockchain.GlobalChain == nil {
+			return c.Status(503).JSON(fiber.Map{"error": "Blockchain not initialized"})
+		}
+		
+		chain := blockchain.GlobalChain.GetChain()
+		isValid := blockchain.GlobalChain.IsChainValid()
+		
+		return c.JSON(fiber.Map{
+			"chain":    chain,
+			"valid":    isValid,
+			"length":   len(chain),
+			"verified": true, // We checked integrity in real-time
+		})
+	})
 
 	// Graceful Shutdown
 	go func() {

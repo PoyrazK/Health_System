@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"healthcare-backend/internal/blockchain"
 	"healthcare-backend/internal/models"
 
 	"gorm.io/gorm"
@@ -21,6 +22,11 @@ type AuditService struct {
 }
 
 func NewAuditService(db *gorm.DB) *AuditService {
+	// Initialize the high-performance blockchain ledger
+	if blockchain.GlobalChain == nil {
+		blockchain.InitBlockchain()
+	}
+
 	// Auto-migrate the AuditLog table
 	db.AutoMigrate(&models.AuditLog{})
 
@@ -84,6 +90,18 @@ func (a *AuditService) LogEvent(eventType string, patientID uint, payload interf
 
 	// Update the chain
 	a.lastHash = entry.CurrentHash
+
+	// --- BLOCKCHAIN INTEGRATION ---
+	// Also write to the in-memory high-performance ledger
+	blockPayload := map[string]interface{}{
+		"event_type": eventType,
+		"entity_id":  patientID,
+		"data_hash":  payloadHash,
+		"timestamp":  entry.Timestamp,
+		"actor":      actorID,
+	}
+	blockchain.GlobalChain.AddBlock(blockPayload)
+	// -------------------------------
 
 	log.Printf("📜 Audit Log: [%s] Patient %s | Hash: %s...%s",
 		eventType,
