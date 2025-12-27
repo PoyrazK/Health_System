@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/contrib/websocket"
 
@@ -57,6 +58,18 @@ func main() {
 	app.Use(cors.New())
 	app.Use(logger.New())
 	app.Use(middleware.ErrorHandler)
+
+	// Rate Limiting (100 req/min)
+	app.Use(limiter.New(limiter.Config{
+		Max:        100,
+		Expiration: 1 * time.Minute,
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"success": false,
+				"error":   "Too many requests, slow down!",
+			})
+		},
+	}))
 
 	// Repositories
 	patientRepo := repositories.NewPatientRepository(database.DB)
