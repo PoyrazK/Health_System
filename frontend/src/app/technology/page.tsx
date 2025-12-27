@@ -8,31 +8,31 @@ const GradientBlinds = dynamic(() => import('@/components/GradientBlinds'), { ss
 
 export default function TechnologyPage() {
     const techStack = [
-        { name: 'XGBoost', desc: 'Cardiac Risk Prediction', color: 'from-red-500 to-orange-500' },
-        { name: 'LSTM', desc: 'Time-Series Analysis', color: 'from-blue-500 to-cyan-500' },
-        { name: 'CNN', desc: 'Medical Imaging', color: 'from-purple-500 to-pink-500' },
-        { name: 'GPT-4', desc: 'Clinical Reasoning', color: 'from-emerald-500 to-teal-500' }
+        { name: 'XGBoost', desc: 'Kardiyak Risk Tahmini', color: 'from-red-500 to-orange-500' },
+        { name: 'LSTM', desc: 'Zaman Serisi Analizi', color: 'from-blue-500 to-cyan-500' },
+        { name: 'CNN', desc: 'Tıbbi Görüntüleme', color: 'from-purple-500 to-pink-500' },
+        { name: 'GPT-4', desc: 'Klinik Akıl Yürütme', color: 'from-emerald-500 to-teal-500' }
     ];
 
     const features = [
         {
-            title: 'Multi-Model Architecture',
-            desc: 'Four specialized neural networks, each optimized for specific clinical domains, working in parallel.',
+            title: 'Çoklu Model Mimarisi',
+            desc: 'Her biri belirli klinik alanlar için optimize edilmiş, paralel çalışan dört özelleşmiş sinir ağı.',
             icon: 'hub'
         },
         {
-            title: 'Real-Time Inference',
-            desc: 'Sub-120ms latency from data input to clinical recommendations, powered by optimized inference pipelines.',
+            title: 'Gerçek Zamanlı Çıkarım',
+            desc: 'Optimize edilmiş çıkarım hatları ile veri girişinden klinik önerilere 120ms altı gecikme.',
             icon: 'speed'
         },
         {
-            title: 'HIPAA Compliant',
-            desc: 'End-to-end encryption, audit logging, and role-based access control meeting healthcare regulations.',
+            title: 'HIPAA Uyumlu',
+            desc: 'Sağlık düzenlemelerini karşılayan uçtan uca şifreleme, denetim günlüğü ve rol tabanlı erişim kontrolü.',
             icon: 'security'
         },
         {
-            title: 'Continuous Learning',
-            desc: 'Models improve over time with anonymized feedback while maintaining patient privacy.',
+            title: 'Sürekli Öğrenme',
+            desc: 'Modeller, hasta gizliliğini koruyarak anonimleştirilmiş geri bildirimle zamanla gelişir.',
             icon: 'model_training'
         }
     ];
@@ -58,7 +58,7 @@ export default function TechnologyPage() {
                         className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
                     >
                         <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-                        <span className="text-sm font-medium">Back</span>
+                        <span className="text-sm font-medium">Geri</span>
                     </Link>
                 </nav>
 
@@ -71,17 +71,17 @@ export default function TechnologyPage() {
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
                                 <span className="material-symbols-outlined text-purple-400">memory</span>
-                                <span className="text-sm text-purple-300">Under the Hood</span>
+                                <span className="text-sm text-purple-300">Kaputun Altında</span>
                             </div>
                             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                                Built on<br />
+                                Üzerine İnşa Edildi<br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
-                                    Cutting-Edge AI.
+                                    Son Teknoloji YZ.
                                 </span>
                             </h1>
                             <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-                                A sophisticated ensemble of machine learning models trained on
-                                thousands of clinical cases with rigorous validation.
+                                Titiz doğrulama ile binlerce klinik vakada eğitilmiş
+                                sofistike bir makine öğrenmesi modelleri topluluğu.
                             </p>
                         </motion.div>
                     </div>
@@ -137,9 +137,9 @@ export default function TechnologyPage() {
                 <section className="py-16 px-6">
                     <div className="max-w-4xl mx-auto">
                         <div className="rounded-3xl bg-gradient-to-br from-white/[0.05] to-white/[0.02] border border-white/10 p-8">
-                            <h2 className="text-2xl font-bold text-white mb-6 text-center">System Architecture</h2>
+                            <h2 className="text-2xl font-bold text-white mb-6 text-center">Sistem Mimarisi</h2>
                             <div className="flex flex-wrap justify-center items-center gap-4">
-                                {['Patient Data', 'API Gateway', 'ML Ensemble', 'Risk Engine', 'Clinical Output'].map((node, i) => (
+                                {['Hasta Verisi', 'API Ağ Geçidi', 'ML Topluluğu', 'Risk Motoru', 'Klinik Çıktı'].map((node, i) => (
                                     <div key={i} className="flex items-center gap-3">
                                         <div className="px-4 py-2 rounded-xl bg-white/10 text-sm text-white font-medium">
                                             {node}
@@ -158,7 +158,7 @@ export default function TechnologyPage() {
                         href="/#dashboard"
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-[#0A0F1C] font-semibold hover:bg-slate-100 transition-colors"
                     >
-                        <span>See It In Action</span>
+                        <span>Çalışırken Gör</span>
                         <span className="material-symbols-outlined">arrow_forward</span>
                     </Link>
                 </section>

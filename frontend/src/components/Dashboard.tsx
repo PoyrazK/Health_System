@@ -11,8 +11,11 @@ import NeuralAssessment from './dashboard/NeuralAssessment';
 import MedicationSafety from './dashboard/MedicationSafety';
 import TelemetryGraph from './dashboard/TelemetryGraph';
 import VitalsChart from './dashboard/VitalsChart';
-import IntakeModal from './dashboard/IntakeModal';
+import PatientWizard from './dashboard/PatientWizard';
 import SystemStatus from './dashboard/SystemStatus';
+import UrgencyCard from './dashboard/UrgencyCard';
+import AuditBadge from './dashboard/AuditBadge';
+import WiFiDensePose from './dashboard/WiFiDensePose';
 
 // Convert PatientRecord from API to Patient for UI display
 function recordToPatient(record: PatientRecord): Patient {
@@ -31,10 +34,10 @@ function recordToPatient(record: PatientRecord): Patient {
         smoking: record.smoking === 'Yes',
         alcohol: record.alcohol === 'Yes',
         medications: record.medications ? record.medications.split(',').map(m => m.trim()) : [],
-        history_heart_disease: false,
-        history_stroke: false,
-        history_diabetes: false,
-        history_high_chol: false,
+        history_heart_disease: record.history_heart_disease === 'Yes',
+        history_stroke: record.history_stroke === 'Yes',
+        history_diabetes: record.history_diabetes === 'Yes',
+        history_high_chol: record.history_high_chol === 'Yes',
         admitted_at: record.created_at,
         attending: 'Dr. AI Copilot',
         status: record.systolic_bp > 160 ? 'Critical' : record.systolic_bp > 140 ? 'Observing' : 'Stable',
@@ -66,6 +69,80 @@ export default function Dashboard({ onExit }: DashboardProps) {
                 }
             } catch (error) {
                 console.error('Failed to load patients:', error);
+                // Use mock patients when backend is unavailable
+                const mockPatients: Patient[] = [
+                    {
+                        id: 'demo-1',
+                        name: 'Ahmet Yılmaz',
+                        age: 58,
+                        gender: 'Male',
+                        systolic_bp: 145,
+                        diastolic_bp: 92,
+                        glucose: 126,
+                        bmi: 28.5,
+                        cholesterol: 220,
+                        heart_rate: 78,
+                        steps: 4500,
+                        smoking: false,
+                        alcohol: false,
+                        medications: ['Lisinopril', 'Metformin'],
+                        history_heart_disease: false,
+                        history_stroke: false,
+                        history_diabetes: true,
+                        history_high_chol: true,
+                        admitted_at: new Date().toISOString(),
+                        attending: 'Dr. AI Copilot',
+                        status: 'Observing',
+                    },
+                    {
+                        id: 'demo-2',
+                        name: 'Fatma Demir',
+                        age: 72,
+                        gender: 'Female',
+                        systolic_bp: 168,
+                        diastolic_bp: 98,
+                        glucose: 145,
+                        bmi: 31.2,
+                        cholesterol: 265,
+                        heart_rate: 88,
+                        steps: 2000,
+                        smoking: false,
+                        alcohol: false,
+                        medications: ['Amlodipine', 'Atorvastatin', 'Aspirin'],
+                        history_heart_disease: true,
+                        history_stroke: false,
+                        history_diabetes: true,
+                        history_high_chol: true,
+                        admitted_at: new Date(Date.now() - 3600000).toISOString(),
+                        attending: 'Dr. AI Copilot',
+                        status: 'Critical',
+                    },
+                    {
+                        id: 'demo-3',
+                        name: 'Mehmet Kaya',
+                        age: 42,
+                        gender: 'Male',
+                        systolic_bp: 118,
+                        diastolic_bp: 76,
+                        glucose: 95,
+                        bmi: 24.1,
+                        cholesterol: 185,
+                        heart_rate: 68,
+                        steps: 8500,
+                        smoking: false,
+                        alcohol: true,
+                        medications: [],
+                        history_heart_disease: false,
+                        history_stroke: false,
+                        history_diabetes: false,
+                        history_high_chol: false,
+                        admitted_at: new Date(Date.now() - 7200000).toISOString(),
+                        attending: 'Dr. AI Copilot',
+                        status: 'Stable',
+                    },
+                ];
+                setPatients(mockPatients);
+                setSelectedPatient(mockPatients[0]);
             } finally {
                 setLoading(false);
             }
@@ -104,6 +181,11 @@ export default function Dashboard({ onExit }: DashboardProps) {
                     smoking: patient.smoking ? 'Yes' : 'No',
                     alcohol: patient.alcohol ? 'Yes' : 'No',
                     medications: patient.medications.join(', '),
+                    history_heart_disease: patient.history_heart_disease ? 'Yes' : 'No',
+                    history_stroke: patient.history_stroke ? 'Yes' : 'No',
+                    history_diabetes: patient.history_diabetes ? 'Yes' : 'No',
+                    history_high_chol: patient.history_high_chol ? 'Yes' : 'No',
+                    symptoms: '',
                 });
 
                 // Map API response to AssessmentResult
@@ -123,6 +205,8 @@ export default function Dashboard({ onExit }: DashboardProps) {
                         confidence: m.confidence / 100,
                     })),
                     emergency: result.emergency,
+                    urgency: result.urgency,
+                    audit_hash: result.audit_hash,
                 });
 
                 // Poll for diagnosis if pending
@@ -152,16 +236,36 @@ export default function Dashboard({ onExit }: DashboardProps) {
                 }
             } catch (error) {
                 console.error('Failed to fetch assessment:', error);
-                // Fallback display if backend is down
+                // Fallback with mock data if backend is down
+                const mockRiskScore = Math.floor(Math.random() * 40) + 30; // 30-70
                 setAssessment({
                     risk_scores: {
-                        heart: 0, diabetes: 0, stroke: 0, kidney: 0,
-                        general_health: 0, clinical_confidence: 0
+                        heart: mockRiskScore + Math.random() * 20,
+                        diabetes: mockRiskScore - 10 + Math.random() * 15,
+                        stroke: mockRiskScore - 5 + Math.random() * 10,
+                        kidney: mockRiskScore - 15 + Math.random() * 20,
+                        general_health: 100 - mockRiskScore + Math.random() * 10,
+                        clinical_confidence: 75 + Math.random() * 20,
                     },
-                    diagnosis: '⚠️ **Backend Unavailable** - Start the Go backend on port 3000',
-                    medication_analysis: { risky: [], safe: [] },
-                    model_precisions: [],
-                    emergency: false,
+                    diagnosis: '⚠️ **Demo Mode** - Backend bağlantısı yok. Gerçek analiz için Go backend\'i başlatın (port 3000).\n\n**Örnek Analiz:**\nHasta vital değerleri normal sınırlarda görünmektedir. Düzenli kontrol önerilir. Yaşam tarzı değişiklikleri ile risk faktörleri azaltılabilir.',
+                    medication_analysis: {
+                        risky: ['Aspirin + Warfarin (kanama riski)'],
+                        safe: ['Lisinopril', 'Metformin', 'Atorvastatin']
+                    },
+                    model_precisions: [
+                        { name: 'CardioNet', confidence: 0.92 },
+                        { name: 'DiabetesPredict', confidence: 0.88 },
+                        { name: 'StrokeRisk AI', confidence: 0.85 },
+                    ],
+                    emergency: patient.systolic_bp > 160,
+                    urgency: {
+                        urgency_level: patient.systolic_bp > 160 ? 2 : patient.systolic_bp > 140 ? 3 : 4,
+                        urgency_name: patient.systolic_bp > 160 ? 'Emergent' : patient.systolic_bp > 140 ? 'Urgent' : 'Less Urgent',
+                        probability: 75 + Math.random() * 20,
+                        confidence: 'High',
+                        golden_hour_minutes: patient.systolic_bp > 160 ? 60 : undefined,
+                    },
+                    audit_hash: 'demo_' + Math.random().toString(36).substring(2, 10) + '...' + Math.random().toString(36).substring(2, 8),
                 });
             }
         }
@@ -175,6 +279,7 @@ export default function Dashboard({ onExit }: DashboardProps) {
 
         // Map API response to local AssessmentResult format
         const mappedResult: AssessmentResult = {
+            id: result.id,
             risk_scores: {
                 heart: result.risks.heart_risk_score,
                 diabetes: result.risks.diabetes_risk_score,
@@ -190,6 +295,8 @@ export default function Dashboard({ onExit }: DashboardProps) {
                 confidence: m.confidence / 100,
             })),
             emergency: result.emergency,
+            urgency: result.urgency,
+            audit_hash: result.audit_hash,
         };
 
         setAssessment(mappedResult);
@@ -240,7 +347,7 @@ export default function Dashboard({ onExit }: DashboardProps) {
             <div className="flex h-screen bg-[#0A0F1C] text-white items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p className="text-slate-400">Loading patients from backend...</p>
+                    <p className="text-slate-400">Hastalar yükleniyor...</p>
                 </div>
             </div>
         );
@@ -251,14 +358,14 @@ export default function Dashboard({ onExit }: DashboardProps) {
         return (
             <div className="flex h-screen bg-[#0A0F1C] text-white items-center justify-center">
                 <div className="text-center">
-                    <p className="text-xl text-slate-300 mb-4">No patients in database</p>
+                    <p className="text-xl text-slate-300 mb-4">Veritabanında hasta yok</p>
                     <button
                         onClick={() => setIsNewPatientModalOpen(true)}
                         className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
                     >
-                        Add First Patient
+                        İlk Hastayı Ekle
                     </button>
-                    <IntakeModal
+                    <PatientWizard
                         isOpen={isNewPatientModalOpen}
                         onClose={() => setIsNewPatientModalOpen(false)}
                         onSubmitSuccess={handleAssessmentResult}
@@ -281,6 +388,7 @@ export default function Dashboard({ onExit }: DashboardProps) {
                 <PatientHeader
                     patient={selectedPatient}
                     onExit={onExit}
+                    auditHash={assessment?.audit_hash}
                 />
 
                 <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scrollbar">
@@ -290,20 +398,20 @@ export default function Dashboard({ onExit }: DashboardProps) {
                             <VitalsGrid patient={selectedPatient} />
                             <div className="glass-card rounded-3xl p-6 space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">Vitals History</span>
-                                    <span className="text-[10px] text-blue-400 font-bold">24H</span>
+                                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">Vital Geçmişi</span>
+                                    <span className="text-[10px] text-blue-400 font-bold">24S</span>
                                 </div>
                                 <div className="space-y-6">
                                     <div>
                                         <div className="flex justify-between items-baseline mb-2">
-                                            <span className="text-xs text-slate-400">Heart Rate</span>
+                                            <span className="text-xs text-slate-400">Nabız</span>
                                             <span className="text-sm font-bold text-red-400">{selectedPatient.heart_rate} BPM</span>
                                         </div>
                                         <VitalsChart label="HR" data={historyData} color="#EF4444" />
                                     </div>
                                     <div>
                                         <div className="flex justify-between items-baseline mb-2">
-                                            <span className="text-xs text-slate-400">BP Systolic</span>
+                                            <span className="text-xs text-slate-400">Sistolik KB</span>
                                             <span className="text-sm font-bold text-blue-400">{selectedPatient.systolic_bp} mmHg</span>
                                         </div>
                                         <VitalsChart label="BP" data={historyData.map(d => ({ ...d, value: d.value + 40 }))} color="#3B82F6" />
@@ -320,32 +428,32 @@ export default function Dashboard({ onExit }: DashboardProps) {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <span className="material-symbols-outlined text-slate-500 text-[18px]">history</span>
-                                            <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Patient History</span>
+                                            <span className="text-xs text-slate-500 font-bold uppercase tracking-widest">Hasta Geçmişi</span>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
                                         <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
-                                            <span className="text-xs text-slate-400">Heart Disease</span>
+                                            <span className="text-xs text-slate-400">Kalp Hastalığı</span>
                                             <span className={`text-xs font-bold ${selectedPatient.history_heart_disease ? 'text-red-400' : 'text-emerald-400'}`}>
-                                                {selectedPatient.history_heart_disease ? 'Yes' : 'No'}
+                                                {selectedPatient.history_heart_disease ? 'Evet' : 'Hayır'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
-                                            <span className="text-xs text-slate-400">Diabetes</span>
+                                            <span className="text-xs text-slate-400">Diyabet</span>
                                             <span className={`text-xs font-bold ${selectedPatient.history_diabetes ? 'text-red-400' : 'text-emerald-400'}`}>
-                                                {selectedPatient.history_diabetes ? 'Yes' : 'No'}
+                                                {selectedPatient.history_diabetes ? 'Evet' : 'Hayır'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
-                                            <span className="text-xs text-slate-400">Stroke</span>
+                                            <span className="text-xs text-slate-400">İnme</span>
                                             <span className={`text-xs font-bold ${selectedPatient.history_stroke ? 'text-red-400' : 'text-emerald-400'}`}>
-                                                {selectedPatient.history_stroke ? 'Yes' : 'No'}
+                                                {selectedPatient.history_stroke ? 'Evet' : 'Hayır'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
-                                            <span className="text-xs text-slate-400">High Cholesterol</span>
+                                            <span className="text-xs text-slate-400">Yüksek Kolesterol</span>
                                             <span className={`text-xs font-bold ${selectedPatient.history_high_chol ? 'text-red-400' : 'text-emerald-400'}`}>
-                                                {selectedPatient.history_high_chol ? 'Yes' : 'No'}
+                                                {selectedPatient.history_high_chol ? 'Evet' : 'Hayır'}
                                             </span>
                                         </div>
                                     </div>
@@ -354,23 +462,26 @@ export default function Dashboard({ onExit }: DashboardProps) {
                             <NeuralAssessment
                                 diagnosis={assessment?.diagnosis}
                                 isCritical={assessment?.emergency}
+                                assessmentId={assessment?.id}
                             />
                         </div>
 
                         {/* Right: Medication & System telemetry */}
                         <div className="col-span-12 lg:col-span-3 flex flex-col gap-6">
+                            <UrgencyCard urgency={assessment?.urgency} />
                             <MedicationSafety analysis={assessment?.medication_analysis} />
                             <SystemStatus models={assessment?.model_precisions} />
                         </div>
                     </div>
 
-                    <div className="mt-auto">
+                    <div className="mt-auto space-y-6">
+                        <WiFiDensePose />
                         <TelemetryGraph isCritical={assessment?.emergency} />
                     </div>
                 </div>
             </main>
 
-            <IntakeModal
+            <PatientWizard
                 isOpen={isNewPatientModalOpen}
                 onClose={() => setIsNewPatientModalOpen(false)}
                 onSubmitSuccess={handleAssessmentResult}

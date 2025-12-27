@@ -1,6 +1,7 @@
 'use client';
 
 import { ModelPrecision } from '@/lib/types';
+import { roundPercent } from '@/lib/formatters';
 
 interface SystemStatusProps {
     models?: ModelPrecision[];
@@ -18,9 +19,9 @@ export default function SystemStatus({ models }: SystemStatusProps) {
                         <div className="w-2 h-2 rounded-full bg-emerald-500" />
                         <div className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-500 animate-ping opacity-75" />
                     </div>
-                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">AI Pipeline</span>
+                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">YZ Hattı</span>
                 </div>
-                <span className="text-[9px] text-emerald-400 font-mono">HEALTHY</span>
+                <span className="text-[9px] text-emerald-400 font-mono">SAĞLIKLI</span>
             </div>
 
             {/* Model Cards */}
@@ -31,7 +32,7 @@ export default function SystemStatus({ models }: SystemStatusProps) {
                     ))
                 ) : (
                     models.map((model, i) => {
-                        const pct = model.confidence * 100;
+                        const pct = roundPercent(model.confidence * 100);
                         const isHigh = pct >= 95;
 
                         return (
@@ -48,7 +49,7 @@ export default function SystemStatus({ models }: SystemStatusProps) {
                                         <span className="text-xs text-slate-400">{model.name}</span>
                                     </div>
                                     <span className={`text-xs font-bold tabular-nums ${isHigh ? 'text-emerald-400' : 'text-blue-400'}`}>
-                                        {pct.toFixed(0)}%
+                                        {pct}%
                                     </span>
                                 </div>
 
@@ -68,7 +69,7 @@ export default function SystemStatus({ models }: SystemStatusProps) {
 
             {/* Footer */}
             <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
-                <span className="text-[9px] text-slate-600">Latency</span>
+                <span className="text-[9px] text-slate-600">Gecikme</span>
                 <span className="text-[10px] text-slate-400 font-mono">~118ms</span>
             </div>
         </div>

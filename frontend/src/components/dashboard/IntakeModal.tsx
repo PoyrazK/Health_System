@@ -37,6 +37,11 @@ export default function IntakeModal({ isOpen, onClose, onSubmitSuccess }: Intake
                         smoking: data.smoking,
                         alcohol: data.alcohol,
                         medications: data.medications,
+                        history_heart_disease: 'No' as const,
+                        history_stroke: 'No' as const,
+                        history_diabetes: 'No' as const,
+                        history_high_chol: 'No' as const,
+                        symptoms: '',
                     });
                 })
                 .catch(() => {

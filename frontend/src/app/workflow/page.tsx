@@ -10,38 +10,38 @@ export default function WorkflowPage() {
     const steps = [
         {
             step: '01',
-            title: 'Patient Intake',
-            desc: 'Capture comprehensive patient data including vitals, symptoms, medical history, and current medications through an intuitive interface.',
+            title: 'Hasta Kabul',
+            desc: 'Sezgisel bir arayüz aracılığıyla vital bulgular, semptomlar, tıbbi geçmiş ve mevcut ilaçlar dahil kapsamlı hasta verilerini yakalayın.',
             icon: 'assignment_ind',
-            detail: 'Smart forms adapt based on chief complaint, pulling relevant history automatically.'
+            detail: 'Akıllı formlar ana şikayete göre uyarlanır ve ilgili geçmişi otomatik olarak çeker.'
         },
         {
             step: '02',
-            title: 'Neural Processing',
-            desc: 'Four specialized AI models simultaneously analyze the patient data—cardiac, metabolic, imaging, and clinical reasoning engines.',
+            title: 'Nöral İşleme',
+            desc: 'Dört özelleşmiş YZ modeli hasta verilerini eş zamanlı analiz eder—kardiyak, metabolik, görüntüleme ve klinik akıl yürütme motorları.',
             icon: 'hub',
-            detail: 'Parallel processing delivers results in under 120ms with 99.8% confidence.'
+            detail: 'Paralel işleme %99.8 güvenle 120ms altında sonuç verir.'
         },
         {
             step: '03',
-            title: 'Risk Stratification',
-            desc: 'Real-time risk scores generated for cardiovascular events, diabetic complications, stroke probability, and more.',
+            title: 'Risk Katmanlandırma',
+            desc: 'Kardiyovasküler olaylar, diyabetik komplikasyonlar, inme olasılığı ve daha fazlası için gerçek zamanlı risk skorları üretilir.',
             icon: 'speed',
-            detail: 'Dynamic gauges update as new data enters the system.'
+            detail: 'Dinamik göstergeler sisteme yeni veri girdikçe güncellenir.'
         },
         {
             step: '04',
-            title: 'Clinical Recommendations',
-            desc: 'AI-generated differential diagnosis with evidence-based treatment protocols, drug interaction alerts, and follow-up scheduling.',
+            title: 'Klinik Öneriler',
+            desc: 'Kanıta dayalı tedavi protokolleri, ilaç etkileşim uyarıları ve takip planlaması ile YZ tarafından oluşturulan ayırıcı tanı.',
             icon: 'clinical_notes',
-            detail: 'All recommendations cite medical literature and institutional guidelines.'
+            detail: 'Tüm öneriler tıbbi literatürü ve kurumsal kılavuzları referans gösterir.'
         },
         {
             step: '05',
-            title: 'Physician Review',
-            desc: 'Human-in-the-loop validation ensures AI suggestions are reviewed and approved by the attending physician.',
+            title: 'Hekim İncelemesi',
+            desc: 'İnsan-döngüde doğrulama, YZ önerilerinin sorumlu hekim tarafından incelenip onaylanmasını sağlar.',
             icon: 'verified_user',
-            detail: 'One-click approval or modification of AI recommendations.'
+            detail: 'YZ önerilerinin tek tıkla onayı veya düzenlenmesi.'
         }
     ];
 
@@ -66,7 +66,7 @@ export default function WorkflowPage() {
                         className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
                     >
                         <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-                        <span className="text-sm font-medium">Back</span>
+                        <span className="text-sm font-medium">Geri</span>
                     </Link>
                 </nav>
 
@@ -79,17 +79,17 @@ export default function WorkflowPage() {
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
                                 <span className="material-symbols-outlined text-emerald-400">account_tree</span>
-                                <span className="text-sm text-emerald-300">Clinical Workflow</span>
+                                <span className="text-sm text-emerald-300">Klinik İş Akışı</span>
                             </div>
                             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                                From Intake to<br />
+                                Kabulden<br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                                    Actionable Insights.
+                                    Eyleme Dönük İçgörülere.
                                 </span>
                             </h1>
                             <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-                                A streamlined five-step process that transforms patient data into
-                                clinical intelligence in under 2 minutes.
+                                Hasta verilerini 2 dakikadan kısa sürede klinik zekaya
+                                dönüştüren beş adımlı akıcı bir süreç.
                             </p>
                         </motion.div>
                     </div>
@@ -137,7 +137,7 @@ export default function WorkflowPage() {
                         href="/#dashboard"
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-[#0A0F1C] font-semibold hover:bg-slate-100 transition-colors"
                     >
-                        <span>Try the Workflow</span>
+                        <span>İş Akışını Dene</span>
                         <span className="material-symbols-outlined">arrow_forward</span>
                     </Link>
                 </section>

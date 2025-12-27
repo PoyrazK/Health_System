@@ -1,6 +1,7 @@
 'use client';
 
 import { RiskScores } from '@/lib/types';
+import { roundPercent } from '@/lib/formatters';
 
 interface RiskGaugesProps {
     scores?: RiskScores;
@@ -9,8 +10,8 @@ interface RiskGaugesProps {
 export default function RiskGauges({ scores }: RiskGaugesProps) {
     const risks = [
         {
-            label: 'Cardiac',
-            value: scores?.heart ?? 0,
+            label: 'Kardiyak',
+            value: roundPercent(scores?.heart ?? 0),
             icon: 'cardiology',
             gradient: 'from-red-500 to-orange-500',
             glow: 'shadow-red-500/50',
@@ -18,8 +19,8 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
             border: 'border-red-500/30'
         },
         {
-            label: 'Metabolic',
-            value: scores?.diabetes ?? 0,
+            label: 'Metabolik',
+            value: roundPercent(scores?.diabetes ?? 0),
             icon: 'water_drop',
             gradient: 'from-blue-500 to-cyan-400',
             glow: 'shadow-blue-500/50',
@@ -27,8 +28,8 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
             border: 'border-blue-500/30'
         },
         {
-            label: 'Neurological',
-            value: scores?.stroke ?? 0,
+            label: 'Nörolojik',
+            value: roundPercent(scores?.stroke ?? 0),
             icon: 'psychology',
             gradient: 'from-purple-500 to-pink-500',
             glow: 'shadow-purple-500/50',
@@ -36,8 +37,8 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
             border: 'border-purple-500/30'
         },
         {
-            label: 'Renal',
-            value: scores?.kidney ?? 0,
+            label: 'Böbrek',
+            value: roundPercent(scores?.kidney ?? 0),
             icon: 'nephrology',
             gradient: 'from-emerald-500 to-teal-400',
             glow: 'shadow-emerald-500/50',
@@ -47,10 +48,10 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
     ];
 
     const getRiskLevel = (value: number) => {
-        if (value >= 70) return { text: 'CRITICAL', color: 'text-red-400' };
-        if (value >= 50) return { text: 'HIGH', color: 'text-orange-400' };
-        if (value >= 30) return { text: 'MODERATE', color: 'text-yellow-400' };
-        return { text: 'LOW', color: 'text-emerald-400' };
+        if (value >= 70) return { text: 'KRİTİK', color: 'text-red-400' };
+        if (value >= 50) return { text: 'YÜKSEK', color: 'text-orange-400' };
+        if (value >= 30) return { text: 'ORTA', color: 'text-yellow-400' };
+        return { text: 'DÜŞÜK', color: 'text-emerald-400' };
     };
 
     return (
@@ -62,8 +63,8 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
                         <span className="material-symbols-outlined text-blue-400 text-[18px]">monitoring</span>
                     </div>
                     <div>
-                        <h3 className="text-sm font-bold text-white">Risk Analysis</h3>
-                        <p className="text-[10px] text-slate-500 uppercase tracking-widest">Real-time Assessment</p>
+                        <h3 className="text-sm font-bold text-white">Risk Analizi</h3>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-widest">Gerçek Zamanlı Değerlendirme</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -71,7 +72,7 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    <span className="text-[10px] text-emerald-400 font-bold">LIVE</span>
+                    <span className="text-[10px] text-emerald-400 font-bold">CANLI</span>
                 </div>
             </div>
 
@@ -145,7 +146,7 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-slate-500 text-[16px]">avg_pace</span>
-                        <span className="text-[10px] text-slate-500 uppercase tracking-widest">Composite Score</span>
+                        <span className="text-[10px] text-slate-500 uppercase tracking-widest">Toplam Skor</span>
                     </div>
                     {scores ? (
                         <div className="flex items-center gap-3">
@@ -154,14 +155,14 @@ export default function RiskGauges({ scores }: RiskGaugesProps) {
                                     <div
                                         key={bar}
                                         className={`w-1.5 rounded-full transition-all duration-500 ${((scores.heart + scores.diabetes + scores.stroke + scores.kidney) / 4) >= bar * 20
-                                                ? 'h-4 bg-gradient-to-t from-blue-500 to-purple-500'
-                                                : 'h-2 bg-white/10'
+                                            ? 'h-4 bg-gradient-to-t from-blue-500 to-purple-500'
+                                            : 'h-2 bg-white/10'
                                             }`}
                                     />
                                 ))}
                             </div>
                             <span className="text-sm font-black text-white">
-                                {Math.round((scores.heart + scores.diabetes + scores.stroke + scores.kidney) / 4)}%
+                                {roundPercent((scores.heart + scores.diabetes + scores.stroke + scores.kidney) / 4)}%
                             </span>
                         </div>
                     ) : (

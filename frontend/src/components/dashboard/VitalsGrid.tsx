@@ -8,12 +8,12 @@ interface VitalsGridProps {
 
 export default function VitalsGrid({ patient }: VitalsGridProps) {
     const vitals = [
-        { label: 'BP Systolic', value: patient.systolic_bp, unit: 'mmHg', color: 'text-blue-400' },
-        { label: 'BP Diastolic', value: patient.diastolic_bp, unit: 'mmHg', color: 'text-blue-400' },
-        { label: 'Heart Rate', value: patient.heart_rate, unit: 'BPM', color: 'text-red-400' },
-        { label: 'Glucose', value: patient.glucose, unit: 'mg/dL', color: 'text-yellow-400' },
-        { label: 'BMI Index', value: patient.bmi, unit: 'kg/m²', color: 'text-emerald-400' },
-        { label: 'Steps', value: patient.steps, unit: 'Daily', color: 'text-slate-400' },
+        { label: 'Sistolik Tansiyon', value: patient.systolic_bp, unit: 'mmHg', color: 'text-blue-400' },
+        { label: 'Diastolik Tansiyon', value: patient.diastolic_bp, unit: 'mmHg', color: 'text-blue-400' },
+        { label: 'Nabız', value: patient.heart_rate, unit: 'BPM', color: 'text-red-400' },
+        { label: 'Glikoz', value: patient.glucose, unit: 'mg/dL', color: 'text-yellow-400' },
+        { label: 'VKİ', value: patient.bmi, unit: 'kg/m²', color: 'text-emerald-400' },
+        { label: 'Adım', value: patient.steps, unit: 'Günlük', color: 'text-slate-400' },
     ];
 
     return (

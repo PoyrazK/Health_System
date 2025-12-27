@@ -15,10 +15,10 @@ export default function MedicationSafety({ analysis }: MedicationSafetyProps) {
             {/* Minimal Header */}
             <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-4 rounded-full bg-gradient-to-b from-emerald-500 to-red-500" />
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Medications</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">İlaçlar</span>
                 <div className="flex-1" />
                 <span className="text-[10px] text-slate-600 font-mono">
-                    {analysis ? `${allMeds.length} active` : '...'}
+                    {analysis ? `${allMeds.length} aktif` : '...'}
                 </span>
             </div>
 
@@ -33,8 +33,8 @@ export default function MedicationSafety({ analysis }: MedicationSafetyProps) {
                         <div
                             key={i}
                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${med.safe
-                                    ? 'hover:bg-emerald-500/5'
-                                    : 'bg-red-500/5 hover:bg-red-500/10'
+                                ? 'hover:bg-emerald-500/5'
+                                : 'bg-red-500/5 hover:bg-red-500/10'
                                 }`}
                         >
                             {/* Status Dot */}
@@ -59,7 +59,7 @@ export default function MedicationSafety({ analysis }: MedicationSafetyProps) {
                 <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-2">
                     <span className="material-symbols-outlined text-red-400 text-[14px]">info</span>
                     <span className="text-[10px] text-slate-500">
-                        {analysis.risky.length} interaction{analysis.risky.length > 1 ? 's' : ''} flagged
+                        {analysis.risky.length} etkileşim tespit edildi
                     </span>
                 </div>
             )}

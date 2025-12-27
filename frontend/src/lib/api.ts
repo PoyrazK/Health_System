@@ -225,5 +225,10 @@ export const DEFAULT_FORM_VALUES: DefaultFormValues = {
     smoking: 'No',
     alcohol: 'No',
     medications: 'Lisinopril, Atorvastatin',
+    history_heart_disease: 'No',
+    history_stroke: 'No',
+    history_diabetes: 'No',
+    history_high_chol: 'No',
+    symptoms: '',
 };
 

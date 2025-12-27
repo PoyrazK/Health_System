@@ -10,27 +10,27 @@ export default function SolutionsPage() {
     const solutions = [
         {
             icon: 'ecg_heart',
-            title: 'Cardiac Risk Assessment',
-            desc: 'XGBoost-powered prediction model analyzing 47+ biomarkers to forecast cardiovascular events with 94% accuracy.',
-            features: ['Real-time ECG analysis', 'Arrhythmia detection', 'Heart failure risk scoring']
+            title: 'Kardiyak Risk Değerlendirmesi',
+            desc: 'Kardiyovasküler olayları %94 doğrulukla tahmin etmek için 47+ biyobelirteci analiz eden XGBoost destekli öngörü modeli.',
+            features: ['Gerçek zamanlı EKG analizi', 'Aritmi tespiti', 'Kalp yetmezliği risk puanlaması']
         },
         {
             icon: 'glucose',
-            title: 'Glycemic Trend Analysis',
-            desc: 'LSTM neural networks tracking glucose patterns to predict hypoglycemic and hyperglycemic events up to 4 hours ahead.',
-            features: ['Continuous monitoring', 'Trend prediction', 'Medication timing optimization']
+            title: 'Glisemik Trend Analizi',
+            desc: '4 saate kadar öncesinden hipoglisemik ve hiperglisemik olayları öngörmek için glikoz paternlerini takip eden LSTM sinir ağları.',
+            features: ['Sürekli izleme', 'Trend tahmini', 'İlaç zamanlama optimizasyonu']
         },
         {
             icon: 'radiology',
-            title: 'Medical Imaging AI',
-            desc: 'CNN-based analysis of X-rays, CT scans, and MRIs to detect anomalies and assist in differential diagnosis.',
-            features: ['Pneumonia detection', 'Tumor identification', 'Fracture analysis']
+            title: 'Tıbbi Görüntüleme YZ',
+            desc: 'Anomalileri tespit etmek ve ayırıcı tanıya yardımcı olmak için X-ray, BT taramaları ve MR\'ların CNN tabanlı analizi.',
+            features: ['Pnömoni tespiti', 'Tümör tanımlama', 'Kırık analizi']
         },
         {
             icon: 'psychology',
-            title: 'Clinical Reasoning Engine',
-            desc: 'GPT-4 powered differential diagnosis with evidence-based recommendations tailored to patient context.',
-            features: ['Multi-condition reasoning', 'Drug interaction checks', 'Treatment protocols']
+            title: 'Klinik Akıl Yürütme Motoru',
+            desc: 'Hasta bağlamına göre uyarlanmış kanıta dayalı önerilerle GPT-4 destekli ayırıcı tanı.',
+            features: ['Çoklu durum akıl yürütme', 'İlaç etkileşim kontrolleri', 'Tedavi protokolleri']
         }
     ];
 
@@ -55,7 +55,7 @@ export default function SolutionsPage() {
                         className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
                     >
                         <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-                        <span className="text-sm font-medium">Back</span>
+                        <span className="text-sm font-medium">Geri</span>
                     </Link>
                 </nav>
 
@@ -68,17 +68,17 @@ export default function SolutionsPage() {
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
                                 <span className="material-symbols-outlined text-blue-400">biotech</span>
-                                <span className="text-sm text-blue-300">AI-Powered Solutions</span>
+                                <span className="text-sm text-blue-300">YZ Destekli Çözümler</span>
                             </div>
                             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-                                Four Neural Engines.<br />
+                                Dört Sinir Motoru.<br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-                                    One Unified Platform.
+                                    Tek Birleşik Platform.
                                 </span>
                             </h1>
                             <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-                                Harness the power of specialized AI models working in harmony to deliver
-                                comprehensive clinical decision support.
+                                Kapsamlı klinik karar desteği sunmak için uyum içinde çalışan
+                                özelleşmiş YZ modellerinin gücünden yararlanın.
                             </p>
                         </motion.div>
                     </div>
@@ -120,7 +120,7 @@ export default function SolutionsPage() {
                         href="/#dashboard"
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-[#0A0F1C] font-semibold hover:bg-slate-100 transition-colors"
                     >
-                        <span>Experience the Dashboard</span>
+                        <span>Dashboard'u Deneyimle</span>
                         <span className="material-symbols-outlined">arrow_forward</span>
                     </Link>
                 </section>

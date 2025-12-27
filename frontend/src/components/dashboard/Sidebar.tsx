@@ -30,7 +30,7 @@ export default function Sidebar({ patients, selectedId, onSelect, onNew }: Sideb
 
             {/* Patient List */}
             <div className="flex-1 overflow-y-auto py-3 px-2">
-                <div className="text-[9px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-2">Queue</div>
+                <div className="text-[9px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-2">HASTA SIRASI</div>
                 <div className="space-y-0.5">
                     {patients.map(patient => (
                         <button
@@ -58,7 +58,7 @@ export default function Sidebar({ patients, selectedId, onSelect, onNew }: Sideb
                                 <div className="text-[10px] text-slate-500 flex items-center gap-1">
                                     <span>#{patient.id}</span>
                                     <span>•</span>
-                                    <span>{patient.age}y</span>
+                                    <span>{patient.age} yaş</span>
                                 </div>
                             </div>
 
@@ -82,8 +82,8 @@ export default function Sidebar({ patients, selectedId, onSelect, onNew }: Sideb
                         style={{ backgroundImage: "url('https://picsum.photos/seed/doc/100/100')" }}
                     />
                     <div className="flex-1 min-w-0">
-                        <div className="text-xs font-medium text-white truncate">Dr. Sarah Smith</div>
-                        <div className="text-[9px] text-slate-500 uppercase tracking-wider">Attending</div>
+                        <div className="text-xs font-medium text-white truncate">Dr. Sara Yılmaz</div>
+                        <div className="text-[9px] text-slate-500 uppercase tracking-wider">Uzman</div>
                     </div>
                     <span className="material-symbols-outlined text-slate-600 text-[16px]">expand_more</span>
                 </div>

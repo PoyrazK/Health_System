@@ -41,12 +41,23 @@ export interface ModelPrecision {
     confidence: number;
 }
 
+export interface UrgencyInfo {
+    urgency_level: number;
+    urgency_name: string;
+    probability: number;
+    confidence: string;
+    golden_hour_minutes?: number;
+}
+
 export interface AssessmentResult {
+    id?: number;
     risk_scores: RiskScores;
     diagnosis: string;
     medication_analysis: MedicationAnalysis;
     model_precisions: ModelPrecision[];
     emergency: boolean;
+    urgency?: UrgencyInfo;
+    audit_hash?: string;
 }
 
 // ==========================================
@@ -70,17 +81,18 @@ export interface PatientFormData {
     smoking: 'Yes' | 'No' | 'Former';
     alcohol: 'Yes' | 'No';
     medications: string; // Comma-separated list
+    history_heart_disease: 'Yes' | 'No';
+    history_stroke: 'Yes' | 'No';
+    history_diabetes: 'Yes' | 'No';
+    history_high_chol: 'Yes' | 'No';
+    symptoms: string; // Comma-separated list
 }
 
 /**
  * Default form values from /api/defaults
+ * This type extends PatientFormData to ensure full compatibility
  */
-export interface DefaultFormValues extends PatientFormData {
-    history_heart_disease?: string;
-    history_stroke?: string;
-    history_diabetes?: string;
-    history_high_chol?: string;
-}
+export type DefaultFormValues = PatientFormData;
 
 /**
  * Response from /api/assess endpoint
@@ -96,6 +108,13 @@ export interface AssessmentAPIResponse {
         clinical_confidence: number;
         model_precisions: Record<string, number>;
     };
+    urgency: {
+        urgency_level: number;
+        urgency_name: string;
+        probability: number;
+        confidence: string;
+        golden_hour_minutes?: number;
+    };
     diagnosis: string;
     diagnosis_status: 'pending' | 'ready' | 'error';
     emergency: boolean;
@@ -105,6 +124,7 @@ export interface AssessmentAPIResponse {
         safe: string[];
     };
     model_precisions: Array<{ model_name: string; confidence: number }>;
+    audit_hash: string;
 }
 
 /**
@@ -134,4 +154,9 @@ export interface PatientRecord {
     smoking: string;
     alcohol: string;
     medications: string;
+    history_heart_disease: string;
+    history_stroke: string;
+    history_diabetes: string;
+    history_high_chol: string;
+    symptoms: string;
 }

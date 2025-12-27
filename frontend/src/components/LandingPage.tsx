@@ -63,9 +63,9 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                         {/* Nav Links */}
                         <div className="hidden md:flex items-center">
                             {[
-                                { name: 'Solutions', href: '/solutions' },
-                                { name: 'Workflow', href: '/workflow' },
-                                { name: 'Technology', href: '/technology' },
+                                { name: 'Çözümler', href: '/solutions' },
+                                { name: 'İş Akışı', href: '/workflow' },
+                                { name: 'Teknoloji', href: '/technology' },
                             ].map((item, i) => (
                                 <Link
                                     key={i}
@@ -86,7 +86,7 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                             onClick={onLaunch}
                             className="px-4 py-1.5 text-[13px] font-medium text-[#0A0F1C] bg-white rounded-full hover:bg-white/90 transition-all shadow-lg"
                         >
-                            Get Started
+                            Başla
                         </button>
                     </div>
                 </nav>
@@ -107,26 +107,26 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
                                 </span>
-                                AI-Powered Clinical Decision Support
+                                YZ Destekli Klinik Karar Desteği
                             </div>
                             <h1 className="font-quiet text-5xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
-                                The Future of <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-blue-300">Clinical Decisions</span>
+                                Klinik Kararların <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-blue-300">Geleceği</span>
                             </h1>
                             <p className="text-lg text-slate-400 leading-relaxed max-w-xl">
-                                From fragmented history to clinical clarity. Our multi-model neural engine analyzes thousands of vitals and historical data points to predict patient risk in real-time.
+                                Dağınık geçmişten klinik netleğe. Çoklu model sinir motorumuz, binlerce vital ve geçmiş veriyi analiz ederek hasta riskini gerçek zamanlı öngörür.
                             </p>
                             <div className="flex flex-wrap gap-4">
                                 <button
                                     onClick={onLaunch}
                                     className="h-12 px-8 rounded-full bg-[#3B82F6] hover:bg-blue-600 text-white font-semibold transition-all shadow-[0_0_25px_rgba(59,130,246,0.3)] flex items-center gap-2 group"
                                 >
-                                    Request Demo
+                                    Demo Talep Et
                                     <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </button>
                                 <button className="h-12 px-6 rounded-full bg-transparent border border-white/20 hover:border-white/40 text-white font-medium transition-all flex items-center gap-2">
                                     <span className="material-symbols-outlined text-[20px]">play_circle</span>
-                                    Watch Video
+                                    Videoyu İzle
                                 </button>
                             </div>
                         </motion.div>
@@ -190,7 +190,7 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                                                                 }`}
                                                         >
                                                             <div className="text-[11px] font-medium text-white/90">{name}</div>
-                                                            <div className="text-[9px] text-white/30 mt-0.5 font-light">Patient ID: {1000 + i * 111}</div>
+                                                            <div className="text-[9px] text-white/30 mt-0.5 font-light">Hasta ID: {1000 + i * 111}</div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -200,9 +200,9 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                                                     {/* Vitals - Frosted cards */}
                                                     <div className="grid grid-cols-2 gap-2">
                                                         {[
-                                                            { label: 'Heart Rate', value: '82', unit: 'BPM', color: '#FF6B6B' },
-                                                            { label: 'Blood Pressure', value: '142/91', unit: 'mmHg', color: '#4DABF7' },
-                                                            { label: 'Glucose', value: '110', unit: 'mg/dL', color: '#FFD43B' },
+                                                            { label: 'Nabız', value: '82', unit: 'BPM', color: '#FF6B6B' },
+                                                            { label: 'Tansiyon', value: '142/91', unit: 'mmHg', color: '#4DABF7' },
+                                                            { label: 'Glikoz', value: '110', unit: 'mg/dL', color: '#FFD43B' },
                                                             { label: 'SpO2', value: '98', unit: '%', color: '#69DB7C' },
                                                         ].map((v, i) => (
                                                             <div
@@ -220,12 +220,12 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
 
                                                     {/* Risk bars with liquid styling */}
                                                     <div className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.05]">
-                                                        <div className="text-[8px] text-white/40 uppercase tracking-wider mb-2 font-light">Risk Analysis</div>
+                                                        <div className="text-[8px] text-white/40 uppercase tracking-wider mb-2 font-light">Risk Analizi</div>
                                                         <div className="space-y-2">
                                                             {[
-                                                                { label: 'Cardiac', pct: 65, color: 'from-red-500 to-orange-400' },
-                                                                { label: 'Metabolic', pct: 42, color: 'from-blue-500 to-cyan-400' },
-                                                                { label: 'Neuro', pct: 18, color: 'from-purple-500 to-pink-400' },
+                                                                { label: 'Kardiyak', pct: 65, color: 'from-red-500 to-orange-400' },
+                                                                { label: 'Metabolik', pct: 42, color: 'from-blue-500 to-cyan-400' },
+                                                                { label: 'Nöro', pct: 18, color: 'from-purple-500 to-pink-400' },
                                                             ].map((r, i) => (
                                                                 <div key={i} className="flex items-center gap-2">
                                                                     <span className="text-[8px] text-white/40 w-12 font-light">{r.label}</span>
@@ -252,10 +252,10 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                                                             <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
                                                                 <span className="material-symbols-outlined text-white text-[10px]">psychology</span>
                                                             </div>
-                                                            <span className="text-[9px] font-medium text-white/70 tracking-wide">NEURAL ASSESSMENT</span>
+                                                            <span className="text-[9px] font-medium text-white/70 tracking-wide">NÖRAL DEĞERLENDİRME</span>
                                                         </div>
                                                         <div className="text-[10px] text-white/60 font-light leading-relaxed">
-                                                            Primary: <span className="text-white font-medium">Bacterial Pneumonia</span>
+                                                            Ön Tanı: <span className="text-white font-medium">Bakteriyel Pnömoni</span>
                                                             <span className="ml-2 text-emerald-400 font-medium">99.8%</span>
                                                         </div>
                                                     </div>
@@ -278,17 +278,17 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                     <div className="max-w-7xl mx-auto">
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <div className="space-y-6">
-                                <h2 className="text-blue-500 font-bold tracking-widest uppercase text-xs">The Problem</h2>
-                                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Healthcare Data is Overwhelming</h3>
+                                <h2 className="text-blue-500 font-bold tracking-widest uppercase text-xs">Sorun</h2>
+                                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Sağlık Verileri Bunaltıcı</h3>
                                 <p className="text-slate-400 leading-relaxed text-lg">
-                                    Clinicians today face a cognitive bottleneck. Fragments of history, thousands of real-time vitals, and complex medication interactions make manual analysis prone to missed early warnings.
+                                    Bugün klinisyenler bilişsel bir darboğazla karşı karşıya. Parçalanmış geçmişler, binlerce gerçek zamanlı vital ve karmaşık ilaç etkileşimleri manuel analizi erken uyarıları kaçırmaya açık hale getiriyor.
                                 </p>
                             </div>
                             <div className="space-y-6">
-                                <h2 className="text-emerald-500 font-bold tracking-widest uppercase text-xs">The Solution</h2>
-                                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">AI-Augmented Clarity</h3>
+                                <h2 className="text-emerald-500 font-bold tracking-widest uppercase text-xs">Çözüm</h2>
+                                <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tight">YZ Destekli Netlik</h3>
                                 <p className="text-slate-400 leading-relaxed text-lg">
-                                    RedFive synthesizes raw clinical data into actionable intelligence. We don&apos;t replace clinicians; we give them a 24/7 super-processor that never misses a detail.
+                                    RedFive ham klinik verileri eyleme dönüştürülebilir zekaya sentezler. Klinisyenlerin yerine geçmiyoruz; onlara hiçbir detayı kaçırmayan 7/24 süper-işlemci sağlıyoruz.
                                 </p>
                             </div>
                         </div>
@@ -299,10 +299,10 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                 <section className="py-24 px-6 bg-[#0A0F1C]/60">
                     <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
                         {[
-                            { label: 'ML Models Trained', value: '4' },
-                            { label: 'Clinical Confidence', value: '99.8%' },
-                            { label: 'End-to-End Latency', value: '<120ms' },
-                            { label: 'Historical Cases', value: '1000+' },
+                            { label: 'Eğitilmiş ML Modeli', value: '4' },
+                            { label: 'Klinik Güven', value: '99.8%' },
+                            { label: 'Uçtan Uca Gecikme', value: '<120ms' },
+                            { label: 'Geçmiş Vaka', value: '1000+' },
                         ].map((m, i) => (
                             <motion.div
                                 key={i}
@@ -339,7 +339,7 @@ export default function LandingPage({ onLaunch }: LandingPageProps) {
                             </div>
                             <span className="text-lg font-bold text-white">RedFive</span>
                         </div>
-                        <div>Made with ❤️ for Healthcare © 2024</div>
+                        <div>Sağlık için ❤️ ile yapıldı © 2024</div>
                     </div>
                 </footer>
             </div >
