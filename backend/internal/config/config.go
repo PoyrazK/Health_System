@@ -23,6 +23,7 @@ type Config struct {
 	// External Services
 	MLServiceURL string
 	RedisURL     string
+	NatsURL      string
 
 	// Feature Flags
 	EnableAuditLog bool
@@ -51,6 +52,7 @@ func Load() *Config {
 		// External Services
 		MLServiceURL: getEnv("ML_SERVICE_URL", "http://127.0.0.1:8000"),
 		RedisURL:     getEnv("REDIS_URL", "localhost:6379"),
+		NatsURL:      getEnv("NATS_URL", "nats://localhost:4222"),
 
 		// Feature Flags
 		EnableAuditLog:  getEnvBool("ENABLE_AUDIT_LOG", true),

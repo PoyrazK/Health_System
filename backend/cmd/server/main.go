@@ -17,6 +17,7 @@ import (
 	"healthcare-backend/internal/database"
 	"healthcare-backend/internal/handlers"
 	"healthcare-backend/internal/middleware"
+	"healthcare-backend/internal/queue"
 	"healthcare-backend/internal/repositories"
 	"healthcare-backend/internal/services"
 )
@@ -30,6 +31,10 @@ func main() {
 
 	// Initialize Redis
 	cache.InitRedis(cfg.RedisURL)
+
+	// Initialize NATS
+	queue.InitNATS(cfg.NatsURL)
+	defer queue.Close()
 
 	// Create Fiber app with custom error handler
 	app := fiber.New(fiber.Config{
